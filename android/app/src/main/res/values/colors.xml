@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="mainColor">#0a5047</color>
-    <color name="mainColorDark">#086138</color>
+    <color name="mainColor">#84B3E1</color>
+    <color name="mainColorDark">#3A8AD8</color>
     <color name="secondColor">#02EAB4</color>
     <color name="grayLight">#ECECEC</color>
     <color name="happyChatColor">#0b5045</color>
