@@ -1,0 +1,57 @@
+﻿@model AspNetMvc.Models.Rating
+
+@{
+    ViewData["Title"] = "Edit";
+}
+<img class="logo" src="~/css/webIcon.png" />
+<h1>Edit feedback</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ID" />
+            <div class="form-group">
+                <tr>
+                    <td>
+                        <fieldset class="rating">
+                            <input type="radio" id="star5" name="@Html.NameFor(model => model.Rate)" value="5" required />
+                            <label for="star5" title="WOW!">5 stars</label>
+                            <input type="radio" id="star4" name="@Html.NameFor(model => model.Rate)" value="4" />
+                            <label for="star4" title="Pretty good">4 stars</label>
+                            <input type="radio" id="star3" name="@Html.NameFor(model => model.Rate)" value="3" />
+                            <label for="star3" title="Cool">3 stars</label>
+                            <input type="radio" id="star2" name="@Html.NameFor(model => model.Rate)" value="2" />
+                            <label for="star2" title="Not good">2 stars</label>
+                            <input type="radio" id="star1" name="@Html.NameFor(model => model.Rate)" value="1" />
+                            <label for="star1" title="Bad!!">1 star</label>
+                        </fieldset>
+                    </td>
+                </tr>
+            </div>
+            <br /><br />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" readonly />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Feedback" class="control-label"></label>
+                <input asp-for="Feedback" class="form-control" />
+                <span asp-validation-for="Feedback" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" /> |
+                <button type="button" class="btn btn-secondary" onClick="location.href='@Url.Action("", "Ratings")'">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}

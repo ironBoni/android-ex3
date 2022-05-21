@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspWebApi", "AspWebApi.csproj", "{B4FAFF79-A9FD-4F73-B073-B55FF8613072}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetMvc", "..\AspNetMvc\AspNetMvc.csproj", "{B5458A2C-BB9F-40E7-A0DC-9489B33D72D6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "..\Models\Models.csproj", "{59E00496-7E24-44AB-8449-017582A5A965}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B4FAFF79-A9FD-4F73-B073-B55FF8613072}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4FAFF79-A9FD-4F73-B073-B55FF8613072}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4FAFF79-A9FD-4F73-B073-B55FF8613072}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4FAFF79-A9FD-4F73-B073-B55FF8613072}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5458A2C-BB9F-40E7-A0DC-9489B33D72D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5458A2C-BB9F-40E7-A0DC-9489B33D72D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5458A2C-BB9F-40E7-A0DC-9489B33D72D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5458A2C-BB9F-40E7-A0DC-9489B33D72D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59E00496-7E24-44AB-8449-017582A5A965}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59E00496-7E24-44AB-8449-017582A5A965}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59E00496-7E24-44AB-8449-017582A5A965}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59E00496-7E24-44AB-8449-017582A5A965}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C7E031CA-D1D0-4320-9F15-D8148DFEE189}
+	EndGlobalSection
+EndGlobal
