@@ -2,6 +2,8 @@ package com.ex3.androidchat;
 
 import android.util.Log;
 
+import com.ex3.androidchat.Response;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -17,7 +19,10 @@ public class Client {
     private static String dataServer = "http://localhost:5186/api/";
     private static String token = "";
 
-    public static void sendPost(String resUrl, Map<String, Object> bodyMap) {
+    public static String getMyServer() {
+        return dataServer;
+    }
+    public static Response sendPost(String resUrl, Map<String, Object> bodyMap) {
         try {
             URL url = new URL(dataServer + resUrl);
 
@@ -56,11 +61,38 @@ public class Client {
             StringBuilder sb = new StringBuilder();
             for (int c; (c = in.read()) >= 0; )
                 sb.append((char) c);
-            String response = sb.toString();
-
+            byte[] response = sb.toString().getBytes();
+            int statusCode = conn.getResponseCode();
             conn.disconnect();
+            return new Response(response, statusCode);
         } catch (Exception e) {
             Log.d("SendToServer", e.toString());
+        }
+        return null;
+    }
+
+    public static Response sendGet(String apiUrl) {
+        try {
+            StringBuilder result = new StringBuilder();
+            URL url = new URL(dataServer + apiUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            if(!token.equals(""))
+                conn.setRequestProperty("Authorization", "Bearer " + token);
+            try (BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(conn.getInputStream()))) {
+                for (String line; (line = reader.readLine()) != null; ) {
+                    result.append(line);
+                }
+            }
+            byte[] response = result.toString().getBytes();
+            int statusCode = conn.getResponseCode();
+
+            conn.disconnect();
+            return new Response(response, statusCode);
+        } catch(Exception e) {
+            Log.d("Exception", e.toString());
+            return null;
         }
     }
 }

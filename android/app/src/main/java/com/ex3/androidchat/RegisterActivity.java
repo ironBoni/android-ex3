@@ -2,11 +2,8 @@ package com.ex3.androidchat;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.ex3.androidchat.databinding.ActivityRegisterBinding;
+import com.ex3.androidchat.models.User;
 
 public class RegisterActivity extends AppCompatActivity {
     private ProgressDialog dialog;
@@ -48,7 +46,23 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             private void createUserInServer() {
-
+                dialog.show();
+                Map<String, Object> body = new LinkedHashMap<>();
+                body.put("id", binding.txtUserId.toString());
+                body.put("name", binding.txtNickname.toString());
+                body.put("password", binding.txtPassword.toString());
+                body.put("profileImage", "/images/default.jpg");
+                body.put("server", Client.getMyServer());
+                Response res = Client.sendPost("api/Register", body);
+                Log.d("Register", "success " + res.getResponse() + " " + res.getStatus());
+                if(res.getStatus() == 200) {
+                    User user = new User(binding.txtUserId.toString(), binding.txtPassword.toString(),
+                            binding.txtNickname.toString(), Client.getMyServer());
+                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
+                 else
+                     Toast.makeText(RegisterActivity.this, "error in register", Toast.LENGTH_SHORT);
             }
 
             private boolean isValidConfirmPassword(String password, String confirmPassword) {
