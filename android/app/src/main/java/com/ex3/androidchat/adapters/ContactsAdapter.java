@@ -8,19 +8,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ex3.androidchat.R;
-import com.ex3.androidchat.models.User;
+import com.ex3.androidchat.models.Contact;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
-    ArrayList<User> users;
+public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHolder> {
+    ArrayList<Contact> contacts;
     Context context;
 
-    public UserAdapter(ArrayList<User> users, Context context) {
-        this.users = users;
+    public ContactsAdapter(ArrayList<Contact> contacts, Context context) {
+        this.contacts = contacts;
         this.context = context;
     }
 
@@ -33,8 +33,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        User user = users.get(position);
-        holder.nickName.setText(user.getName());
+        Contact contact = contacts.get(position);
+        holder.nickName.setText(contact.getName());
     }
 
     @Override

@@ -4,23 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <!--<com.google.android.material.tabs.TabLayout
-        android:layout_width="match_parent"
-        android:layout_height="53dp"
-        android:background="@color/mainColor"
-        app:tabIndicator="@color/white"
-        app:tabTextColor="@color/white"
-        android:id="@+id/tabMenu"
-        android:elevation="13dp"
-        app:tabMode="fixed"
-        app:tabSelectedTextColor="@color/white"
-        app:tabMaxWidth="9dp"/>
-
-    <androidx.viewpager.widget.ViewPager
+    <fragment
+        android:id="@+id/chatFrag"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/pager"
-        />-->
+        android:layout_gravity="start"
+        class="com.ex3.androidchat.fragments.ChatFragment"
+        />
+<!--    <com.google.android.material.tabs.TabLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="53dp"-->
+<!--        android:background="@color/mainColor"-->
+<!--        app:tabIndicator="@color/white"-->
+<!--        app:tabTextColor="@color/white"-->
+<!--        android:id="@+id/tabMenu"-->
+<!--        android:elevation="13dp"-->
+<!--        app:tabMode="fixed"-->
+<!--        app:tabSelectedTextColor="@color/white"-->
+<!--        app:tabMaxWidth="9dp"/>-->
+
+<!--    <androidx.viewpager.widget.ViewPager-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:id="@+id/pager"-->
+<!--        />-->
 </LinearLayout>

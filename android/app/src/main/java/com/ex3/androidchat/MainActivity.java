@@ -21,11 +21,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        /*pager = findViewById(R.id.pager);
-        pager.setAdapter(new FragAdapter(getSupportFragmentManager()));
-
-        tabMenu = findViewById(R.id.tabMenu);
-        tabMenu.setupWithViewPager(pager);*/
+        getSupportActionBar().hide();
     }
 
     @Override
