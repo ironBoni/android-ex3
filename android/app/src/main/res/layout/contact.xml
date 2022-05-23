@@ -35,12 +35,18 @@
             android:id="@+id/txtNickname"
             android:paddingTop="5dp"
             android:textStyle="bold"
-            android:paddingButton="5dp"
+            android:paddingBottom="5dp"
             android:text="Noam"
             android:textSize="55sp"
-            android:textColor="@color/black"
-            >
+            android:textColor="@color/black" />
 
-        </TextView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lastMsg"
+            android:paddingTop="2dp"
+            android:text="Hey friend!"
+            android:textSize="55sp"/>
+
     </LinearLayout>
 </LinearLayout>
