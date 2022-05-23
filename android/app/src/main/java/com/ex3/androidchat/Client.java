@@ -2,6 +2,8 @@ package com.ex3.androidchat;
 
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 import com.ex3.androidchat.Response;
 
 import java.io.BufferedReader;
@@ -19,10 +21,24 @@ public class Client {
     private static String dataServer = "http://localhost:5186/api/";
     private static String token = "";
 
+    public static void setToken(String t) {
+        token = t;
+    }
+
     public static String getMyServer() {
         return dataServer;
     }
+
+    public static String getToken() {
+        return token;
+    }
+
     public static Response sendPost(String resUrl, Map<String, Object> bodyMap) {
+        return doPost(resUrl, bodyMap);
+    }
+
+    @Nullable
+    private static Response doPost(String resUrl, Map<String, Object> bodyMap) {
         try {
             URL url = new URL(dataServer + resUrl);
 
@@ -72,6 +88,11 @@ public class Client {
     }
 
     public static Response sendGet(String apiUrl) {
+        return doGet(apiUrl);
+    }
+
+    @Nullable
+    private static Response doGet(String apiUrl) {
         try {
             StringBuilder result = new StringBuilder();
             URL url = new URL(dataServer + apiUrl);

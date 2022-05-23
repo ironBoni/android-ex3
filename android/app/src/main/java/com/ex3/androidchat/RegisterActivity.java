@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.LinkedHashMap;
@@ -20,13 +21,15 @@ import com.ex3.androidchat.models.User;
 
 public class RegisterActivity extends AppCompatActivity {
     private ProgressDialog dialog;
-    ActivityRegisterBinding binding;
-
+    EditText txtUserId, txtPassword, txtNickname, txtConfirm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityRegisterBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        txtUserId = findViewById(R.id.txtUserId);
+        txtPassword = findViewById(R.id.txtPassword);
+        txtNickname = findViewById(R.id.txtNickname);
+        txtConfirm = findViewById(R.id.txtConfirm);
+        setContentView(R.layout.activity_register);
         getSupportActionBar().hide();
 
         dialog = new ProgressDialog(RegisterActivity.this);
@@ -38,26 +41,26 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Boolean isValid = true;
                 if (!hasEnteredAllFields()) return;
-                if (!isValidUser(binding.txtUserId.toString())) return;
-                if (!isValidPassword(binding.txtPassword.toString())) return;
-                if (!isValidConfirmPassword(binding.txtPassword.toString(),
-                        binding.txtConfirm.toString())) return;
+                if (!isValidUser(txtUserId.getText().toString())) return;
+                if (!isValidPassword(txtPassword.getText().toString())) return;
+                if (!isValidConfirmPassword(txtPassword.getText().toString(),
+                        txtConfirm.getText().toString())) return;
                 createUserInServer();
             }
 
             private void createUserInServer() {
                 dialog.show();
                 Map<String, Object> body = new LinkedHashMap<>();
-                body.put("id", binding.txtUserId.toString());
-                body.put("name", binding.txtNickname.toString());
-                body.put("password", binding.txtPassword.toString());
+                body.put("id", txtUserId.getText().toString());
+                body.put("name", txtNickname.getText().toString());
+                body.put("password", txtPassword.getText().toString());
                 body.put("profileImage", "/images/default.jpg");
                 body.put("server", Client.getMyServer());
                 Response res = Client.sendPost("api/Register", body);
                 Log.d("Register", "success " + res.getResponse() + " " + res.getStatus());
                 if(res.getStatus() == 200) {
-                    User user = new User(binding.txtUserId.toString(), binding.txtPassword.toString(),
-                            binding.txtNickname.toString(), Client.getMyServer());
+                    User user = new User(txtUserId.getText().toString(), txtPassword.getText().toString(),
+                            txtNickname.getText().toString(), Client.getMyServer());
                     Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                     startActivity(intent);
                 }
@@ -103,19 +106,19 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             private boolean hasEnteredAllFields() {
-                if (binding.txtUserId.toString().isEmpty()) {
+                if (txtUserId.getText().toString().isEmpty()) {
                     Toast.makeText(RegisterActivity.this, "Enter User Id!", Toast.LENGTH_LONG).show();
                     return false;
                 }
-                if (binding.txtNickname.toString().isEmpty()) {
+                if (txtNickname.getText().toString().isEmpty()) {
                     Toast.makeText(RegisterActivity.this, "Enter Nickname!", Toast.LENGTH_LONG).show();
                     return false;
                 }
-                if (binding.txtPassword.toString().isEmpty()) {
+                if (txtPassword.getText().toString().isEmpty()) {
                     Toast.makeText(RegisterActivity.this, "Enter Password!", Toast.LENGTH_LONG).show();
                     return false;
                 }
-                if (binding.txtConfirm.toString().isEmpty()) {
+                if (txtConfirm.getText().toString().isEmpty()) {
                     Toast.makeText(RegisterActivity.this, "Enter Confirm Password!", Toast.LENGTH_LONG).show();
                     return false;
                 }
