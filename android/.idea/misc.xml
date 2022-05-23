@@ -3,8 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/noamc/android-ex3/android/app/src/main/res/drawable/background_msg.xml" value="0.1" />
         <entry key="..\:/Users/noamc/android-ex3/android/app/src/main/res/drawable/circular_image.xml" value="0.1" />
         <entry key="..\:/Users/noamc/android-ex3/android/app/src/main/res/drawable/picture.xml" value="0.1" />
+        <entry key="..\:/Users/noamc/android-ex3/android/app/src/main/res/layout/activity_conversation.xml" value="0.28433734939759037" />
         <entry key="..\:/Users/noamc/android-ex3/android/app/src/main/res/layout/activity_login.xml" value="0.125" />
         <entry key="..\:/Users/noamc/android-ex3/android/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/noamc/android-ex3/android/app/src/main/res/layout/activity_register.xml" value="0.264" />
