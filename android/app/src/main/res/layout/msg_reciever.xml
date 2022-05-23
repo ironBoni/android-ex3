@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="4dp"
+    android:layout_marginLeft="4dp"
+    android:layout_marginTop="3dp"
+    android:layout_marginRight="6dp"
+    android:background="@drawable/background_recieve_msg"
+    android:maxWidth="300dp"
+    android:maxHeight="390dp"
+    android:minHeight="29dp">
+
+    <TextView
+        android:id="@+id/txtRecieve"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="7dp"
+        android:inputType="textLongMessage|textMultiLine"
+        android:maxWidth="268dp"
+        android:minWidth="48dp"
+        android:textSize="18dp"
+        android:textColor="@color/black"
+        android:text="hey guys"
+        app:layout_constraintBottom_toTopOf="@+id/txtTimeReceived"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideS"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/txtTimeReceived"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="3dp"
+        android:layout_marginRight="3dp"
+        android:layout_marginBottom="3dp"
+        android:text="12:56"
+        android:textSize="9sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="15dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>
