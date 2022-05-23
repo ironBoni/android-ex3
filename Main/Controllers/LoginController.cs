@@ -69,5 +69,17 @@ namespace AspWebApi.Controllers {
 
             return Ok(new LoginResponse("Good Login", true, CreateToken(user)));
         }
+
+        [HttpPost]
+        [Route("/api/login/android")]
+        public IActionResult Post([FromBody] LoginRequest req)
+        {
+            var user = serivce.GetById(req.Username);
+            if (user == null) return NotFound();
+            var isCorrect = user.Password == req.Password;
+            if (isCorrect)
+                return Ok();
+            return NotFound();
+        }
     }
 }
