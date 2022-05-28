@@ -41,7 +41,7 @@ public class ChatFragment extends Fragment {
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         binding.recycleView.setLayoutManager(manager);
 
-        Response res = Client.sendGet("contacts");
+        /*Response res = Client.sendGet("contacts");
         ObjectInputStream stream;
         try {
             stream = new ObjectInputStream(new ByteArrayInputStream(res.getResponse()));
@@ -49,7 +49,7 @@ public class ChatFragment extends Fragment {
             stream.close();
         } catch(Exception ex) {
             Log.d("ChatFragment", ex.toString());
-        }
+        }*/
         return inflater.inflate(R.layout.fragment_chat, container, false);
     }
 }

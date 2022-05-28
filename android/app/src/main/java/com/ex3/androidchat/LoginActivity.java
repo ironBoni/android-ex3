@@ -66,10 +66,11 @@ public class LoginActivity extends AppCompatActivity {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("username", txtUserId.getText().toString());
         body.put("password", txtPassword.getText().toString());
-        Response res = Client.sendPost("login/android", body);
+        //Response res = Client.sendPost("login/android", body);
         dialog.dismiss();
-        if(res.getStatus() == 200) {
-            Client.setToken(new String(res.getResponse()));
+        boolean isLoginOk = true;
+        if(isLoginOk) {
+            Client.setToken("abcd");
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
         } else {

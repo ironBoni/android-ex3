@@ -50,15 +50,16 @@ public class RegisterActivity extends AppCompatActivity {
 
             private void createUserInServer() {
                 dialog.show();
-                Map<String, Object> body = new LinkedHashMap<>();
+                /*Map<String, Object> body = new LinkedHashMap<>();
                 body.put("id", txtUserId.getText().toString());
                 body.put("name", txtNickname.getText().toString());
                 body.put("password", txtPassword.getText().toString());
                 body.put("profileImage", "/images/default.jpg");
                 body.put("server", Client.getMyServer());
                 Response res = Client.sendPost("api/Register", body);
-                Log.d("Register", "success " + res.getResponse() + " " + res.getStatus());
-                if(res.getStatus() == 200) {
+                Log.d("Register", "success " + res.getResponse() + " " + res.getStatus());*/
+                boolean isRegisterOk = true;
+                if(isRegisterOk) {
                     User user = new User(txtUserId.getText().toString(), txtPassword.getText().toString(),
                             txtNickname.getText().toString(), Client.getMyServer());
                     Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
