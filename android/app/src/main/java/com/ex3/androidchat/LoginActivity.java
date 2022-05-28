@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
         dialog.setTitle("Sign in");
         dialog.setMessage("Please wait...\nLogin deatils checked");
 
-        buttonRegister = findViewById(R.id.btnRegister);
+        buttonRegister = findViewById(R.id.btnSignup);
         buttonLogin = findViewById(R.id.btnLogin);
         buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
