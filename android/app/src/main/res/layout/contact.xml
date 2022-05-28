@@ -3,14 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="@drawable/border_contact">
 
     <androidx.cardview.widget.CardView
         app:cardCornerRadius="2dp"
         app:cardPreventCornerOverlap="false"
         android:background="@color/grayLight"
-        android:layout_width="180dp"
-        android:layout_height="180dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:padding="6dp"
         android:layout_marginLeft="6dp">
         <ImageView
@@ -29,24 +30,50 @@
         android:orientation="vertical"
         android:layout_marginLeft="9dp">
 
-        <TextView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/txtViewNickname"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             android:paddingTop="5dp"
             android:textStyle="bold"
             android:paddingBottom="5dp"
             android:text="Noam"
-            android:textSize="55sp"
+            android:textSize="23sp"
             android:textColor="@color/black" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/lastMsg"
-            android:paddingTop="2dp"
-            android:text="Hey friend!"
-            android:textSize="55sp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/txtViewNickname"
+                android:id="@+id/lastMsg"
+                android:paddingTop="2dp"
+                android:text="Hey friend!"
+                android:textSize="23sp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraint ="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/lastMsgTime"
+                android:paddingTop="2dp"
+                android:text="28.05.2022"
+                android:textSize="23sp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraint ="parent"
+                app:layout_constraintTop_toBottomOf="@id/lastMsgTime"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/lastMsgHour"
+                android:paddingTop="2dp"
+                android:text="23:42"
+                android:textSize="23sp"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 </LinearLayout>
