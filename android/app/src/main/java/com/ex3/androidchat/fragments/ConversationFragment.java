@@ -11,13 +11,13 @@ import android.view.ViewGroup;
 
 import com.ex3.androidchat.R;
 import com.ex3.androidchat.adapters.ContactsAdapter;
-import com.ex3.androidchat.databinding.FragmentChatBinding;
+import com.ex3.androidchat.databinding.FragmentConversationBinding;
 import com.ex3.androidchat.models.Contact;
 
 import java.util.ArrayList;
 
 public class ConversationFragment extends Fragment {
-    FragmentChatBinding binding;
+    FragmentConversationBinding binding;
 
     public ConversationFragment() {
         // Required empty public constructor
@@ -30,7 +30,7 @@ public class ConversationFragment extends Fragment {
         // Inflate the layout for this fragment
 
         ContactsAdapter uAdapter = new ContactsAdapter(contacts, getContext());
-        binding = FragmentChatBinding.inflate(getLayoutInflater());
+        binding = FragmentConversationBinding.inflate(getLayoutInflater());
         binding.recycleView.setAdapter(uAdapter);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         binding.recycleView.setLayoutManager(manager);
