@@ -37,7 +37,9 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Contact contact = contacts.get(position);
         holder.nickName.setText(contact.getName());
-
+        holder.lastMsgTime.setText(contact.getLastdate());
+        holder.picture.setImageResource(R.drawable.default_avatar);
+        holder.lastMsg.setText(contact.getLast());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,12 +60,14 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView picture;
-        TextView nickName, lastMsg;
+        TextView nickName, lastMsg, lastMsgTime, lastMsgHour;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             picture = itemView.findViewById(R.id.image);
             nickName = itemView.findViewById(R.id.txtViewNickname);
             lastMsg = itemView.findViewById(R.id.lastMsg);
+            lastMsgTime = itemView.findViewById(R.id.lastMsgTime);
+            lastMsgHour = itemView.findViewById(R.id.lastMsgHour);
         }
     }
 }
