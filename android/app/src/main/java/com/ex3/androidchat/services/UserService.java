@@ -24,27 +24,27 @@ public class UserService implements  IUserService {
     private static IChatService chatsService = new ChatService();
 
     @Override
-    public ArrayList<Contact> GetContacts(String username) {
+    public ArrayList<Contact> getContacts(String username) {
         User user = getById(username);
         if(user == null) return null;
         return user.getContacts();
     }
 
     @Override
-    public boolean AddContact(String id, String name, String server) {
-        ArrayList<Contact> contacts = GetContacts(id);
+    public boolean addContact(String id, String name, String server) {
+        ArrayList<Contact> contacts = getContacts(id);
         if(contacts == null) return false;
         return contacts.add(new Contact(id, name, server));
     }
 
     @Override
-    public boolean RemoveContact(String username) {
-        ArrayList<Contact> contacts = GetContacts(username);
+    public boolean removeContact(String username) {
+        ArrayList<Contact> contacts = getContacts(username);
         if(contacts == null) return false;
         Contact contactToRemove = null;
         
         for(Contact contact : contacts) {
-            if(contact.getId() == username) {
+            if(contact.getId().equals(username)) {
                 contactToRemove = contact;        
             }
         }

@@ -56,8 +56,8 @@ public class RegisterActivity extends AppCompatActivity {
                 txtPasswordR = findViewById(R.id.txtPasswordR);
                 txtNickname = findViewById(R.id.txtNickname);
                 txtConfirm = findViewById(R.id.txtConfirm);
-                User user = new User(txtUserIdR.getText().toString(), txtPasswordR.getText().toString(),
-                        txtNickname.getText().toString(), Client.getMyServer());
+                User user = new User(txtUserIdR.getText().toString(),
+                        txtNickname.getText().toString(), txtPasswordR.getText().toString(), Client.getMyServer());
                 boolean isRegisterOk = userService.create(user);
                 if (isRegisterOk) {
                     Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
