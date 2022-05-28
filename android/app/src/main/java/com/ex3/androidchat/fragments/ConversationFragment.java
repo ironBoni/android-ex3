@@ -5,27 +5,21 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ex3.androidchat.Client;
 import com.ex3.androidchat.R;
-import com.ex3.androidchat.Response;
 import com.ex3.androidchat.adapters.ContactsAdapter;
 import com.ex3.androidchat.databinding.FragmentChatBinding;
 import com.ex3.androidchat.models.Contact;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
-public class ChatFragment extends Fragment {
+public class ConversationFragment extends Fragment {
     FragmentChatBinding binding;
 
-    public ChatFragment() {
+    public ConversationFragment() {
         // Required empty public constructor
     }
 
@@ -50,6 +44,6 @@ public class ChatFragment extends Fragment {
         } catch(Exception ex) {
             Log.d("ChatFragment", ex.toString());
         }*/
-        return inflater.inflate(R.layout.fragment_chat, container, false);
+        return inflater.inflate(R.layout.fragment_conversation, container, false);
     }
 }

@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.ex3.androidchat.fragments.ChatFragment;
+import com.ex3.androidchat.fragments.ConversationFragment;
 
 public class FragAdapter extends FragmentPagerAdapter {
     public FragAdapter(@NonNull FragmentManager fm) {
@@ -17,7 +17,7 @@ public class FragAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         // if(position == 0)
-        return new ChatFragment();
+        return new ConversationFragment();
     }
 
     @Override

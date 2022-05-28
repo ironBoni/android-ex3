@@ -12,7 +12,10 @@
         <entry key="..\:/Users/noamc/android-ex3/android/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/noamc/android-ex3/android/app/src/main/res/layout/activity_register.xml" value="0.264" />
         <entry key="..\:/Users/noamc/android-ex3/android/app/src/main/res/layout/contact.xml" value="0.1" />
-        <entry key="..\:/Users/noamc/android-ex3/android/app/src/main/res/layout/fragment_chat.xml" value="0.264" />
+        <entry key="..\:/Users/noamc/android-ex3/android/app/src/main/res/layout/fragment_chat.xml" value="0.1" />
+        <entry key="..\:/Users/noamc/android-ex3/android/app/src/main/res/layout/fragment_chat_list.xml" value="0.1" />
+        <entry key="..\:/Users/noamc/android-ex3/android/app/src/main/res/layout/fragment_contact_list.xml" value="0.13768115942028986" />
+        <entry key="..\:/Users/noamc/android-ex3/android/app/src/main/res/layout/fragment_contacts.xml" value="0.12512664640324214" />
         <entry key="..\:/Users/noamc/android-ex3/android/app/src/main/res/layout/msg_reciever.xml" value="0.192481884057971" />
         <entry key="..\:/Users/noamc/android-ex3/android/app/src/main/res/layout/msg_sender.xml" value="0.1931097008159565" />
         <entry key="..\:/Users/noamc/android-ex3/android/app/src/main/res/menu/menu.xml" value="0.1" />

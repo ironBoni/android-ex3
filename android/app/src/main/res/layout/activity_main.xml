@@ -8,12 +8,17 @@
     tools:context=".MainActivity">
 
     <fragment
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        class="com.ex3.androidchat.fragments.ConversationFragment"/>
+    <!--<fragment
         android:id="@+id/chatFrag"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        class="com.ex3.androidchat.fragments.ChatFragment"
-        />
+        class="com.ex3.androidchat.fragments.ConversationFragment"
+        />-->
 <!--    <com.google.android.material.tabs.TabLayout-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="53dp"-->
