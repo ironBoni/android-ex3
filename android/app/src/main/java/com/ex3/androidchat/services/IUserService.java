@@ -5,10 +5,11 @@ import com.ex3.androidchat.models.User;
 import java.util.ArrayList;
 
 public interface IUserService extends IContactService {
-    ArrayList<User> GetAll();
-    User GetById(String id);
-    boolean Create(User user);
-    boolean Update(User user);
-    boolean Delete(User user);
-    String GetFullServerUrl(String url);
+    ArrayList<User> getAll();
+    User getById(String id);
+    boolean create(User user);
+    boolean update(User user);
+    boolean delete(String userId);
+    String getFullServerUrl(String url);
+    boolean isLoginOk(String username, String password);
 }

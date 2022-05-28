@@ -1,9 +1,16 @@
 package com.ex3.androidchat.models;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class User {
     String id, password, last, name, server, profileImage;
+
+    public ArrayList<Contact> getContacts() {
+        return contacts;
+    }
+
+    ArrayList<Contact> contacts;
     LocalDateTime lastdate;
     public User() { }
 
@@ -15,16 +22,18 @@ public class User {
         this.profileImage = profileImage;
         this.lastdate = lastdate;
         this.server = server;
+        this.contacts = new ArrayList<>();
     }
 
-    public User(String id, String password, String name, String server) {
+    public User(String id, String name, String password, String image) {
         this.id = id;
         this.password = password;
         this.name = name;
-        this.profileImage = "/images/default.jpg";
+        this.profileImage = image;
         this.last = null;
         this.lastdate = null;
-        this.server = server;
+        this.server = "http://localhost:5186";
+        this.contacts = new ArrayList<>();
     }
 
     public String getId() {

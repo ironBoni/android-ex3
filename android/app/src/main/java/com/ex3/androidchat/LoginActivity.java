@@ -10,6 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.ex3.androidchat.services.IUserService;
+import com.ex3.androidchat.services.UserService;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -17,10 +20,12 @@ public class LoginActivity extends AppCompatActivity {
     Button buttonRegister, buttonLogin;
     EditText txtUserId, txtPassword;
     ProgressDialog dialog;
+    IUserService userService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.userService = new UserService();
         txtUserId = findViewById(R.id.txtUserId);
         txtPassword = findViewById(R.id.txtPassword);
         setContentView(R.layout.activity_login);
@@ -63,19 +68,20 @@ public class LoginActivity extends AppCompatActivity {
 
     private void handleLogin() {
         dialog.show();
-        Map<String, Object> body = new LinkedHashMap<>();
+/*        Map<String, Object> body = new LinkedHashMap<>();
         body.put("username", txtUserId.getText().toString());
-        body.put("password", txtPassword.getText().toString());
+        body.put("password", txtPassword.getText().toString());*/
         //Response res = Client.sendPost("login/android", body);
         dialog.dismiss();
-        boolean isLoginOk = true;
+        this.userService = new UserService();
+        boolean isLoginOk = userService.isLoginOk(txtUserId.getText().toString(), txtPassword.getText().toString());
         if(isLoginOk) {
             Client.setToken("abcd");
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
         } else {
             Toast.makeText(LoginActivity.this, "Username or password are incorrect",
-                    Toast.LENGTH_LONG);
+                    Toast.LENGTH_LONG).show();
         }
     }
 }

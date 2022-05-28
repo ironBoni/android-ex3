@@ -1,18 +1,30 @@
 package com.ex3.androidchat.models;
 
+import com.ex3.androidchat.R;
+
 import java.time.LocalDateTime;
 
 public class Contact {
-    String id, name, server, last, profileImage;
-    LocalDateTime lastdate;
+    String id, name, server, last;
+    int profileImage;
+    String lastdate;
 
-    public Contact(String id, String name, String server, String last, String profileImage, LocalDateTime lastdate) {
+    public Contact(String id, String name, String server, String last, int profileImage, String lastdate) {
         this.id = id;
         this.name = name;
         this.server = server;
         this.last = last;
         this.profileImage = profileImage;
         this.lastdate = lastdate;
+    }
+
+    public Contact(String id, String name, String server) {
+        this.id = id;
+        this.name = name;
+        this.server = server;
+        this.last = null;
+        this.lastdate = null;
+        this.profileImage = R.drawable.default_avatar;
     }
 
     public String getId() {
@@ -31,11 +43,11 @@ public class Contact {
         return last;
     }
 
-    public String getProfileImage() {
+    public int getProfileImage() {
         return profileImage;
     }
 
-    public LocalDateTime getLastdate() {
+    public String getLastdate() {
         return lastdate;
     }
 }

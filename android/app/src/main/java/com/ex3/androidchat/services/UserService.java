@@ -1,6 +1,5 @@
 package com.ex3.androidchat.services;
 
-import com.ex3.androidchat.models.Chat;
 import com.ex3.androidchat.models.Contact;
 import com.ex3.androidchat.models.User;
 
@@ -26,51 +25,79 @@ public class UserService implements  IUserService {
 
     @Override
     public ArrayList<Contact> GetContacts(String username) {
-        return null;
+        User user = getById(username);
+        if(user == null) return null;
+        return user.getContacts();
     }
 
     @Override
     public boolean AddContact(String id, String name, String server) {
-        return false;
-    }
-
-    @Override
-    public boolean AcceptInvitation(String from, String server, String to) {
-        return false;
+        ArrayList<Contact> contacts = GetContacts(id);
+        if(contacts == null) return false;
+        return contacts.add(new Contact(id, name, server));
     }
 
     @Override
     public boolean RemoveContact(String username) {
-        return false;
+        ArrayList<Contact> contacts = GetContacts(username);
+        if(contacts == null) return false;
+        Contact contactToRemove = null;
+        
+        for(Contact contact : contacts) {
+            if(contact.getId() == username) {
+                contactToRemove = contact;        
+            }
+        }
+        
+        if(contactToRemove == null)
+            return false;
+        return contacts.remove(contactToRemove);
     }
 
     @Override
-    public ArrayList<User> GetAll() {
+    public ArrayList<User> getAll() {
+        return users;
+    }
+
+    @Override
+    public User getById(String id) {
+        for(User user : users) {
+            if(user.getId().equals(id))
+                return user;
+        }
         return null;
     }
 
     @Override
-    public User GetById(String id) {
-        return null;
+    public boolean create(User user) {
+        return users.add(user);
     }
 
     @Override
-    public boolean Create(User user) {
+    public boolean update(User user) {
+        delete(user.getId());
+        return create(user);
+    }
+
+    @Override
+    public boolean delete(String userId) {
+        for (User user : users) {
+            if (user.getId() == userId)
+                users.remove(user);
+            return true;
+        }
         return false;
     }
 
     @Override
-    public boolean Update(User user) {
-        return false;
+    public String getFullServerUrl(String url) {
+        return url;
     }
 
     @Override
-    public boolean Delete(User user) {
-        return false;
-    }
-
-    @Override
-    public String GetFullServerUrl(String url) {
-        return null;
+    public boolean isLoginOk(String username, String password) {
+        User user = getById(username);
+        if(user == null) return false;
+        return user.getPassword().equals(password);
     }
 }
