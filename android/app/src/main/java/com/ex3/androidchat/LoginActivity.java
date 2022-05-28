@@ -77,6 +77,7 @@ public class LoginActivity extends AppCompatActivity {
         boolean isLoginOk = userService.isLoginOk(txtUserId.getText().toString(), txtPassword.getText().toString());
         if(isLoginOk) {
             Client.setToken("abcd");
+            Client.setUser(txtUserId.getText().toString());
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
         } else {

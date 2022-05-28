@@ -20,6 +20,15 @@ import java.util.Map;
 public class Client {
     private static String dataServer = "http://localhost:5186/api/";
     private static String token = "";
+    private static String user = "";
+
+    public static String getUser() {
+        return user;
+    }
+
+    public static void setUser(String username) {
+        Client.user = username;
+    }
 
     public static void setToken(String t) {
         token = t;

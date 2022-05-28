@@ -10,6 +10,12 @@ public class Message {
     String writtenIn;
     boolean sent;
 
+    public Message(int id, String text, String senderUsername, String writtenIn) {
+        this.id = id;
+        this.text = text;
+        this.senderUsername = senderUsername;
+        this.writtenIn = writtenIn;
+    }
 
     public Message(int id, String type, String text, String senderUsername, String writtenIn, String fileName, boolean sent) {
         this.id = id;
