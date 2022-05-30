@@ -104,7 +104,8 @@ namespace Models.DataServices {
         {
             using (var db = new ItemsContext())
             {
-                db.Chats.Add(entity);
+                var dbAccess = new DatabaseContext();
+                dbAccess.AddChat(entity);
                 db.SaveChanges();
                 return true;
             }

@@ -3,6 +3,7 @@ using System;
 using AspWebApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AspWebApi.Migrations
 {
     [DbContext(typeof(ItemsContext))]
-    partial class ItemsContextModelSnapshot : ModelSnapshot
+    [Migration("20220530191259_InitialMigration2212")]
+    partial class InitialMigration2212
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,7 +33,7 @@ namespace AspWebApi.Migrations
 
                     b.HasIndex("UsersUsername");
 
-                    b.ToTable("ChatUser", (string)null);
+                    b.ToTable("ChatUser");
                 });
 
             modelBuilder.Entity("Models.Chat", b =>
@@ -42,7 +44,7 @@ namespace AspWebApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Chats", (string)null);
+                    b.ToTable("Chats");
                 });
 
             modelBuilder.Entity("Models.Message", b =>
@@ -80,7 +82,7 @@ namespace AspWebApi.Migrations
 
                     b.HasIndex("ChatId");
 
-                    b.ToTable("Messages", (string)null);
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Models.Models.Contact", b =>
@@ -121,7 +123,7 @@ namespace AspWebApi.Migrations
 
                     b.HasIndex("Username");
 
-                    b.ToTable("Contacts", (string)null);
+                    b.ToTable("Contacts");
                 });
 
             modelBuilder.Entity("Models.User", b =>
@@ -146,7 +148,7 @@ namespace AspWebApi.Migrations
 
                     b.HasKey("Username");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("ChatUser", b =>

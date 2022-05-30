@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 namespace Models {
     public class User {
         [Key]
-        [ForeignKey("ParticipantsUsername")]
-        public string Username { get; set; }
+        //[ForeignKey("UsersUsername")]
+        public virtual string Username { get; set; }
 
         [Required(ErrorMessage ="Please enter nickname.")]
         public string Nickname { get; set; }
@@ -24,8 +24,8 @@ namespace Models {
         [Required(ErrorMessage ="Please enter server")]
         public string Server { get; set; }
 
-        public List<Chat> Chats { get; set; }
-        public List<Contact> Contacts { get; set; }
+        public virtual List<Chat> Chats { get; set; }
+        public virtual List<Contact> Contacts { get; set; }
         public User()
         {
         }

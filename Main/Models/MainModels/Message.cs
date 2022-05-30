@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Models {
     public class Message {
         [Key]
-        public int Id { get; set; }
+        public virtual int Id { get; set; }
 
         [Required]
         [MaxLength(10)]
@@ -18,7 +18,7 @@ namespace Models {
         public string Text { get; set; }
 
         [Required(ErrorMessage = "Please enter the sender username")]
-        public string SenderUsername { get; set; }
+        public virtual string Username { get; set; }
 
         [Required(ErrorMessage = "Please enter when the message was written in")]
         public DateTime WrittenIn { get; set; }
@@ -30,7 +30,7 @@ namespace Models {
             Id = id;
             Type = type;
             Text = text;
-            SenderUsername = senderUsername;
+            Username = senderUsername;
             WrittenIn = writtenIn;
             FileName = fileName;
             Sent = false;
@@ -41,7 +41,7 @@ namespace Models {
             Id = id;
             Type = type;
             Text = text;
-            SenderUsername = senderUsername;
+            Username = senderUsername;
             WrittenIn = writtenIn;
             FileName = fileName;
             Sent = sent;

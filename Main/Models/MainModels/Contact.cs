@@ -29,7 +29,7 @@ namespace Models.Models {
 
         public string ProfileImage { get; set; }
         public string OfUser { get; set; }
-        public Contact()
+       public Contact()
         {
         }
 

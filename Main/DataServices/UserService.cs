@@ -55,7 +55,8 @@ namespace Models.DataServices {
             {
                 foreach (var chat in db.Chats)
                 {
-                    var participants = chat.Participants.Select(x => x.Username).ToList();
+                    var dbAccess = new DatabaseContext();
+                    var participants = dbAccess.GetParticipants(chat.Id).Select(x => x.Username);
                     if (participants.Contains(user1.Username) && participants.Contains(user2.Username))
                         return chat;
                 }

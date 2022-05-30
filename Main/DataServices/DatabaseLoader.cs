@@ -7,17 +7,17 @@ namespace AspWebApi.DataServices {
         {
             foreach (var chat in db.Chats.ToList())
             {
-                if (chat.Participants != null && chat.Participants.Count >= 2) continue;
-                chat.Participants = new List<User>();
+                if (chat.Users != null && chat.Users.Count >= 2) continue;
+                chat.Users = new List<User>();
                 foreach (var u in db.Users.ToList())
                 {
-                    if (chat.Messages.Any(m => m.SenderUsername == u.Username)
-                        && !chat.Participants.Contains(u))
+                    if (chat.Messages.Any(m => m.Username == u.Username)
+                        && !chat.Users.Contains(u))
                     {
-                        chat.Participants.Remove(u);
+                        chat.Users.Remove(u);
                         db.SaveChanges();
 
-                        chat.Participants.Add(u);
+                        chat.Users.Add(u);
                         db.SaveChanges();
                     }
                 }
@@ -32,14 +32,14 @@ namespace AspWebApi.DataServices {
                 chat.Messages = new List<Message>();
                 foreach (var m in db.Messages.ToList().OrderBy(m => m.Id))
                 {
-                    if (chat.Participants.Any(u => u.Username == m.SenderUsername))
+                    if (chat.Users.Any(u => u.Username == m.Username))
                     {
-                        var user = db.Users.Where(u => u.Username == m.SenderUsername).FirstOrDefault();
-                        if (!chat.Participants.Contains(user))
+                        var user = db.Users.Where(u => u.Username == m.Username).FirstOrDefault();
+                        if (!chat.Users.Contains(user))
                         {
-                            chat.Participants.Remove(user);
+                            chat.Users.Remove(user);
                             db.SaveChanges();
-                            chat.Participants.Add(user);
+                            chat.Users.Add(user);
                             db.SaveChanges();
                         }
                     }

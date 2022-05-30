@@ -54,7 +54,7 @@ namespace AspWebApi.Controllers {
             Current.Username = User.Claims.SingleOrDefault(i => i.Type.EndsWith("UserId"))?.Value;
             var messages = userService.GetAllMessages(id, Current.Username);
             if (messages == null) return NotFound();
-            var msgList = messages.Select(m => new MessageResponse(m.Id, m.Text, m.WrittenIn, m.Sent, m.SenderUsername)).ToList();
+            var msgList = messages.Select(m => new MessageResponse(m.Id, m.Text, m.WrittenIn, m.Sent, m.Username)).ToList();
             return Ok(UpdateSent(msgList));
         }
 
@@ -71,7 +71,7 @@ namespace AspWebApi.Controllers {
             if (messages == null) return NotFound();
             if (messages.Count == 0) return Ok(UpdateSentSingle(new MessageResponse(1, "", null, true, id)));
             var m = messages[messages.Count - 1];
-            return Ok(UpdateSentSingle(new MessageResponse(m.Id, m.Text, m.WrittenIn, m.Sent, m.SenderUsername)));
+            return Ok(UpdateSentSingle(new MessageResponse(m.Id, m.Text, m.WrittenIn, m.Sent, m.Username)));
         }
 
         [HttpGet]
@@ -83,7 +83,7 @@ namespace AspWebApi.Controllers {
             if (messages == null) return NotFound();
             var m = messages.Find(m => m.Id == id2);
             if (m == null) return NotFound();
-            return Ok(UpdateSentSingle(new MessageResponse(m.Id, m.Text, m.WrittenIn, m.Sent, m.SenderUsername)));
+            return Ok(UpdateSentSingle(new MessageResponse(m.Id, m.Text, m.WrittenIn, m.Sent, m.Username)));
         }
 
         [HttpPost]
