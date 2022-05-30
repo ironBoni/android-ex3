@@ -23,6 +23,9 @@ namespace Models {
         public string Server { get; set; }
 
         public List<Contact> Contacts { get; set; }
+        public User()
+        {
+        }
 
         public User(string username, string nickname, string password, string profileImage, string server)
         {

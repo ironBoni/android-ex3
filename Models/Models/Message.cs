@@ -64,5 +64,8 @@ namespace Models {
 
         public Message(int id, string type, string text, string senderUsername, DateTime writtenIn, bool sent)
             : this(id, type, text, senderUsername, writtenIn, "") { Sent = sent; }
+        public Message()
+        {
+        }
     }
 }

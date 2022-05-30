@@ -23,6 +23,9 @@ namespace Models.Models {
         public DateTime? Lastdate { get; set; }
 
         public string ProfileImage { get; set; }
+        public Contact()
+        {
+        }
         public Contact(string id, string name, string server, string last, DateTime? lastDate)
         {
             Id = id;
