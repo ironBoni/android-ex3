@@ -67,7 +67,7 @@ namespace Models.DataServices {
                 }
 
                 // You cannot add someone that is already in your chats.
-                if (currentContacts.Any(user => user.Id == friendToAdd))
+                if (currentContacts.Any(user => user.ContactId == friendToAdd))
                 {
                     response = "You cannot add him, because he's already in your chat list.";
                     return false;
@@ -177,13 +177,13 @@ namespace Models.DataServices {
                     return false;
                 }
 
-                if (!currentContacts.Any(user => user.Id == userToRemove))
+                if (!currentContacts.Any(user => user.ContactId == userToRemove))
                 {
                     res = "You cannot add someone that is already in your chats.";
                     return false;
                 }
 
-                var contactToRemove = currentContacts.Where(c => c.Id == userToRemove).FirstOrDefault(); ;
+                var contactToRemove = currentContacts.Where(c => c.ContactId == userToRemove).FirstOrDefault(); ;
                 var userObjectToRemove = db.Users.Where(c => c.Username == userToRemove).FirstOrDefault();
                 if (contactToRemove == null)
                 {
@@ -234,7 +234,7 @@ namespace Models.DataServices {
                 }
 
                 // You cannot add someone that is already in your chats.
-                if (currentContacts.Any(user => user.Id == from))
+                if (currentContacts.Any(user => user.ContactId == from))
                 {
                     response = "User cannot be added, because he's already in your chat list.";
                     return false;

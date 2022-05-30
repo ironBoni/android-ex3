@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 
 namespace Models.Models {
     public class Contact {
-        [Required(ErrorMessage ="Please enter contact Id")]
+        [Required(ErrorMessage ="Please enter Id")]
         [Key]
         public string Id { get; set; }
+        [Required(ErrorMessage = "Please enter contact Id")]
+        public string ContactId { get; set; }
 
         [Required(ErrorMessage ="Please enter name")]
         public string Name { get; set; }

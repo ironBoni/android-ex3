@@ -37,7 +37,7 @@ namespace AspWebApi.Models {
 
             foreach (var contact in contactsByMessages)
             {
-                if (!currentUser.Contacts.Any(c => c.Id == contact.Id))
+                if (!currentUser.Contacts.Any(c => c.Id == contact.ContactId))
                     currentUser.Contacts.Add(contact);
             }
 
@@ -46,8 +46,8 @@ namespace AspWebApi.Models {
                 var oldContacts = IdToContactsDict[currentUser.Username];
                 if (oldContacts != null)
                 {
-                    var currentIds = currentUser.Contacts.Select(c => c.Id).ToList();
-                    var newToAdd = oldContacts.Where(c => !currentIds.Contains(c.Id));
+                    var currentIds = currentUser.Contacts.Select(c => c.ContactId).ToList();
+                    var newToAdd = oldContacts.Where(c => !currentIds.Contains(c.ContactId));
                     currentUser.Contacts.AddRange(newToAdd);
                 }
             }
