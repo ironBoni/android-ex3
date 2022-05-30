@@ -19,9 +19,9 @@ namespace AspWebApi.Controllers {
         private readonly IUserService serivce;
         private readonly IConfiguration configuration;
 
-        public LoginController(IConfiguration configuration)
+        public LoginController(IConfiguration configuration, IUserService userServ)
         {
-            serivce = new UserService();
+            serivce = userServ;
             this.configuration = configuration;
         }
         

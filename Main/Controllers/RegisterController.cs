@@ -12,9 +12,9 @@ namespace AspWebApi.Controllers {
     [ApiController]
     public class RegisterController : ControllerBase {
         private IUserService service;
-        public RegisterController()
+        public RegisterController(IUserService userServ)
         {
-            service = new UserService();
+            service = userServ;
         }
         // GET: api/<RegisterController>
         [HttpGet]

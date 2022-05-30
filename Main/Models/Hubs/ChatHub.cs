@@ -10,9 +10,9 @@ namespace AspWebApi.Models.Hubs {
         private readonly IChatService chatService;
         private static ConcurrentDictionary<string, List<string>> userToConnection = new ConcurrentDictionary<string, List<string>>();
         private const string ReceiveMessage = "ReceiveMessage";
-        public ChatHub()
+        public ChatHub(IChatService chatServ)
         {
-            chatService = new ChatService();
+            chatService = chatServ;
         }
         public async Task SendMsg(string from, string content, string to)
         {

@@ -20,10 +20,10 @@ namespace AspWebApi.Controllers {
         private readonly IUserService userService;
         private readonly IChatService chatService;
 
-        public ContactsController()
+        public ContactsController(IUserService userServ, IChatService chatServ)
         {
-            userService = new UserService();
-            chatService = new ChatService();
+            this.userService = userServ;
+            this.chatService = chatServ;
         }
 
         private List<MessageResponse> UpdateSent(List<MessageResponse> messages)

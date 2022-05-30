@@ -11,9 +11,9 @@ namespace AspWebApi.Controllers {
     [ApiController]
     public class InvitationsController : ControllerBase {
         private IUserService service;
-        public InvitationsController()
+        public InvitationsController(IUserService userServ)
         {
-            service = new UserService();
+            service = userServ;
         }
 
         // POST api/<InvitationsController>

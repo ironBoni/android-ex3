@@ -15,9 +15,9 @@ namespace AspWebApi.Controllers {
         private IChatService service;
         private IUserService userService;
     
-        public TransferController(IUserService userServ)
+        public TransferController(IUserService userServ, IChatService serv)
         {
-            service = new ChatService();
+            service = serv;
             this.userService = userServ;
 
         }

@@ -15,6 +15,7 @@ And enter the following command:
 Then, install the Microsoft Entity Framework Tools package
 by entering the following command:
 "Install-Package Microsoft.EntityFrameworkcore.Tools -version 6.0.1"
+"Install-Package Microsoft.EntityFrameworkCore.SqlServer"
 
 Finally create the database:
 	1) First create a migration by typing: "add-migration InitialMigration" 

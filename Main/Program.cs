@@ -1,8 +1,10 @@
+using AspWebApi;
 using AspWebApi.Models;
 using AspWebApi.Models.Hubs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Models.DataServices;
+using Microsoft.EntityFrameworkCore;
 using Models.DataServices.Interfaces;
 using System.Text;
 
@@ -11,8 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddSignalR();
-builder.Services.AddSingleton<IChatService, ChatService>();
-builder.Services.AddSingleton<IUserService, UserService>();
+builder.Services.AddScoped<IChatService, ChatService>();
+builder.Services.AddScoped<IUserService, UserService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -29,6 +31,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
 });
+
+builder.Services.AddDbContext<ItemsContext>(
+     options => options.UseSqlServer("name=server=localhost;port=3306;database=pomelodb;user=root;password=Np1239:DefaultConnection"));
 
 builder.Services.AddCors(p => p.AddPolicy("cors", builder =>
 {
@@ -55,5 +60,5 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapHub<ChatHub>("/hub");
-CurrentUsers.SetContacts();
+//CurrentUsers.SetContacts();
 app.Run();
