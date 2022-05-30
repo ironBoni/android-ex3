@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using Models;
 using Models.Models;
+using MySqlConnector;
 using System.Data;
 
 namespace AspWebApi {
@@ -24,11 +25,12 @@ namespace AspWebApi {
             return list;
         }
 
-        public int GetMaxFromTable(string table, string column)
+        public int GetMaxFromTable(string table, string column, MySqlConnection conn)
         {
-            SqlCommand cmd = new SqlCommand(@"SELECT MAX(@Column) FROM @Tbl");
+            MySqlCommand cmd = new MySqlCommand(@"SELECT MAX(@Column) FROM @Tbl");
             cmd.Parameters.AddWithValue("@Column", column);
             cmd.Parameters.AddWithValue("@Tbl", table);
+            cmd.Connection = conn;
             var reader = cmd.ExecuteReader();
             return reader.GetInt32(column);
         }
@@ -36,38 +38,57 @@ namespace AspWebApi {
         public void AddChat(Chat c)
         {
 
-            using (var conn = new SqlConnection(connectionString))
+            using (var conn = new MySqlConnection(connectionString))
             {
                 conn.Open();
-                InsertToChatTable();
-                InsertToChatUserTable(c);
-
+                //InsertToChatTable();
+                InsertToChatUserTable(c, conn);
+                using(var db = new ItemsContext())
+                {
+                    db.Chats.Add(c);
+                    db.SaveChanges();
+                }
+                //InsertToContactsTable(c);
             }
         }
 
-        private void InsertToChatTable()
+        private void InsertToContactsTable(Chat c, MySqlConnection conn)
         {
-            var maxCurrentId = GetMaxFromTable("chats", "Id");
-            var newId = maxCurrentId + 1;
-            SqlCommand insert = new SqlCommand("INSERT INTO @Table (Id) VALUES (@Value);");
+            var maxId = GetMaxFromTable("contacts", "Id", conn);
+            var newId = maxId + 1;
+            MySqlCommand insert = new MySqlCommand("INSERT INTO @Tbl (@Column1, @Column2, @Column3, @Column4, @Column5, @Column6, @Column7, @Column8, @Column9) " +
+                "VALUES (@Value1, @Value2, @Value3', @Value4, @Value5, @Value6, 'dan', 'noam', 'dan');");
             insert.Parameters.AddWithValue("@Table", "chats");
             insert.Parameters.AddWithValue("@Value", newId);
+            insert.Connection = conn;
             insert.ExecuteNonQuery();
         }
 
-        private void InsertToChatUserTable(Chat c)
+        private void InsertToChatTable(MySqlConnection conn)
         {
-            SqlCommand insert = new SqlCommand("INSERT INTO @Table (Id) VALUES (@Value);");
+            var maxCurrentId = GetMaxFromTable("chats", "Id", conn);
+            var newId = maxCurrentId + 1;
+            MySqlCommand insert = new MySqlCommand("INSERT INTO @Table (Id) VALUES (@Value);");
+            insert.Parameters.AddWithValue("@Table", "chats");
+            insert.Parameters.AddWithValue("@Value", newId);
+            insert.Connection = conn;
+            insert.ExecuteNonQuery();
+        }
+
+        private void InsertToChatUserTable(Chat c, MySqlConnection conn)
+        {
+            MySqlCommand insert = new MySqlCommand("INSERT INTO @Table (Id) VALUES (@Value);");
             foreach (var user in c.Users)
             {
-                var maxCurrentId = GetMaxFromTable("chatuser", "ChatsId");
+                var maxCurrentId = GetMaxFromTable("chatuser", "ChatsId", conn);
                 var newId = maxCurrentId + 1;
-                insert = new SqlCommand("INSERT INTO @Table (@Column1, @Column2) VALUES (@Value1, @Value2);");
+                insert = new MySqlCommand("INSERT INTO @Table (@Column1, @Column2) VALUES (@Value1, @Value2);");
                 insert.Parameters.AddWithValue("@Table", "chatuser");
                 insert.Parameters.AddWithValue("@Column1", "ChatsId");
                 insert.Parameters.AddWithValue("@Column2", "UsersUsername");
                 insert.Parameters.AddWithValue("@Value1", newId);
                 insert.Parameters.AddWithValue("@Value2", user.Username);
+                insert.Connection = conn;
                 insert.ExecuteNonQuery();
             }
         }
@@ -76,13 +97,19 @@ namespace AspWebApi {
         {
             List<string> participants = new List<string>();
             List<User> users = new List<User>();
-            using(var conn = new SqlConnection(connectionString))
+            using(var conn = new MySqlConnection(connectionString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand(@"SELECT UsersUsername FROM chatuser WHERE ChatsId=@Id");
+                MySqlCommand cmd = new MySqlCommand(@"SELECT UsersUsername FROM chatuser WHERE ChatsId=@Id");
+                cmd.Connection = conn;
                 cmd.Parameters.AddWithValue("@Id", chatId);
                 var reader = cmd.ExecuteReader();
-                participants = GetList<string>(reader);
+                while (reader.Read())
+                {
+                    var participant = reader.GetString(0);
+                    participants.Add(participant);
+                }
+                
             }
             using(var db = new ItemsContext())
             {
