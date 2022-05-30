@@ -27,12 +27,12 @@ namespace AspWebApi {
 
         public int GetMaxFromTable(string table, string column, MySqlConnection conn)
         {
-            MySqlCommand cmd = new MySqlCommand(@"SELECT MAX(@Column) FROM @Tbl");
-            cmd.Parameters.AddWithValue("@Column", column);
-            cmd.Parameters.AddWithValue("@Tbl", table);
+            MySqlCommand cmd = new MySqlCommand(@"SELECT MAX("+column+") FROM "+table+";");
             cmd.Connection = conn;
             var reader = cmd.ExecuteReader();
-            return reader.GetInt32(column);
+            reader.Read();
+            var maxValue = reader.GetInt32(0);
+            return maxValue;
         }
 
         public void AddChat(Chat c)
@@ -77,15 +77,12 @@ namespace AspWebApi {
 
         private void InsertToChatUserTable(Chat c, MySqlConnection conn)
         {
-            MySqlCommand insert = new MySqlCommand("INSERT INTO @Table (Id) VALUES (@Value);");
             foreach (var user in c.Users)
             {
                 var maxCurrentId = GetMaxFromTable("chatuser", "ChatsId", conn);
                 var newId = maxCurrentId + 1;
-                insert = new MySqlCommand("INSERT INTO @Table (@Column1, @Column2) VALUES (@Value1, @Value2);");
-                insert.Parameters.AddWithValue("@Table", "chatuser");
-                insert.Parameters.AddWithValue("@Column1", "ChatsId");
-                insert.Parameters.AddWithValue("@Column2", "UsersUsername");
+                var insert = new MySqlCommand("INSERT INTO chatuser (ChatsId, UsersUsername) VALUES (@Value1, @Value2);");
+
                 insert.Parameters.AddWithValue("@Value1", newId);
                 insert.Parameters.AddWithValue("@Value2", user.Username);
                 insert.Connection = conn;
@@ -93,6 +90,20 @@ namespace AspWebApi {
             }
         }
 
+        public List<Message> GetMessages(int chatId)
+        {
+            List<Message> users = new List<Message>();
+            using (var conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand(@"SELECT * FROM messages WHERE ChatId=@ChtId;");
+                cmd.Parameters.AddWithValue("@ChtId", chatId);
+                cmd.Connection = conn;
+                var reader = cmd.ExecuteReader();
+                var messages = GetList<Message>(reader);
+                return messages;
+            }
+        }
         public List<User> GetParticipants(int chatId)
         {
             List<string> participants = new List<string>();
@@ -100,7 +111,7 @@ namespace AspWebApi {
             using(var conn = new MySqlConnection(connectionString))
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand(@"SELECT UsersUsername FROM chatuser WHERE ChatsId=@Id");
+                MySqlCommand cmd = new MySqlCommand(@"SELECT UsersUsername FROM chatuser WHERE ChatsId=@Id;");
                 cmd.Connection = conn;
                 cmd.Parameters.AddWithValue("@Id", chatId);
                 var reader = cmd.ExecuteReader();
@@ -119,9 +130,26 @@ namespace AspWebApi {
                 return new List<User>();
             return users;
         }
-        public List<Contact> Contacts { get; }
-        public List<Chat> Chats { get; }
-        public List<Message> Messages { get; }
 
+        public void AddChatMessage(Message message, int chatId)
+        {
+            using (var conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+                var maxId = GetMaxFromTable("messages", "Id", conn);
+                var newId = maxId + 1;
+                var insert = new MySqlCommand("INSERT INTO messages (Id, Type, Text, Username, WrittenIn, Sent, ChatId) VALUES (@id, @type, @text, @username, @writtenIn, @sent, @chatId);");
+                insert.Parameters.AddWithValue("@id", newId);
+                insert.Parameters.AddWithValue("@type", message.Type);
+                insert.Parameters.AddWithValue("@text", message.Text);
+                insert.Parameters.AddWithValue("@username", message.Username);
+                insert.Parameters.AddWithValue("@writtenIn", message.WrittenIn);
+                insert.Parameters.AddWithValue("@sent", message.Sent);
+                insert.Parameters.AddWithValue("@chatId", chatId);
+                insert.Connection = conn;
+                insert.ExecuteNonQuery();
+            }
+
+        }
     }
 }

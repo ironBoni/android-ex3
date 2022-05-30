@@ -155,15 +155,17 @@ namespace Models.DataServices {
 
         public int GetNewMsgIdInChat(int id)
         {
+            var dbAccess = new DatabaseContext();
             using (var db = new ItemsContext())
             {
                 var chat = db.Chats.Where(chat => chat.Id == id).FirstOrDefault();
                 if (chat == null)
                     return 0;
 
-                if (chat.Messages == null || chat.Messages.Count == 0)
+                var chatMessages = dbAccess.GetMessages(chat.Id);
+                if (chatMessages == null || chatMessages.Count == 0)
                     return 1;
-                var maxMessageId = chat.Messages.Max(message => message.Id);
+                var maxMessageId = chatMessages.Max(message => message.Id);
                 return maxMessageId + 1;
             }
         }
@@ -172,9 +174,12 @@ namespace Models.DataServices {
         {
             using (var db = new ItemsContext())
             {
+                var dbAccess = new DatabaseContext();
                 var chat = db.Chats.Where(chat => chat.Id == chatId).FirstOrDefault();
                 if (chat == null) return false;
-                chat.Messages.Add(message);
+                var chatMessages = dbAccess.GetMessages(chatId);
+                chatMessages.Add(message);
+                dbAccess.AddChatMessage(message, chatId);
                 db.SaveChanges();
                 return true;
             }

@@ -7,7 +7,6 @@ using Models.DataServices;
 using Microsoft.EntityFrameworkCore;
 using Models.DataServices.Interfaces;
 using System.Text;
-using AspWebApi.DataServices;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.

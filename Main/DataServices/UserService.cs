@@ -66,17 +66,19 @@ namespace Models.DataServices {
 
         public List<Message> GetAllMessages(User user1, User user2)
         {
+            var dbAccess = new DatabaseContext();
             var chat = GetChatByParticipants(user1, user2);
             if (chat == null) return null;
-            return chat.Messages;
+            return dbAccess.GetMessages(chat.Id);
         }
 
 
         public List<Message> GetAllMessages(string username, string other)
         {
+            var dbAccess = new DatabaseContext();
             var chat = GetChatByParticipants(username, other);
             if (chat == null) return null;
-            return chat.Messages;
+            return dbAccess.GetMessages(chat.Id);
         }
 
         public Chat GetChatByParticipants(string username1, string username2)
