@@ -18,7 +18,7 @@ namespace Models.DataServices {
         {
             this.chatsService = new ChatService();
         }
-        private static List<User> users = new List<User>() {
+        /*private static List<User> users = new List<User>() {
             new User("noam", "Noam Cohen", "Np1234", "/profile/noam.jpg"),
             new User("hadar", "Hadar Pinto", "Np1234", "/profile/hadar.jpg"),
             new User("dvir", "Dvir Pollak", "Np1234", "/profile/dvir.jpg"),
@@ -30,7 +30,7 @@ namespace Models.DataServices {
             new User("oren", "Oren Orbach", "Np1234", "/profile/oren.webp"),
             new User("yuval", "Yuval Baruchi", "Np1234", "/profile/yuval.png"),
             new User("ran", "Ran Levi", "Np1234", "/profile/ran.webp"),
-        };
+        };*/
 
 
         public List<Contact> GetContacts(string username)
