@@ -13,10 +13,13 @@ namespace AspWebApi.Controllers {
     [ApiController]
     public class TransferController : ControllerBase {
         private IChatService service;
+        private IUserService userService;
     
-        public TransferController()
+        public TransferController(IUserService userServ)
         {
             service = new ChatService();
+            this.userService = userServ;
+
         }
 
         // POST api/<TransferController>
@@ -24,14 +27,15 @@ namespace AspWebApi.Controllers {
         [Route("/api/transfer")]
         public IActionResult Post([Bind("From,To,Content")] TransferRequest request)
         {
-            Chat chat = service.GetAll().Find(c => c.Participants.Contains(request.From) 
-            && c.Participants.Contains(request.To));
+            var fromUser = userService.GetById(request.From);
+            var toUser = userService.GetById(request.To);
+            Chat chat = service.GetChatByParticipants(fromUser, toUser);
             if (chat == null)
             {
-                chat = new Chat(new List<string>()
+                chat = new Chat(new List<User>()
                 {
-                    request.From,
-                    request.To
+                    fromUser,
+                    toUser
                 });
                 var success = service.Create(chat);
                 if (success) { return Ok(); }

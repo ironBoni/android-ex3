@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace Models.Models {
     public class Contact {
         [Required(ErrorMessage ="Please enter contact Id")]
+        [Key]
         public string Id { get; set; }
 
         [Required(ErrorMessage ="Please enter name")]

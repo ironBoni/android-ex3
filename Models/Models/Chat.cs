@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 namespace Models {
     public class Chat {
         private static int id = 16;
+        [Key]
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Please enter the participants.")]
-        public List<string> Participants { get; set; }
+        public List<User> Participants { get; set; }
 
         [Required(ErrorMessage = "Please enter the messages.")]
         public List<Message> Messages { get; set; }
@@ -19,14 +20,14 @@ namespace Models {
         {   
         }
 
-        public Chat(int id, List<string> participants, List<Message> messages)
+        public Chat(int id, List<User> participants, List<Message> messages)
         {
             Id = id;
             Participants = participants;
             Messages = messages;
         }
 
-        public Chat(List<string> participants, List<Message> messages)
+        public Chat(List<User> participants, List<Message> messages)
         {
             Id = id;
             id++;
@@ -34,7 +35,7 @@ namespace Models {
             Messages = messages;
         }
 
-        public Chat(List<string> participants)
+        public Chat(List<User> participants)
             : this(participants, new List<Message>())
         {
         }

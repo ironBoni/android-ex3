@@ -7,8 +7,13 @@ using System.Threading.Tasks;
 
 namespace Models.DataServices {
     public class ChatService : IChatService {
-        private static List<Chat> chats = new List<Chat>() {
-            new Chat(1, new List<string>{ "ron", "noam" }, new List<Message>
+        private static List<Chat> chats = new List<Chat>() { };
+        private IUserService _userService;
+        public ChatService()
+        {
+            _userService = new UserService();
+        }
+         /*   new Chat(1, new List<string>{ "ron", "noam" }, new List<Message>
             {
                 new Message(1, "text", "my name is Noam.", "noam", new DateTime(2021, 4, 6, 9, 56, 0), true),
                 new Message(2, "text", "my name is Ron.", "ron", new DateTime(2021, 4, 6, 10, 5, 0), true),
@@ -94,7 +99,7 @@ namespace Models.DataServices {
                 new Message(2, "text", "I'm great. Thanks!", "dvir", new DateTime(2021, 4, 6, 12, 7, 0), true),
                 new Message(2, "text", "Always smile! :)", "hadar", new DateTime(2021, 4, 8, 12, 30, 0), true)
             })
-        };
+        };*/
 
         public bool Create(Chat entity)
         {
@@ -150,9 +155,29 @@ namespace Models.DataServices {
             return true;
         }
 
-        public Chat GetChatByParticipants(string username, string other)
+        public Chat GetChatByParticipants(User user1, User user2)
         {
-            return chats.Find(c => c.Participants.Contains(username) && c.Participants.Contains(other));
+            foreach (var chat in chats)
+            {
+                var participants = chat.Participants.Select(x => x.Username).ToList();
+                if (participants.Contains(user1.Username) && participants.Contains(user2.Username))
+                    return chat;
+            }
+            return null;
+        }
+
+        public List<Message> GetAllMessages(User user1, User user2)
+        {
+            var chat = GetChatByParticipants(user1, user2);
+            if(chat == null) return null;
+            return chat.Messages;
+        }
+
+        public Chat GetChatByParticipants(string username1, string username2)
+        {
+            var user1 = _userService.GetById(username1);
+            var user2 = _userService.GetById(username2);
+            return GetChatByParticipants(user1, user2);
         }
 
         public List<Message> GetAllMessages(string username, string other)

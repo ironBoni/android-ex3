@@ -21,6 +21,14 @@ namespace AspWebApi {
             modelBuilder.Entity<User>().HasKey(e => e.Username);
         }
 
+        public ItemsContext()
+        {
+        }
+        public ItemsContext(DbContextOptions<ItemsContext> options)
+            :base(options)
+        {
+        }
+
         public DbSet<User> Users { get; set; }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Chat> Chats { get; set; }

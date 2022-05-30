@@ -14,18 +14,16 @@ namespace AspWebApi.Models {
             currentUser.Contacts = new List<Contact>();
             var contactsByMessages = new List<Contact>();
             var chats = chatsService.GetAll();
-            var chatsWithHim = chats.Where(chat => chat.Participants.Contains(username));
+            var chatsWithHim = chats.Where(chat => chat.Participants.Select(x => x.Username).Any(u => u == username));
 
-            var friends = chatsWithHim.Select(chat => chat.Participants.Find(participant => participant != username));
+            var friends = chatsWithHim.Select(chat => chat.Participants.Find(participant => participant.Username != username));
 
-            foreach (var fUsername in friends)
+            foreach (var fUser in friends)
             {
-                var fUser = users.Find(user => user.Username == fUsername);
-                var chat = chats.Find(chat => chat.Participants.Contains(username) &&
-                                                       chat.Participants.Contains(fUsername));
+                var chat = chatsService.GetChatByParticipants(currentUser, fUser);
                 var lastTime = chat.Messages.Max(message => message.WrittenIn);
                 var lastMsg = chat.Messages.Find(message => message.WrittenIn == lastTime);
-                var contact = new Contact(fUsername, fUser.Nickname, fUser.Server, lastMsg.Text, lastTime, fUser.ProfileImage);
+                var contact = new Contact(fUser.Username, fUser.Nickname, fUser.Server, lastMsg.Text, lastTime, fUser.ProfileImage);
                 contactsByMessages.Add(contact);
             }
 

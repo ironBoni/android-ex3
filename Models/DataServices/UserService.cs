@@ -24,7 +24,7 @@ namespace Models.DataServices {
             new User("ran", "Ran Levi", "Np1234", "/profile/ran.webp"),
         };
 
-        private static IDataService<Chat, int> chatsService = new ChatService();
+        private static ChatService chatsService = new ChatService();
 
         public List<Contact> GetContacts(string username)
         {
@@ -60,11 +60,12 @@ namespace Models.DataServices {
                 return false;
             }
 
-            var newChat = new Chat(new List<string>() {
-                username, friendToAdd});
-
             var friend = users.Find(user => user.Username == friendToAdd);
             // then add it
+
+            var newChat = new Chat(new List<User>() {
+                currentUser, friend});
+
             if (friend == null)
             {
                 response = "The user doesn't exist in the system.";
@@ -145,6 +146,7 @@ namespace Models.DataServices {
             }
 
             var contactToRemove = currentContacts.Find(c => c.Id == userToRemove);
+            var userObjectToRemove = users.Find(c => c.Username == userToRemove);
             if (contactToRemove == null)
             {
                 res = "You cannot remove it. It's not one of your contacts.";
@@ -154,9 +156,7 @@ namespace Models.DataServices {
             currentUser.Contacts.Remove(contactToRemove);
             CurrentUsers.IdToContactsDict[currentUser.Username] = currentUser.Contacts;
 
-            var chatToRemove = chatsService.GetAll().Find(
-                c => c.Participants.Contains(userToRemove) &&
-                c.Participants.Contains(Current.Username));
+            var chatToRemove = chatsService.GetChatByParticipants(userObjectToRemove, currentUser);
 
             if (chatToRemove == null)
             {
@@ -196,10 +196,11 @@ namespace Models.DataServices {
                 return false;
             }
 
-            var newChat = new Chat(new List<string>() {
-                to, from});
-
             var requestor = users.Find(user => user.Username == from);
+
+            var newChat = new Chat(new List<User>() {
+                currentUser, requestor});
+
             // then add it
             if (requestor == null)
             {
@@ -221,8 +222,9 @@ namespace Models.DataServices {
             }
 
             response = "";
-            if (chatsService.GetAll().Find(c => c.Participants.Contains(from) 
-                && c.Participants.Contains(Current.Username)) != null)
+
+            var isExistsChat = chatsService.GetChatByParticipants(requestor, currentUser) != null;
+            if (!isExistsChat)
                 return true;
             return chatsService.Create(newChat);
         }
