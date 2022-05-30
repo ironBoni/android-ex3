@@ -179,7 +179,7 @@ namespace Models.DataServices {
                 if (chat == null) return false;
                 var chatMessages = dbAccess.GetMessages(chatId);
                 chatMessages.Add(message);
-                dbAccess.AddChatMessage(message, chatId);
+                dbAccess.AddMessage(message, chatId);
                 db.SaveChanges();
                 return true;
             }

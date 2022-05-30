@@ -134,7 +134,7 @@ namespace AspWebApi.Controllers {
 
         // GET: api/<ContactsController>
         [HttpGet]
-        public IEnumerable<ContactModel> Get()
+        public IEnumerable<Contact> Get()
         {
             Current.Username = User.Claims.SingleOrDefault(i => i.Type.EndsWith("UserId"))?.Value;
             var result = userService.GetContacts(Current.Username);

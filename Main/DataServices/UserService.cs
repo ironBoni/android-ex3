@@ -33,22 +33,6 @@ namespace Models.DataServices {
             new User("ran", "Ran Levi", "Np1234", "/profile/ran.webp"),
         };*/
 
-
-        public List<ContactModel> GetContacts(string username)
-        {
-            var contacts = new List<ContactModel>();
-            using (var db = new ItemsContext())
-            {
-                var user = db.Users.Where(user => user.Username == username).FirstOrDefault();
-                if (user == null) return new List<ContactModel>();
-
-                contacts = db.Contacts.Where(contact => contact.OfUser == username)
-                    .Select(c => new ContactModel(c.ContactId, c.Name, c.Server, c.Last, c.Lastdate, c.ProfileImage)).ToList();
-                db.SaveChanges();
-                return contacts;
-            }
-        }
-
         public Chat GetChatByParticipants(User user1, User user2)
         {
             using (var db = new ItemsContext())
@@ -88,8 +72,15 @@ namespace Models.DataServices {
             return GetChatByParticipants(user1, user2);
         }
 
+        public List<Contact> GetContacts(string userId)
+        {
+            var dbAccess = new DatabaseContext();
+            return dbAccess.GetContacts(userId);
+        }
+
         public bool AddContact(string friendToAdd, string name, string server, out string response)
         {
+            var dbAccess = new DatabaseContext();
             using (var db = new ItemsContext())
             {
                 var username = Current.Username;
@@ -136,13 +127,11 @@ namespace Models.DataServices {
                 
 
                 var newContact = new Contact(name, server, null, null, friend.ProfileImage, friendToAdd);
-                var newContactModel = new ContactModel(friendToAdd, name, server, null, null, friend.ProfileImage);
-                if (!currentContacts.Contains(newContactModel))
+                if (!currentContacts.Contains(newContact))
                 {
-                    db.Contacts.Add(newContact);
+                    dbAccess.AddContact(newContact);
                     CurrentUsers.IdToContactsDict[currentUser.Username] = db.Contacts.Where(contact => contact.OfUser == username).ToList();;
                 }
-                db.SaveChanges();
 
                 response = "";
                 return chatsService.Create(newChat);
@@ -305,10 +294,11 @@ namespace Models.DataServices {
                     name = requestor.Nickname;
                 requestor.Server = server;
 
-                var newContact = new ContactModel(from, name, server, null, null, requestor.ProfileImage);
+                var newContact = new Contact(from, name, server, null, null, requestor.ProfileImage);
+                var dbAccess = new DatabaseContext();
                 if (!currentContacts.Contains(newContact))
                 {
-                    currentContacts.Add(newContact);
+                    dbAccess.AddContact(new Contact(name, server, null, null, from, requestor.Username));
                     CurrentUsers.IdToContactsDict[currentUser.Username] = db.Contacts.Where(contact => contact.OfUser == currentUser.Username).ToList();
                 }
 

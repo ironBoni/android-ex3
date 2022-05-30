@@ -25,68 +25,60 @@ namespace AspWebApi {
             return list;
         }
 
-        public int GetMaxFromTable(string table, string column, MySqlConnection conn)
+        public int GetMaxFromTable(string table, string column)
         {
-            MySqlCommand cmd = new MySqlCommand(@"SELECT MAX("+column+") FROM "+table+";");
-            cmd.Connection = conn;
-            var reader = cmd.ExecuteReader();
-            reader.Read();
-            var maxValue = reader.GetInt32(0);
-            return maxValue;
+            using (var conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand(@"SELECT MAX(" + column + ") FROM " + table + ";");
+                cmd.Connection = conn;
+                var reader = cmd.ExecuteReader();
+                reader.Read();
+                var maxValue = reader.GetInt32(0);
+                return maxValue;
+            }
         }
 
         public void AddChat(Chat c)
         {
-
             using (var conn = new MySqlConnection(connectionString))
             {
                 conn.Open();
-                //InsertToChatTable();
-                InsertToChatUserTable(c, conn);
-                using(var db = new ItemsContext())
-                {
-                    db.Chats.Add(c);
-                    db.SaveChanges();
-                }
-                //InsertToContactsTable(c);
+                var newId = InsertToChatTable(c.Id);
+                InsertToChatUserTable(c, newId);
             }
         }
 
-        private void InsertToContactsTable(Chat c, MySqlConnection conn)
+        private int InsertToChatTable(int id)
         {
-            var maxId = GetMaxFromTable("contacts", "Id", conn);
-            var newId = maxId + 1;
-            MySqlCommand insert = new MySqlCommand("INSERT INTO @Tbl (@Column1, @Column2, @Column3, @Column4, @Column5, @Column6, @Column7, @Column8, @Column9) " +
-                "VALUES (@Value1, @Value2, @Value3', @Value4, @Value5, @Value6, 'dan', 'noam', 'dan');");
-            insert.Parameters.AddWithValue("@Table", "chats");
-            insert.Parameters.AddWithValue("@Value", newId);
-            insert.Connection = conn;
-            insert.ExecuteNonQuery();
-        }
-
-        private void InsertToChatTable(MySqlConnection conn)
-        {
-            var maxCurrentId = GetMaxFromTable("chats", "Id", conn);
-            var newId = maxCurrentId + 1;
-            MySqlCommand insert = new MySqlCommand("INSERT INTO @Table (Id) VALUES (@Value);");
-            insert.Parameters.AddWithValue("@Table", "chats");
-            insert.Parameters.AddWithValue("@Value", newId);
-            insert.Connection = conn;
-            insert.ExecuteNonQuery();
-        }
-
-        private void InsertToChatUserTable(Chat c, MySqlConnection conn)
-        {
-            foreach (var user in c.Users)
+            using (var conn = new MySqlConnection(connectionString))
             {
-                var maxCurrentId = GetMaxFromTable("chatuser", "ChatsId", conn);
+                conn.Open();
+                var insert = new MySqlCommand("INSERT INTO chats (Id) VALUES (@id);");
+                var maxCurrentId = GetMaxFromTable("chats", "Id");
                 var newId = maxCurrentId + 1;
-                var insert = new MySqlCommand("INSERT INTO chatuser (ChatsId, UsersUsername) VALUES (@Value1, @Value2);");
-
-                insert.Parameters.AddWithValue("@Value1", newId);
-                insert.Parameters.AddWithValue("@Value2", user.Username);
+                insert.Parameters.AddWithValue("@id", newId);
                 insert.Connection = conn;
                 insert.ExecuteNonQuery();
+                return newId;
+            }
+        }
+
+        private void InsertToChatUserTable(Chat c, int newId)
+        {
+            using (var conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+                foreach (var user in c.Users)
+                {
+                    var maxCurrentId = GetMaxFromTable("chatuser", "ChatsId");
+                    var insert = new MySqlCommand("INSERT INTO chatuser (ChatsId, UsersUsername) VALUES (@Value1, @Value2);");
+
+                    insert.Parameters.AddWithValue("@Value1", newId);
+                    insert.Parameters.AddWithValue("@Value2", user.Username);
+                    insert.Connection = conn;
+                    insert.ExecuteNonQuery();
+                }
             }
         }
 
@@ -102,6 +94,20 @@ namespace AspWebApi {
                 var reader = cmd.ExecuteReader();
                 var messages = GetList<Message>(reader);
                 return messages;
+            }
+        }
+
+        public List<Contact> GetContacts(string userId)
+        {
+            using (var conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand(@"SELECT * FROM contacts WHERE OfUser=@userId;");
+                cmd.Parameters.AddWithValue("@userId", userId);
+                cmd.Connection = conn;
+                var reader = cmd.ExecuteReader();
+                var contacts = GetList<Contact>(reader);
+                return contacts;
             }
         }
         public List<User> GetParticipants(int chatId)
@@ -131,12 +137,35 @@ namespace AspWebApi {
             return users;
         }
 
-        public void AddChatMessage(Message message, int chatId)
+        public void AddContact(Contact c)
         {
             using (var conn = new MySqlConnection(connectionString))
             {
                 conn.Open();
-                var maxId = GetMaxFromTable("messages", "Id", conn);
+                var newId = Guid.NewGuid().ToString();
+                var insert = new MySqlCommand(@"INSERT INTO contacts (Id, Name, Server, Last, 
+                Lastdate, ProfileImage, Username, ContactId, OfUser) VALUES(@id, @name, 
+                @server, @last, @lastdate, @profileImage, @username, @contactId, @ofUser);");
+                insert.Parameters.AddWithValue("@id", newId);
+                insert.Parameters.AddWithValue("@name", c.Name);
+                insert.Parameters.AddWithValue("@server", c.Server);
+                insert.Parameters.AddWithValue("@last", c.Last);
+                insert.Parameters.AddWithValue("@lastdate", c.Lastdate);
+                insert.Parameters.AddWithValue("@profileImage", c.ProfileImage);
+                insert.Parameters.AddWithValue("@username", c.OfUser);
+                insert.Parameters.AddWithValue("@contactId", c.ContactId);
+                insert.Parameters.AddWithValue("@ofUser", c.OfUser);
+                insert.Connection = conn;
+                insert.ExecuteNonQuery();
+            }
+        }
+
+        public void AddMessage(Message message, int chatId)
+        {
+            using (var conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+                var maxId = GetMaxFromTable("messages", "Id");
                 var newId = maxId + 1;
                 var insert = new MySqlCommand("INSERT INTO messages (Id, Type, Text, Username, WrittenIn, Sent, ChatId) VALUES (@id, @type, @text, @username, @writtenIn, @sent, @chatId);");
                 insert.Parameters.AddWithValue("@id", newId);
