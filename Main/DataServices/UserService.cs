@@ -132,7 +132,7 @@ namespace Models.DataServices {
                 friend.Server = server;
                 
 
-                var newContact = new Contact(friendToAdd, name, server, null, null, friend.ProfileImage);
+                var newContact = new Contact(name, server, null, null, friend.ProfileImage, friendToAdd);
                 var newContactModel = new ContactModel(friendToAdd, name, server, null, null, friend.ProfileImage);
                 if (!currentContacts.Contains(newContactModel))
                 {

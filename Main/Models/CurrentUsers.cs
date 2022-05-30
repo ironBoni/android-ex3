@@ -31,7 +31,7 @@ namespace AspWebApi.Models {
                 var chat = chatService.GetChatByParticipants(currentUser, fUser);
                 var lastTime = chat.Messages.Max(message => message.WrittenIn);
                 var lastMsg = chat.Messages.Find(message => message.WrittenIn == lastTime);
-                var contact = new Contact(fUser.Username, fUser.Nickname, fUser.Server, lastMsg.Text, lastTime, fUser.ProfileImage);
+                var contact = new Contact(fUser.Nickname, fUser.Server, lastMsg.Text, lastTime, fUser.ProfileImage, fUser.Username);
                 contactsByMessages.Add(contact);
             }
 
