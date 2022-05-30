@@ -7,11 +7,11 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <fragment
+<!--    <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        class="com.ex3.androidchat.fragments.ChatListFragment"/>
+        class="com.ex3.androidchat.fragments.ChatListFragment"/>-->
     <!--<fragment
         android:id="@+id/chatFrag"
         android:layout_width="match_parent"
