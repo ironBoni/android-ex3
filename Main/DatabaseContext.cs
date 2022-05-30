@@ -42,13 +42,22 @@ namespace AspWebApi {
                 var maxCurrentId = GetMaxFromTable("chats", "Id");
                 var newId = maxCurrentId + 1;
 
-                SqlCommand insert = new SqlCommand("INSERT INTO @Table (@Id) VALUES (@Value);");
-                insert.Parameters.AddWithValue("@Id", newId);
+                SqlCommand insert = new SqlCommand("INSERT INTO @Table (Id) VALUES (@Value);");
+                insert.Parameters.AddWithValue("@Table", "chats");
+                insert.Parameters.AddWithValue("@Value", newId);
                 insert.ExecuteNonQuery();
 
                 foreach(var user in c.Users)
                 {
-                    //var maxCurrentId 
+                    maxCurrentId = GetMaxFromTable("chatuser", "ChatsId");
+                    newId = maxCurrentId + 1;
+                    insert = new SqlCommand("INSERT INTO @Table (@Column1, @Column2) VALUES (@Value1, @Value2);");
+                    insert.Parameters.AddWithValue("@Table", "chatuser");
+                    insert.Parameters.AddWithValue("@Column1", "ChatsId");
+                    insert.Parameters.AddWithValue("@Column2", "UsersUsername");
+                    insert.Parameters.AddWithValue("@Value1", newId);
+                    insert.Parameters.AddWithValue("@Value2", user.Username);
+                    insert.ExecuteNonQuery();
                 }
 
             }
