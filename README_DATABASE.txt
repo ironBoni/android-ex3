@@ -1,5 +1,3 @@
-﻿Welcome to my WebShop!
-
 In this example we will use MariaDB as the Database server. 
 To run this app on your computer please make sure MariaDB is installed. 
 If not, please download it from here: https://mariadb.org/
@@ -26,4 +24,4 @@ Finally create the database:
 Note: We are working with .NET version 6.0.1 (same as the university server).
 	  Please make sure it is installed. 
 
-
+Password is Np1239
