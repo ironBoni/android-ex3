@@ -106,7 +106,6 @@ namespace Models.DataServices {
             {
                 var dbAccess = new DatabaseContext();
                 dbAccess.AddChat(entity);
-                db.SaveChanges();
                 return true;
             }
         }
@@ -115,11 +114,11 @@ namespace Models.DataServices {
         {
             using (var db = new ItemsContext())
             {
+                var dbAccess = new DatabaseContext();
                 var toRemove = db.Chats.Where(chat => chat.Id == Id).FirstOrDefault();
                 if (toRemove == null)
                     return false;
-                db.Chats.Remove(toRemove);
-                db.SaveChanges();
+                dbAccess.RemoveChat(toRemove);
                 return true;
             }
         }
@@ -148,7 +147,8 @@ namespace Models.DataServices {
                 if (chat == null)
                     return false;
                 chat.Id = entity.Id;
-                db.SaveChanges();
+                var dbAccess = new DatabaseContext();
+                dbAccess.UpdateChat(entity);
                 return true;
             }
         }
@@ -180,7 +180,6 @@ namespace Models.DataServices {
                 var chatMessages = dbAccess.GetMessages(chatId);
                 chatMessages.Add(message);
                 dbAccess.AddMessage(message, chatId);
-                db.SaveChanges();
                 return true;
             }
         }

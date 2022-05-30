@@ -62,7 +62,7 @@ namespace Models.Models {
             ContactId = contactId;
         }
 
-        public Contact(string name, string server, string last, DateTime lastDate, string profileImage, string contactId, string ofUser)
+        public Contact(string name, string server, string last, DateTime? lastDate, string profileImage, string contactId, string ofUser)
         : this(name, server, last, lastDate, contactId, ofUser){
             
             ProfileImage = profileImage;
