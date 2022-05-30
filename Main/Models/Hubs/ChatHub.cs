@@ -8,16 +8,20 @@ using System.Collections.Concurrent;
 namespace AspWebApi.Models.Hubs {
     public class ChatHub : Hub {
         private readonly IChatService chatService;
+        private readonly IUserService userService;
+        
         private static ConcurrentDictionary<string, List<string>> userToConnection = new ConcurrentDictionary<string, List<string>>();
         private const string ReceiveMessage = "ReceiveMessage";
-        public ChatHub(IChatService chatServ)
+
+        public ChatHub(IChatService chatServ, IUserService userServ)
         {
             chatService = chatServ;
+            userService = userServ;
         }
         public async Task SendMsg(string from, string content, string to)
         {
             //var userId = CurrentUsers.GetIdByToken(token);
-            var chat = chatService.GetChatByParticipants(from, to);
+            var chat = userService.GetChatByParticipants(from, to);
             var id = chatService.GetNewMsgIdInChat(chat.Id);
 
             if (userToConnection.ContainsKey(to)) {

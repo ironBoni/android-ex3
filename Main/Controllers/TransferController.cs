@@ -29,7 +29,7 @@ namespace AspWebApi.Controllers {
         {
             var fromUser = userService.GetById(request.From);
             var toUser = userService.GetById(request.To);
-            Chat chat = service.GetChatByParticipants(fromUser, toUser);
+            Chat chat = userService.GetChatByParticipants(fromUser, toUser);
             if (chat == null)
             {
                 chat = new Chat(new List<User>()

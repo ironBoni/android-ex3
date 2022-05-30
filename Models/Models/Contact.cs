@@ -26,6 +26,7 @@ namespace Models.Models {
         public DateTime? Lastdate { get; set; }
 
         public string ProfileImage { get; set; }
+        public string OfUser { get; set; }
         public Contact()
         {
         }

@@ -52,7 +52,7 @@ namespace AspWebApi.Controllers {
         public IActionResult GetMessagesByContact(string id)
         {
             Current.Username = User.Claims.SingleOrDefault(i => i.Type.EndsWith("UserId"))?.Value;
-            var messages = chatService.GetAllMessages(id, Current.Username);
+            var messages = userService.GetAllMessages(id, Current.Username);
             if (messages == null) return NotFound();
             var msgList = messages.Select(m => new MessageResponse(m.Id, m.Text, m.WrittenIn, m.Sent, m.SenderUsername)).ToList();
             return Ok(UpdateSent(msgList));
@@ -63,8 +63,8 @@ namespace AspWebApi.Controllers {
         public IActionResult GetLastMessage(string id)
         {
             Current.Username = User.Claims.SingleOrDefault(i => i.Type.EndsWith("UserId"))?.Value;
-            var messages = chatService.GetAllMessages(id, Current.Username);
-            var chat = chatService.GetChatByParticipants(id, Current.Username);
+            var messages = userService.GetAllMessages(id, Current.Username);
+            var chat = userService.GetChatByParticipants(id, Current.Username);
             if (chat == null) return NotFound();
 
             var msgId = chatService.GetNewMsgIdInChat(chat.Id);
@@ -79,7 +79,7 @@ namespace AspWebApi.Controllers {
         public IActionResult GetMessagesByContact(string id, int id2)
         {
             Current.Username = User.Claims.SingleOrDefault(i => i.Type.EndsWith("UserId"))?.Value;
-            var messages = chatService.GetAllMessages(id, Current.Username);
+            var messages = userService.GetAllMessages(id, Current.Username);
             if (messages == null) return NotFound();
             var m = messages.Find(m => m.Id == id2);
             if (m == null) return NotFound();
@@ -92,9 +92,9 @@ namespace AspWebApi.Controllers {
         {
             Current.Username = User.Claims.SingleOrDefault(i => i.Type.EndsWith("UserId"))?.Value;
 
-            var messages = chatService.GetAllMessages(id, Current.Username);
+            var messages = userService.GetAllMessages(id, Current.Username);
             if (messages == null) return BadRequest();
-            var chat = chatService.GetChatByParticipants(id, Current.Username);
+            var chat = userService.GetChatByParticipants(id, Current.Username);
             if (chat == null) return BadRequest();
 
             var msgId = chatService.GetNewMsgIdInChat(chat.Id);
@@ -112,7 +112,7 @@ namespace AspWebApi.Controllers {
         {
             Current.Username = User.Claims.SingleOrDefault(i => i.Type.EndsWith("UserId"))?.Value;
 
-            var messages = chatService.GetAllMessages(id, Current.Username);
+            var messages = userService.GetAllMessages(id, Current.Username);
             if (messages == null) return BadRequest();
             messages.Remove(messages.Find(m => m.Id == id2));
             return StatusCode(204);
@@ -125,7 +125,7 @@ namespace AspWebApi.Controllers {
         {
             Current.Username = User.Claims.SingleOrDefault(i => i.Type.EndsWith("UserId"))?.Value;
 
-            var messages = chatService.GetAllMessages(id, Current.Username);
+            var messages = userService.GetAllMessages(id, Current.Username);
             if (messages == null) return BadRequest();
             var message = messages.Find(m => m.Id == id2);
             message.Text = req.Content;
@@ -134,7 +134,7 @@ namespace AspWebApi.Controllers {
 
         // GET: api/<ContactsController>
         [HttpGet]
-        public IEnumerable<Contact> Get()
+        public IEnumerable<ContactModel> Get()
         {
             Current.Username = User.Claims.SingleOrDefault(i => i.Type.EndsWith("UserId"))?.Value;
             var result = userService.GetContacts(Current.Username);
@@ -172,7 +172,7 @@ namespace AspWebApi.Controllers {
         {
             Current.Username = User.Claims.SingleOrDefault(i => i.Type.EndsWith("UserId"))?.Value;
 
-            var result = userService.GetContacts(Current.Username).Find(contact => contact.ContactId == username);
+            var result = userService.GetContacts(Current.Username).Find(contact => contact.Id == username);
             if (result == null)
                 return NotFound();
             return Ok(result);
@@ -184,7 +184,7 @@ namespace AspWebApi.Controllers {
         {
             Current.Username = User.Claims.SingleOrDefault(i => i.Type.EndsWith("UserId"))?.Value;
 
-            var contact = userService.GetContacts(Current.Username).Find(c => c.ContactId == id);
+            var contact = userService.GetContacts(Current.Username).Find(c => c.Id == id);
             if (contact == null)
                 return StatusCode(400);
 

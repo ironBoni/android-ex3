@@ -1,5 +1,6 @@
 ﻿using AspWebApi;
 using AspWebApi.Models;
+using AspWebApi.Models.Contacts;
 using Microsoft.EntityFrameworkCore;
 using Models.DataServices.Interfaces;
 using Models.Models;
@@ -33,14 +34,55 @@ namespace Models.DataServices {
         };*/
 
 
-        public List<Contact> GetContacts(string username)
+        public List<ContactModel> GetContacts(string username)
         {
+            var contacts = new List<ContactModel>();
             using (var db = new ItemsContext())
             {
                 var user = db.Users.Where(user => user.Username == username).FirstOrDefault();
-                if (user == null) return new List<Contact>();
-                return user.Contacts;
+                if (user == null) return new List<ContactModel>();
+
+                contacts = db.Contacts.Where(contact => contact.OfUser == username)
+                    .Select(c => new ContactModel(c.ContactId, c.Name, c.Server, c.Last, c.Lastdate, c.ProfileImage)).ToList();
+                db.SaveChanges();
+                return contacts;
             }
+        }
+
+        public Chat GetChatByParticipants(User user1, User user2)
+        {
+            using (var db = new ItemsContext())
+            {
+                foreach (var chat in db.Chats)
+                {
+                    var participants = chat.Participants.Select(x => x.Username).ToList();
+                    if (participants.Contains(user1.Username) && participants.Contains(user2.Username))
+                        return chat;
+                }
+                return null;
+            }
+        }
+
+        public List<Message> GetAllMessages(User user1, User user2)
+        {
+            var chat = GetChatByParticipants(user1, user2);
+            if (chat == null) return null;
+            return chat.Messages;
+        }
+
+
+        public List<Message> GetAllMessages(string username, string other)
+        {
+            var chat = GetChatByParticipants(username, other);
+            if (chat == null) return null;
+            return chat.Messages;
+        }
+
+        public Chat GetChatByParticipants(string username1, string username2)
+        {
+            var user1 = GetById(username1);
+            var user2 = GetById(username2);
+            return GetChatByParticipants(user1, user2);
         }
 
         public bool AddContact(string friendToAdd, string name, string server, out string response)
@@ -48,8 +90,10 @@ namespace Models.DataServices {
             using (var db = new ItemsContext())
             {
                 var username = Current.Username;
-                User currentUser;
-                currentUser = db.Users.Where(user => user.Username == Current.Username).FirstOrDefault();
+                var currentUserObj = db.Users.Where(user => user.Username == Current.Username).FirstOrDefault();
+                var contacts = GetContacts(currentUserObj.Username);
+                var currentUser = new UserModel(currentUserObj.Username, currentUserObj.Nickname, currentUserObj.Password,
+                    currentUserObj.ProfileImage, currentUserObj.Server);
 
                 var currentContacts = GetContacts(username);
 
@@ -67,7 +111,7 @@ namespace Models.DataServices {
                 }
 
                 // You cannot add someone that is already in your chats.
-                if (currentContacts.Any(user => user.ContactId == friendToAdd))
+                if (currentContacts.Any(user => user.Id == friendToAdd))
                 {
                     response = "You cannot add him, because he's already in your chat list.";
                     return false;
@@ -76,9 +120,8 @@ namespace Models.DataServices {
                 User friend;
                 friend = db.Users.Where(user => user.Username == friendToAdd).FirstOrDefault();
                 // then add it
-
                 var newChat = new Chat(new List<User>() {
-                currentUser, friend});
+                currentUserObj, friend});
 
                 if (friend == null)
                 {
@@ -90,11 +133,11 @@ namespace Models.DataServices {
                 
 
                 var newContact = new Contact(friendToAdd, name, server, null, null, friend.ProfileImage);
-
-                if (!currentUser.Contacts.Contains(newContact))
+                var newContactModel = new ContactModel(friendToAdd, name, server, null, null, friend.ProfileImage);
+                if (!currentContacts.Contains(newContactModel))
                 {
-                    currentUser.Contacts.Add(newContact);
-                    CurrentUsers.IdToContactsDict[currentUser.Username] = currentUser.Contacts;
+                    db.Contacts.Add(newContact);
+                    CurrentUsers.IdToContactsDict[currentUser.Username] = db.Contacts.Where(contact => contact.OfUser == username).ToList();;
                 }
                 db.SaveChanges();
 
@@ -177,13 +220,13 @@ namespace Models.DataServices {
                     return false;
                 }
 
-                if (!currentContacts.Any(user => user.ContactId == userToRemove))
+                if (!currentContacts.Any(user => user.Id == userToRemove))
                 {
                     res = "You cannot add someone that is already in your chats.";
                     return false;
                 }
 
-                var contactToRemove = currentContacts.Where(c => c.ContactId == userToRemove).FirstOrDefault(); ;
+                var contactToRemove = db.Contacts.Where(c => c.ContactId == userToRemove).FirstOrDefault();
                 var userObjectToRemove = db.Users.Where(c => c.Username == userToRemove).FirstOrDefault();
                 if (contactToRemove == null)
                 {
@@ -191,10 +234,11 @@ namespace Models.DataServices {
                     return false;
                 }
 
-                currentUser.Contacts.Remove(contactToRemove);
-                CurrentUsers.IdToContactsDict[currentUser.Username] = currentUser.Contacts;
+                var hisContacts = db.Contacts.Where(contact => contact.OfUser == username).ToList();
+                hisContacts.Remove(contactToRemove);
+                CurrentUsers.IdToContactsDict[currentUser.Username] = hisContacts;
 
-                var chatToRemove = chatsService.GetChatByParticipants(userObjectToRemove, currentUser);
+                var chatToRemove = GetChatByParticipants(userObjectToRemove, currentUser);
 
                 if (chatToRemove == null)
                 {
@@ -234,7 +278,7 @@ namespace Models.DataServices {
                 }
 
                 // You cannot add someone that is already in your chats.
-                if (currentContacts.Any(user => user.ContactId == from))
+                if (currentContacts.Any(user => user.Id == from))
                 {
                     response = "User cannot be added, because he's already in your chat list.";
                     return false;
@@ -258,16 +302,16 @@ namespace Models.DataServices {
                     name = requestor.Nickname;
                 requestor.Server = server;
 
-                var newContact = new Contact(from, name, server, null, null, requestor.ProfileImage);
-                if (!currentUser.Contacts.Contains(newContact))
+                var newContact = new ContactModel(from, name, server, null, null, requestor.ProfileImage);
+                if (!currentContacts.Contains(newContact))
                 {
-                    currentUser.Contacts.Add(newContact);
-                    CurrentUsers.IdToContactsDict[currentUser.Username] = currentUser.Contacts;
+                    currentContacts.Add(newContact);
+                    CurrentUsers.IdToContactsDict[currentUser.Username] = db.Contacts.Where(contact => contact.OfUser == currentUser.Username).ToList();
                 }
 
                 response = "";
 
-                var isExistsChat = chatsService.GetChatByParticipants(requestor, currentUser) != null;
+                var isExistsChat = GetChatByParticipants(requestor, currentUser) != null;
                 if (!isExistsChat)
                     return true;
                 db.SaveChanges();

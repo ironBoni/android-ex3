@@ -3,6 +3,7 @@ using System;
 using AspWebApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AspWebApi.Migrations
 {
     [DbContext(typeof(ItemsContext))]
-    partial class ItemsContextModelSnapshot : ModelSnapshot
+    [Migration("20220530162936_InitialMigration1929")]
+    partial class InitialMigration1929
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

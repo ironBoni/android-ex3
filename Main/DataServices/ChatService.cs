@@ -9,10 +9,8 @@ using System.Threading.Tasks;
 namespace Models.DataServices {
     public class ChatService : IChatService {
         //private static List<Chat> chats = new List<Chat>() { };
-        private IUserService _userService;
         public ChatService()
         {
-            this._userService = new UserService();
         }
          /*   new Chat(1, new List<string>{ "ron", "noam" }, new List<Message>
             {
@@ -181,39 +179,6 @@ namespace Models.DataServices {
             }
         }
 
-        public Chat GetChatByParticipants(User user1, User user2)
-        {
-            using (var db = new ItemsContext())
-            {
-                foreach (var chat in db.Chats)
-                {
-                    var participants = chat.Participants.Select(x => x.Username).ToList();
-                    if (participants.Contains(user1.Username) && participants.Contains(user2.Username))
-                        return chat;
-                }
-                return null;
-            }
-        }
-
-        public List<Message> GetAllMessages(User user1, User user2)
-        {
-            var chat = GetChatByParticipants(user1, user2);
-            if(chat == null) return null;
-            return chat.Messages;
-        }
-
-        public Chat GetChatByParticipants(string username1, string username2)
-        {
-            var user1 = _userService.GetById(username1);
-            var user2 = _userService.GetById(username2);
-            return GetChatByParticipants(user1, user2);
-        }
-
-        public List<Message> GetAllMessages(string username, string other)
-        {
-            var chat = GetChatByParticipants(username, other);
-            if(chat == null) return null;
-            return chat.Messages;
-        }
+        
     }
 }
