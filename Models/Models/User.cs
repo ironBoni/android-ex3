@@ -22,6 +22,7 @@ namespace Models {
         [Required(ErrorMessage ="Please enter server")]
         public string Server { get; set; }
 
+        public List<Chat> Chats { get; set; }
         public List<Contact> Contacts { get; set; }
         public User()
         {
