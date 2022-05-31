@@ -38,13 +38,18 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(R.string.happy_chat);
 
         addContact = findViewById(R.id.addContact);
-//        RecyclerView recyclerView = findViewById(R.id.rvChatList);
-//
+        RecyclerView recyclerView = findViewById(R.id.rvChatList);
+
 //        contacts = currentUser.getContacts();
-//        ContactsAdapter adapter = new ContactsAdapter(contacts, this);
-//        recyclerView.setAdapter(adapter);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//
+        //static array
+        contacts.add(new Contact("0","hadar","localhost:3000", "hey there",0,"31.05.22"));
+        contacts.add(new Contact("1","noam","localhost:3000", "hey there",1,"31.05.22"));
+        contacts.add(new Contact("2","dvir","localhost:3000", "hey there",2,"31.05.22"));
+        contacts.add(new Contact("3","linda","localhost:3000", "hey there",3,"31.05.22"));
+        ContactsAdapter adapter = new ContactsAdapter(contacts, this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
             addContact.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
