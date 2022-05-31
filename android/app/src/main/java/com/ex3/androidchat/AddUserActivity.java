@@ -27,7 +27,7 @@ public class AddUserActivity extends AppCompatActivity {
         cAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // send name to server and retrive contact, then add
+                // send name to server and get contact, then add it to list
 
             }
         });
