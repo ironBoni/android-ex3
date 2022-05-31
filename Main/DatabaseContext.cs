@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.Models;
 using MySqlConnector;
@@ -6,6 +7,12 @@ using System.Data;
 using System.Diagnostics;
 
 namespace AspWebApi {
+    /**
+     * This Class is not in use, because
+     * I succeeded to make the Entity Framework load 
+     * the List<Cotnact> in Users by .Incldue(x => x.Contacts)
+     * and also I made in ItemsCotext.cs the OneToMany configuration etc.
+     */
     public class DatabaseContext {
         private const string connectionString = "server=localhost;port=3306;database=pomelodb;user=root;password=Np1239";
 
@@ -136,7 +143,7 @@ namespace AspWebApi {
 
         public List<Contact> GetContacts(string userId)
         {
-            try
+            /*try
             {
                 using (var conn = new MySqlConnection(connectionString))
                 {
@@ -153,6 +160,13 @@ namespace AspWebApi {
             {
                 Debug.Write(ex.ToString());
                 return new List<Contact>();
+            }*/
+            using(var db = new ItemsContext())
+            {
+                var user = db.Users.Include(x => x.Contacts).ToList().Find(u => u.Username == userId);
+                if (user == null) return new List<Contact>();
+                var contacts = user.Contacts;
+                return contacts;
             }
         }
         public List<User> GetParticipants(int chatId)

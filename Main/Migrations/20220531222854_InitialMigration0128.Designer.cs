@@ -3,6 +3,7 @@ using System;
 using AspWebApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AspWebApi.Migrations
 {
     [DbContext(typeof(ItemsContext))]
-    partial class ItemsContextModelSnapshot : ModelSnapshot
+    [Migration("20220531222854_InitialMigration0128")]
+    partial class InitialMigration0128
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,11 +53,14 @@ namespace AspWebApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("ChatId")
-                        .HasColumnType("int");
+                    b.Property<string>("ChatId")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("FileName")
                         .HasColumnType("longtext");
+
+                    b.Property<int?>("MappedChatId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("Sent")
                         .HasColumnType("tinyint(1)");
@@ -81,7 +86,7 @@ namespace AspWebApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChatId");
+                    b.HasIndex("MappedChatId");
 
                     b.HasIndex("Username1");
 
@@ -171,9 +176,7 @@ namespace AspWebApi.Migrations
                 {
                     b.HasOne("Models.Chat", "MappedChat")
                         .WithMany("Messages")
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MappedChatId");
 
                     b.HasOne("Models.User", "User")
                         .WithMany()

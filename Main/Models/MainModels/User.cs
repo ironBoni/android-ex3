@@ -11,7 +11,7 @@ namespace Models {
     public class User {
         [Key]
         //[ForeignKey("UsersUsername")]
-        public virtual string Username { get; set; }
+        public string Username { get; set; }
 
         [Required(ErrorMessage ="Please enter nickname.")]
         public string Nickname { get; set; }

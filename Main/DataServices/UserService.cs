@@ -37,10 +37,10 @@ namespace Models.DataServices {
         {
             using (var db = new ItemsContext())
             {
-                foreach (var chat in db.Chats)
+                var chats = db.Chats.Include(x => x.Messages).Include(x => x.Users).ToList();
+                foreach (var chat in chats)
                 {
-                    var dbAccess = new DatabaseContext();
-                    var participants = dbAccess.GetParticipants(chat.Id).Select(x => x.Username);
+                    var participants = chat.Users.Select(x => x.Username);
                     if (participants.Contains(user1.Username) && participants.Contains(user2.Username))
                         return chat;
                 }
@@ -50,57 +50,43 @@ namespace Models.DataServices {
 
         public List<Message> GetAllMessages(User user1, User user2)
         {
-            var dbAccess = new DatabaseContext();
-            var chat = GetChatByParticipants(user1, user2);
-            if (chat == null) return null;
-            return dbAccess.GetMessages(chat.Id);
+            try
+            {
+                using (var db = new ItemsContext())
+                {
+                    var chat = GetChatByParticipants(user1, user2);
+                    if (chat == null) return null;
+                    return chat.Messages;
+                }
+            } catch(Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+                return new List<Message>();
+            }
         }
-
-
-        public List<Message> GetAllMessages(string username, string other)
-        {
-            var dbAccess = new DatabaseContext();
-            var chat = GetChatByParticipants(username, other);
-            if (chat == null) return null;
-            return dbAccess.GetMessages(chat.Id);
-        }
-
         public Chat GetChatByParticipants(string username1, string username2)
         {
             var user1 = GetById(username1);
             var user2 = GetById(username2);
             return GetChatByParticipants(user1, user2);
         }
-
         public List<ContactModel> GetContacts(string username)
         {
-            var contacts = new List<ContactModel>();
-            using (var db = new ItemsContext())
+            using(var db = new ItemsContext())
             {
-                var user = db.Users.Where(user => user.Username == username).FirstOrDefault();
-                if (user == null) return new List<ContactModel>();
-
-                contacts = db.Contacts.Where(contact => contact.OfUser == username)
-                    .Select(c => new ContactModel(c.ContactId, c.Name, c.Server, c.Last, c.Lastdate, c.ProfileImage)).ToList();
-                try
-                {
-                    db.SaveChanges();
-                } catch(Exception ex)
-                {
-                    Debug.Write(ex.ToString());
-                }
-                return contacts;
+                var user = db.Users.Include(x => x.Contacts).ToList().Find(u => u.Username == username);
+                var contacts = user.Contacts;
+                return contacts.Select(c => new ContactModel(c.ContactId, c.Name, c.Server, c.Last, c.Lastdate, c.ProfileImage)).ToList();
             }
-        }
+         }
 
 
         public bool AddContact(string friendToAdd, string name, string server, out string response)
         {
-            var dbAccess = new DatabaseContext();
             using (var db = new ItemsContext())
             {
                 var username = Current.Username;
-                var currentUserObj = db.Users.Where(user => user.Username == Current.Username).FirstOrDefault();
+                var currentUserObj = db.Users.Include(x => x.Contacts).Where(user => user.Username == Current.Username).FirstOrDefault();
                 var contacts = GetContacts(currentUserObj.Username);
                 var currentUser = new UserModel(currentUserObj.Username, currentUserObj.Nickname, currentUserObj.Password,
                     currentUserObj.ProfileImage, currentUserObj.Server);
@@ -128,7 +114,7 @@ namespace Models.DataServices {
                 }
 
                 User friend;
-                friend = db.Users.Where(user => user.Username == friendToAdd).FirstOrDefault();
+                friend = db.Users.Include(x => x.Contacts).Where(user => user.Username == friendToAdd).FirstOrDefault();
                 // then add it
                 var newChat = new Chat(new List<User>() {
                 currentUserObj, friend});
@@ -149,7 +135,16 @@ namespace Models.DataServices {
                     Debug.Write(ex.ToString());
                 }
                 response = "";
-                return chatsService.Create(newChat);
+                db.Chats.Add(newChat);
+                try
+                {
+                    db.SaveChanges();
+                } catch(Exception ex)
+                {
+                    Debug.WriteLine(ex.ToString());
+                    return false;
+                }
+                return true;
             }
         }
 
@@ -174,7 +169,7 @@ namespace Models.DataServices {
         {
             using (var db = new ItemsContext())
             {
-                var toRemove = db.Users.Where(user => user.Username == username).FirstOrDefault();
+                var toRemove = db.Users.Include(x => x.Contacts).Where(user => user.Username == username).FirstOrDefault();
                 if (toRemove == null)
                     return false;
                 db.Users.Remove(toRemove);
@@ -194,7 +189,7 @@ namespace Models.DataServices {
         {
             using (var db = new ItemsContext())
             {
-                return db.Users.ToList();
+                return db.Users.Include(x => x.Contacts).ToList();
             }
         }
 
@@ -202,7 +197,7 @@ namespace Models.DataServices {
         {
             using (var db = new ItemsContext())
             {
-                return db.Users.Where(user => user.Username == username).FirstOrDefault();
+                return db.Users.Include(x => x.Contacts).ToList().Find(x => x.Username == username);
             }
         }
 
@@ -210,7 +205,7 @@ namespace Models.DataServices {
         {
             using (var db = new ItemsContext())
             {
-                var user = db.Users.Where(user => user.Username == entity.Username).FirstOrDefault();
+                var user = db.Users.Include(x => x.Contacts).Where(user => user.Username == entity.Username).FirstOrDefault();
                 if (user == null)
                     return false;
                 user.Username = entity.Username;
@@ -233,7 +228,7 @@ namespace Models.DataServices {
             using (var db = new ItemsContext())
             {
                 var username = Current.Username;
-                var currentUser = db.Users.Where(user => user.Username == Current.Username).FirstOrDefault();
+                var currentUser = db.Users.Include(x => x.Contacts).Where(user => user.Username == Current.Username).FirstOrDefault();
                 var currentContacts = GetContacts(username);
                 res = "";
                 if (currentContacts == null)
@@ -255,7 +250,7 @@ namespace Models.DataServices {
                 }
 
                 var contactToRemove = db.Contacts.Where(c => c.ContactId == userToRemove).FirstOrDefault();
-                var userObjectToRemove = db.Users.Where(c => c.Username == userToRemove).FirstOrDefault();
+                var userObjectToRemove = db.Users.Include(x => x.Contacts).Where(c => c.Username == userToRemove).FirstOrDefault();
                 if (contactToRemove == null)
                 {
                     res = "You cannot remove it. It's not one of your contacts.";
@@ -282,7 +277,17 @@ namespace Models.DataServices {
                 {
                     Debug.Write(ex.ToString());
                 }
-                return chatsService.Delete(chatToRemove.Id);
+
+                db.Chats.Remove(chatToRemove);
+                try
+                {
+                    db.SaveChanges();
+                }
+                 catch(Exception ex)
+                {
+                    Debug.WriteLine(ex.ToString());
+                }
+                return true;
             }
         }
 
@@ -290,7 +295,7 @@ namespace Models.DataServices {
         {
             using (var db = new ItemsContext())
             {
-                var userToAdd = db.Users.Where(u => u.Username == from).FirstOrDefault();
+                var userToAdd = db.Users.Include(x => x.Contacts).Where(u => u.Username == from).FirstOrDefault();
                 string name = "";
                 if (userToAdd == null)
                 {
@@ -298,7 +303,7 @@ namespace Models.DataServices {
                     return false;
                 }
                 //var username = Current.Username;
-                var currentUser = db.Users.Where(user => user.Username == to).FirstOrDefault();
+                var currentUser = db.Users.Include(x => x.Contacts).Where(user => user.Username == to).FirstOrDefault();
                 if (currentUser == null)
                 {
                     response = "such user doesn't exists";
@@ -319,7 +324,7 @@ namespace Models.DataServices {
                     return false;
                 }
 
-                var requestor = db.Users.Where(user => user.Username == from).FirstOrDefault();
+                var requestor = db.Users.Include(x => x.Contacts).Where(user => user.Username == from).FirstOrDefault();
 
                 var newChat = new Chat(new List<User>() {
                 currentUser, requestor});
@@ -338,10 +343,16 @@ namespace Models.DataServices {
                 requestor.Server = server;
 
                 var newContact = new ContactModel(from, name, server, null, null, requestor.ProfileImage);
-                var dbAccess = new DatabaseContext();
                 if (!currentContacts.Contains(newContact))
                 {
-                    dbAccess.AddContact(new Contact(name, server, null, null, from, requestor.Username));
+                    db.Contacts.Add(new Contact(name, server, null, null, from, requestor.Username));
+                    try
+                    {
+                        db.SaveChanges();
+                    } catch(Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                    }
                     CurrentUsers.IdToContactsDict[currentUser.Username] = db.Contacts.Where(contact => contact.OfUser == currentUser.Username).ToList();
                 }
 
@@ -350,6 +361,8 @@ namespace Models.DataServices {
                 var isExistsChat = GetChatByParticipants(requestor, currentUser) != null;
                 if (!isExistsChat)
                     return true;
+
+                db.Chats.Add(newChat);
                 try
                 {
                     db.SaveChanges();
@@ -358,7 +371,8 @@ namespace Models.DataServices {
                 {
                     Debug.Write(ex.ToString());
                 }
-                return chatsService.Create(newChat);
+
+                return true;
             }
         }
 
@@ -369,6 +383,16 @@ namespace Models.DataServices {
             if (!url.StartsWith("http://"))
                 url = "http://" + url;
             return url;
+        }
+
+        public List<Message> GetAllMessages(string user1, string user2)
+        {
+            using (var db = new ItemsContext())
+            {
+                var chat = GetChatByParticipants(user1, user2);
+                if (chat == null) return null;
+                return chat.Messages;
+            }
         }
     }
 }

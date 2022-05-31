@@ -1,7 +1,9 @@
 ﻿using AspWebApi;
+using Microsoft.EntityFrameworkCore;
 using Models.DataServices.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -102,24 +104,38 @@ namespace Models.DataServices {
 
         public bool Create(Chat entity)
         {
-            using (var db = new ItemsContext())
+            try
             {
-                var dbAccess = new DatabaseContext();
-                dbAccess.AddChat(entity);
-                return true;
+                using (var db = new ItemsContext())
+                {
+                    db.Chats.Add(entity);
+                    db.SaveChanges();
+                    return true;
+                }
+            } catch(Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return false;
             }
         }
 
         public bool Delete(int Id)
         {
-            using (var db = new ItemsContext())
+            try
             {
-                var dbAccess = new DatabaseContext();
-                var toRemove = db.Chats.Where(chat => chat.Id == Id).FirstOrDefault();
-                if (toRemove == null)
-                    return false;
-                dbAccess.RemoveChat(toRemove);
-                return true;
+                using (var db = new ItemsContext())
+                {
+                    var toRemove = db.Chats.Include(x => x.Messages).Where(chat => chat.Id == Id).FirstOrDefault();
+                    if (toRemove == null)
+                        return false;
+                    db.Chats.Remove(toRemove);
+                    db.SaveChanges();
+                    return true;
+                }
+            } catch(Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+                return false;
             }
         }
 
@@ -127,7 +143,7 @@ namespace Models.DataServices {
         {
             using (var db = new ItemsContext())
             {
-                return db.Chats.ToList();
+                return db.Chats.Include(x => x.Messages).Include(x => x.Users).ToList();
             }
         }
 
@@ -135,34 +151,39 @@ namespace Models.DataServices {
         {
             using (var db = new ItemsContext())
             {
-                return db.Chats.Where(chat => chat.Id == Id).FirstOrDefault();
+                return db.Chats.Include(x => x.Messages).Include(x => x.Users).Where(chat => chat.Id == Id).FirstOrDefault();
             }
         }
 
         public bool Update(Chat entity)
         {
-            using (var db = new ItemsContext())
+            try
             {
-                var chat = db.Chats.Where(chat => chat.Id == entity.Id).FirstOrDefault();
-                if (chat == null)
-                    return false;
-                chat.Id = entity.Id;
-                var dbAccess = new DatabaseContext();
-                dbAccess.UpdateChat(entity);
-                return true;
+                using (var db = new ItemsContext())
+                {
+                    var chat = db.Chats.Include(x => x.Messages).Include(x => x.Users).Where(chat => chat.Id == entity.Id).FirstOrDefault();
+                    if (chat == null)
+                        return false;
+                    chat.Id = entity.Id;
+                    db.Chats.Update(entity);
+                    return true;
+                }
+            } catch(Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+                return false;
             }
         }
 
         public int GetNewMsgIdInChat(int id)
         {
-            var dbAccess = new DatabaseContext();
             using (var db = new ItemsContext())
             {
-                var chat = db.Chats.Where(chat => chat.Id == id).FirstOrDefault();
+                var chat = db.Chats.Include(x => x.Messages).Where(chat => chat.Id == id).FirstOrDefault();
                 if (chat == null)
                     return 0;
 
-                var chatMessages = dbAccess.GetMessages(chat.Id);
+                var chatMessages = chat.Messages;
                 if (chatMessages == null || chatMessages.Count == 0)
                     return 1;
                 var maxMessageId = chatMessages.Max(message => message.Id);
@@ -172,18 +193,22 @@ namespace Models.DataServices {
 
         public bool AddMessage(int chatId, Message message)
         {
-            using (var db = new ItemsContext())
+            try
             {
-                var dbAccess = new DatabaseContext();
-                var chat = db.Chats.Where(chat => chat.Id == chatId).FirstOrDefault();
-                if (chat == null) return false;
-                var chatMessages = dbAccess.GetMessages(chatId);
-                chatMessages.Add(message);
-                dbAccess.AddMessage(message, chatId);
-                return true;
+                using (var db = new ItemsContext())
+                {
+                    var chat = db.Chats.Include(x => x.Messages).Where(chat => chat.Id == chatId).FirstOrDefault();
+                    if (chat == null) return false;
+                    var chatMessages = chat.Messages;
+                    chatMessages.Add(message);
+                    db.SaveChanges();
+                    return true;
+                }
+            } catch(Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+                return false;
             }
         }
-
-        
     }
 }

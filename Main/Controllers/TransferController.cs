@@ -14,7 +14,7 @@ namespace AspWebApi.Controllers {
     public class TransferController : ControllerBase {
         private IChatService service;
         private IUserService userService;
-    
+
         public TransferController(IUserService userServ, IChatService serv)
         {
             service = serv;
@@ -45,7 +45,7 @@ namespace AspWebApi.Controllers {
             var messageId = service.GetNewMsgIdInChat(chat.Id);
             // the sent is false because it was not sent from my server
             var addSuccess = service.AddMessage(chat.Id, new Message(messageId, request.Content, request.From, false));
-            if(!addSuccess) return BadRequest();
+            if (!addSuccess) return BadRequest();
             return Ok();
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,13 +19,17 @@ namespace Models {
         public string Text { get; set; }
 
         [Required(ErrorMessage = "Please enter the sender username")]
-        public virtual string Username { get; set; }
+        public string Username { get; set; }
 
         [Required(ErrorMessage = "Please enter when the message was written in")]
         public DateTime WrittenIn { get; set; }
 
         public string FileName { get; set; }
         public bool Sent { get; set; }
+        [ForeignKey("ChatId")]
+        public int ChatId { get; set; }
+        public User User { get; set; }
+        public Chat MappedChat { get; set; }
         public Message(int id, string type, string text, string senderUsername, DateTime writtenIn, string fileName)
         {
             Id = id;

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,10 +25,12 @@ namespace Models.Models {
         public string Last { get; set; }
 
         public DateTime? Lastdate { get; set; }
-
+        [ForeignKey("Username")]
+        public string Username { get; set; }
         public string ProfileImage { get; set; }
         public string OfUser { get; set; }
-       public Contact()
+        public User MappedUser { get; set; }
+        public Contact()
         {
         }
 
