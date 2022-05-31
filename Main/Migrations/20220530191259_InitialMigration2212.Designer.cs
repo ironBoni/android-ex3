@@ -3,6 +3,7 @@ using System;
 using AspWebApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AspWebApi.Migrations
 {
     [DbContext(typeof(ItemsContext))]
-    partial class ItemsContextModelSnapshot : ModelSnapshot
+    [Migration("20220530191259_InitialMigration2212")]
+    partial class InitialMigration2212
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,7 +53,7 @@ namespace AspWebApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("ChatId")
+                    b.Property<int?>("ChatId")
                         .HasColumnType("int");
 
                     b.Property<string>("FileName")
@@ -73,17 +75,12 @@ namespace AspWebApi.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Username1")
-                        .HasColumnType("varchar(255)");
-
                     b.Property<DateTime>("WrittenIn")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ChatId");
-
-                    b.HasIndex("Username1");
 
                     b.ToTable("Messages");
                 });
@@ -98,9 +95,11 @@ namespace AspWebApi.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Last")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTime?>("Lastdate")
+                        .IsRequired()
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
@@ -169,28 +168,16 @@ namespace AspWebApi.Migrations
 
             modelBuilder.Entity("Models.Message", b =>
                 {
-                    b.HasOne("Models.Chat", "MappedChat")
+                    b.HasOne("Models.Chat", null)
                         .WithMany("Messages")
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("Username1");
-
-                    b.Navigation("MappedChat");
-
-                    b.Navigation("User");
+                        .HasForeignKey("ChatId");
                 });
 
             modelBuilder.Entity("Models.Models.Contact", b =>
                 {
-                    b.HasOne("Models.User", "MappedUser")
+                    b.HasOne("Models.User", null)
                         .WithMany("Contacts")
                         .HasForeignKey("Username");
-
-                    b.Navigation("MappedUser");
                 });
 
             modelBuilder.Entity("Models.Chat", b =>

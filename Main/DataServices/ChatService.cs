@@ -1,7 +1,9 @@
 ﻿using AspWebApi;
+using Microsoft.EntityFrameworkCore;
 using Models.DataServices.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,10 +11,8 @@ using System.Threading.Tasks;
 namespace Models.DataServices {
     public class ChatService : IChatService {
         //private static List<Chat> chats = new List<Chat>() { };
-        private IUserService _userService;
         public ChatService()
         {
-            this._userService = new UserService();
         }
          /*   new Chat(1, new List<string>{ "ron", "noam" }, new List<Message>
             {
@@ -104,24 +104,38 @@ namespace Models.DataServices {
 
         public bool Create(Chat entity)
         {
-            using (var db = new ItemsContext())
+            try
             {
-                db.Chats.Add(entity);
-                db.SaveChanges();
-                return true;
+                using (var db = new ItemsContext())
+                {
+                    db.Chats.Add(entity);
+                    db.SaveChanges();
+                    return true;
+                }
+            } catch(Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return false;
             }
         }
 
         public bool Delete(int Id)
         {
-            using (var db = new ItemsContext())
+            try
             {
-                var toRemove = db.Chats.Where(chat => chat.Id == Id).FirstOrDefault();
-                if (toRemove == null)
-                    return false;
-                db.Chats.Remove(toRemove);
-                db.SaveChanges();
-                return true;
+                using (var db = new ItemsContext())
+                {
+                    var toRemove = db.Chats.Include(x => x.Messages).Where(chat => chat.Id == Id).FirstOrDefault();
+                    if (toRemove == null)
+                        return false;
+                    db.Chats.Remove(toRemove);
+                    db.SaveChanges();
+                    return true;
+                }
+            } catch(Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+                return false;
             }
         }
 
@@ -129,7 +143,7 @@ namespace Models.DataServices {
         {
             using (var db = new ItemsContext())
             {
-                return db.Chats.ToList();
+                return db.Chats.Include(x => x.Messages).Include(x => x.Users).ToList();
             }
         }
 
@@ -137,20 +151,27 @@ namespace Models.DataServices {
         {
             using (var db = new ItemsContext())
             {
-                return db.Chats.Where(chat => chat.Id == Id).FirstOrDefault();
+                return db.Chats.Include(x => x.Messages).Include(x => x.Users).Where(chat => chat.Id == Id).FirstOrDefault();
             }
         }
 
         public bool Update(Chat entity)
         {
-            using (var db = new ItemsContext())
+            try
             {
-                var chat = db.Chats.Where(chat => chat.Id == entity.Id).FirstOrDefault();
-                if (chat == null)
-                    return false;
-                chat.Id = entity.Id;
-                db.SaveChanges();
-                return true;
+                using (var db = new ItemsContext())
+                {
+                    var chat = db.Chats.Include(x => x.Messages).Include(x => x.Users).Where(chat => chat.Id == entity.Id).FirstOrDefault();
+                    if (chat == null)
+                        return false;
+                    chat.Id = entity.Id;
+                    db.Chats.Update(entity);
+                    return true;
+                }
+            } catch(Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+                return false;
             }
         }
 
@@ -158,62 +179,36 @@ namespace Models.DataServices {
         {
             using (var db = new ItemsContext())
             {
-                var chat = db.Chats.Where(chat => chat.Id == id).FirstOrDefault();
+                var chat = db.Chats.Include(x => x.Messages).Where(chat => chat.Id == id).FirstOrDefault();
                 if (chat == null)
                     return 0;
 
-                if (chat.Messages == null || chat.Messages.Count == 0)
+                var chatMessages = chat.Messages;
+                if (chatMessages == null || chatMessages.Count == 0)
                     return 1;
-                var maxMessageId = chat.Messages.Max(message => message.Id);
+                var maxMessageId = chatMessages.Max(message => message.Id);
                 return maxMessageId + 1;
             }
         }
 
         public bool AddMessage(int chatId, Message message)
         {
-            using (var db = new ItemsContext())
+            try
             {
-                var chat = db.Chats.Where(chat => chat.Id == chatId).FirstOrDefault();
-                if (chat == null) return false;
-                chat.Messages.Add(message);
-                db.SaveChanges();
-                return true;
-            }
-        }
-
-        public Chat GetChatByParticipants(User user1, User user2)
-        {
-            using (var db = new ItemsContext())
-            {
-                foreach (var chat in db.Chats)
+                using (var db = new ItemsContext())
                 {
-                    var participants = chat.Participants.Select(x => x.Username).ToList();
-                    if (participants.Contains(user1.Username) && participants.Contains(user2.Username))
-                        return chat;
+                    var chat = db.Chats.Include(x => x.Messages).Where(chat => chat.Id == chatId).FirstOrDefault();
+                    if (chat == null) return false;
+                    var chatMessages = chat.Messages;
+                    chatMessages.Add(message);
+                    db.SaveChanges();
+                    return true;
                 }
-                return null;
+            } catch(Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+                return false;
             }
-        }
-
-        public List<Message> GetAllMessages(User user1, User user2)
-        {
-            var chat = GetChatByParticipants(user1, user2);
-            if(chat == null) return null;
-            return chat.Messages;
-        }
-
-        public Chat GetChatByParticipants(string username1, string username2)
-        {
-            var user1 = _userService.GetById(username1);
-            var user2 = _userService.GetById(username2);
-            return GetChatByParticipants(user1, user2);
-        }
-
-        public List<Message> GetAllMessages(string username, string other)
-        {
-            var chat = GetChatByParticipants(username, other);
-            if(chat == null) return null;
-            return chat.Messages;
         }
     }
 }

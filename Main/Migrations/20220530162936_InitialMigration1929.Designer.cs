@@ -3,6 +3,7 @@ using System;
 using AspWebApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AspWebApi.Migrations
 {
     [DbContext(typeof(ItemsContext))]
-    partial class ItemsContextModelSnapshot : ModelSnapshot
+    [Migration("20220530162936_InitialMigration1929")]
+    partial class InitialMigration1929
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,12 +26,12 @@ namespace AspWebApi.Migrations
                     b.Property<int>("ChatsId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UsersUsername")
+                    b.Property<string>("ParticipantsUsername")
                         .HasColumnType("varchar(255)");
 
-                    b.HasKey("ChatsId", "UsersUsername");
+                    b.HasKey("ChatsId", "ParticipantsUsername");
 
-                    b.HasIndex("UsersUsername");
+                    b.HasIndex("ParticipantsUsername");
 
                     b.ToTable("ChatUser");
                 });
@@ -51,10 +53,14 @@ namespace AspWebApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("ChatId")
+                    b.Property<int?>("ChatId")
                         .HasColumnType("int");
 
                     b.Property<string>("FileName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("SenderUsername")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<bool>("Sent")
@@ -69,21 +75,12 @@ namespace AspWebApi.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("varchar(10)");
 
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Username1")
-                        .HasColumnType("varchar(255)");
-
                     b.Property<DateTime>("WrittenIn")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ChatId");
-
-                    b.HasIndex("Username1");
 
                     b.ToTable("Messages");
                 });
@@ -98,9 +95,11 @@ namespace AspWebApi.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Last")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTime?>("Lastdate")
+                        .IsRequired()
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
@@ -162,35 +161,23 @@ namespace AspWebApi.Migrations
 
                     b.HasOne("Models.User", null)
                         .WithMany()
-                        .HasForeignKey("UsersUsername")
+                        .HasForeignKey("ParticipantsUsername")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("Models.Message", b =>
                 {
-                    b.HasOne("Models.Chat", "MappedChat")
+                    b.HasOne("Models.Chat", null)
                         .WithMany("Messages")
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("Username1");
-
-                    b.Navigation("MappedChat");
-
-                    b.Navigation("User");
+                        .HasForeignKey("ChatId");
                 });
 
             modelBuilder.Entity("Models.Models.Contact", b =>
                 {
-                    b.HasOne("Models.User", "MappedUser")
+                    b.HasOne("Models.User", null)
                         .WithMany("Contacts")
                         .HasForeignKey("Username");
-
-                    b.Navigation("MappedUser");
                 });
 
             modelBuilder.Entity("Models.Chat", b =>

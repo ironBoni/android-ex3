@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 namespace Models {
     public class User {
         [Key]
+        //[ForeignKey("UsersUsername")]
         public string Username { get; set; }
 
         [Required(ErrorMessage ="Please enter nickname.")]
@@ -22,8 +24,8 @@ namespace Models {
         [Required(ErrorMessage ="Please enter server")]
         public string Server { get; set; }
 
-        public List<Chat> Chats { get; set; }
-        public List<Contact> Contacts { get; set; }
+        public virtual List<Chat> Chats { get; set; }
+        public virtual List<Contact> Contacts { get; set; }
         public User()
         {
         }

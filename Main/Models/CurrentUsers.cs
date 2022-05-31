@@ -31,13 +31,13 @@ namespace AspWebApi.Models {
                 var chat = chatService.GetChatByParticipants(currentUser, fUser);
                 var lastTime = chat.Messages.Max(message => message.WrittenIn);
                 var lastMsg = chat.Messages.Find(message => message.WrittenIn == lastTime);
-                var contact = new Contact(fUser.Username, fUser.Nickname, fUser.Server, lastMsg.Text, lastTime, fUser.ProfileImage);
+                var contact = new Contact(fUser.Nickname, fUser.Server, lastMsg.Text, lastTime, fUser.ProfileImage, fUser.Username);
                 contactsByMessages.Add(contact);
             }
 
             foreach (var contact in contactsByMessages)
             {
-                if (!currentUser.Contacts.Any(c => c.Id == contact.Id))
+                if (!currentUser.Contacts.Any(c => c.Id == contact.ContactId))
                     currentUser.Contacts.Add(contact);
             }
 
@@ -46,8 +46,8 @@ namespace AspWebApi.Models {
                 var oldContacts = IdToContactsDict[currentUser.Username];
                 if (oldContacts != null)
                 {
-                    var currentIds = currentUser.Contacts.Select(c => c.Id).ToList();
-                    var newToAdd = oldContacts.Where(c => !currentIds.Contains(c.Id));
+                    var currentIds = currentUser.Contacts.Select(c => c.ContactId).ToList();
+                    var newToAdd = oldContacts.Where(c => !currentIds.Contains(c.ContactId));
                     currentUser.Contacts.AddRange(newToAdd);
                 }
             }

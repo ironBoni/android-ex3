@@ -32,8 +32,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 });
 
-builder.Services.AddDbContext<ItemsContext>(
-     options => options.UseSqlServer("name=server=localhost;port=3306;database=pomelodb;user=root;password=Np1239:DefaultConnection"));
+//builder.Services.AddDbContext<ItemsContext>(
+ //    options => options.UseSqlServer("name=server=localhost;port=3306;database=pomelodb;user=root;password=Np1239:DefaultConnection"));
 
 builder.Services.AddCors(p => p.AddPolicy("cors", builder =>
 {
@@ -61,4 +61,5 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapHub<ChatHub>("/hub");
 //CurrentUsers.SetContacts();
+//DatabaseLoader.Load();
 app.Run();
