@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AspWebApi;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -31,8 +32,7 @@ namespace Models {
 
         public Chat(List<User> participants, List<Message> messages)
         {
-            Id = id;
-            id++;
+            Id = GetNewId();
             Users = participants;
             Messages = messages;
         }
@@ -40,6 +40,15 @@ namespace Models {
         public Chat(List<User> participants)
             : this(participants, new List<Message>())
         {
+        }
+
+        public static int GetNewId()
+        {
+            using(var db = new ItemsContext())
+            {
+                var chats = db.Chats.ToList();
+                return chats.Max(x => x.Id) + 1;
+            }
         }
     }
 }

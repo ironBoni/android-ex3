@@ -87,6 +87,7 @@ namespace Models.DataServices {
             {
                 var username = Current.Username;
                 var currentUserObj = db.Users.Include(x => x.Contacts).Where(user => user.Username == Current.Username).FirstOrDefault();
+                
                 var contacts = GetContacts(currentUserObj.Username);
                 var currentUser = new UserModel(currentUserObj.Username, currentUserObj.Nickname, currentUserObj.Password,
                     currentUserObj.ProfileImage, currentUserObj.Server);
@@ -119,12 +120,32 @@ namespace Models.DataServices {
                 var newChat = new Chat(new List<User>() {
                 currentUserObj, friend});
 
-                var newContact = new Contact(name, server, null, null, friend.ProfileImage, friendToAdd);
+                var newContact = new Contact(name, server, null, null, friend.ProfileImage, friendToAdd, currentUserObj.Username);
                 var newContactModel = new ContactModel(friendToAdd, name, server, null, null, friend.ProfileImage);
                 if (!currentContacts.Contains(newContactModel))
                 {
                     db.Contacts.Add(newContact);
                     CurrentUsers.IdToContactsDict[currentUser.Username] = db.Contacts.Where(contact => contact.OfUser == username).ToList(); ;
+                }
+
+                if(currentUserObj.Username != newContact.Username)
+                    currentUserObj.Contacts.Add(newContact);
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    Debug.Write(ex.ToString());
+                }
+                var otherUser = db.Users.ToList().Find(x => x.Username == friendToAdd);
+                var otherContact = new Contact(currentUser.Nickname, currentUser.Server, null, null, currentUser.ProfileImage, currentUser.Username, otherUser.Username);
+                
+                if(GetFullServerUrl(server) == Current.Server)
+                {
+
+                    if(friendToAdd != currentUser.Username)
+                    otherUser.Contacts.Add(otherContact);
                 }
                 try
                 {
@@ -293,6 +314,9 @@ namespace Models.DataServices {
 
         public bool AcceptInvitation(string from, string server, string to, out string response)
         {
+            response = "";
+            if (GetFullServerUrl(server) == (Current.Server))
+                return true;
             using (var db = new ItemsContext())
             {
                 var userToAdd = db.Users.Include(x => x.Contacts).Where(u => u.Username == from).FirstOrDefault();
@@ -328,7 +352,7 @@ namespace Models.DataServices {
 
                 var newChat = new Chat(new List<User>() {
                 currentUser, requestor});
-
+                
                 // then add it
                 if (requestor == null)
                 {
@@ -345,7 +369,9 @@ namespace Models.DataServices {
                 var newContact = new ContactModel(from, name, server, null, null, requestor.ProfileImage);
                 if (!currentContacts.Contains(newContact))
                 {
-                    db.Contacts.Add(new Contact(name, server, null, null, from, requestor.Username));
+                    var contact = new Contact(name, server, null, null, requestor.ProfileImage, from, currentUser.Username);
+                    db.Contacts.Add(contact);
+                    currentUser.Contacts.Add(contact);
                     try
                     {
                         db.SaveChanges();

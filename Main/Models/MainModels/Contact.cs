@@ -34,35 +34,21 @@ namespace Models.Models {
         {
         }
 
-        public static string GetNewId(string contactId, string ofUser)
+        public static string GetNewId()
         {
-            var random = new Random();
-            var random1 = random.Next(begin, end).ToString();
-            var random2 = random.Next(1, 100).ToString();
-            var newId = random1 + random2;
-
-            using(var db = new ItemsContext())
-            {
-                foreach(var c in db.Contacts.ToList())
-                {
-                    if(c.ContactId == contactId && c.OfUser == ofUser)
-                    {
-                        return c.Id;
-                    }
-                }
-            }
-            
-            return newId;
+            return Guid.NewGuid().ToString();
         }
         public Contact(string name, string server, string last, DateTime? lastDate, string contactId, string ofUser)
         {
             
-            Id = GetNewId(contactId, ofUser);
+            Id = GetNewId();
             Name = name;
             Server = server;
             Last = last;
             Lastdate = lastDate;
             ContactId = contactId;
+            OfUser = ofUser;
+            Username = ofUser;
         }
 
         public Contact(string name, string server, string last, DateTime? lastDate, string profileImage, string contactId, string ofUser)
