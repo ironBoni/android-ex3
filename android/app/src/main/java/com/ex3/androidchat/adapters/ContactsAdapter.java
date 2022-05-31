@@ -33,6 +33,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         return new ViewHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Contact contact = contacts.get(position);
@@ -55,10 +56,10 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return 0;
+        return contacts.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView picture;
         TextView nickName, lastMsg, lastMsgTime, lastMsgHour;
         public ViewHolder(@NonNull View itemView) {
