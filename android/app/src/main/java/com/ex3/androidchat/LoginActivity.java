@@ -33,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
 
         dialog = new ProgressDialog(LoginActivity.this);
         dialog.setTitle("Sign in");
-        dialog.setMessage("Please wait...\nLogin deatils checked");
+        dialog.setMessage("Please wait...\nLogin details checked");
 
         buttonRegister = findViewById(R.id.btnSignup);
         buttonLogin = findViewById(R.id.btnLogin);

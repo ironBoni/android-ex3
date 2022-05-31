@@ -5,5 +5,8 @@
     <string name="happy_chat">HappyChat</string>
     <string name="noam">Noam</string>
     <string name="hey_friend">Hey friend!</string>
+    <string name="add_user">Add User</string>
+    <string name="add_new_contact">Add New Contact</string>
+    <string name="add_contact">add contact</string>
 
 </resources>
