@@ -3,6 +3,19 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/hadar/Desktop/CS/android-chat/android-ex3/android/app/src/main/res/drawable/ic_android_black_24dp.xml" value="0.2535" />
+        <entry key="..\:/Users/hadar/Desktop/CS/android-chat/android-ex3/android/app/src/main/res/layout/activity_add_user.xml" value="0.293790546802595" />
+        <entry key="..\:/Users/hadar/Desktop/CS/android-chat/android-ex3/android/app/src/main/res/layout/activity_chat_detail.xml" value="0.30141085934159895" />
+        <entry key="..\:/Users/hadar/Desktop/CS/android-chat/android-ex3/android/app/src/main/res/layout/activity_chat_list.xml" value="0.21504916631038906" />
+        <entry key="..\:/Users/hadar/Desktop/CS/android-chat/android-ex3/android/app/src/main/res/layout/activity_conversation.xml" value="0.21504916631038906" />
+        <entry key="..\:/Users/hadar/Desktop/CS/android-chat/android-ex3/android/app/src/main/res/layout/activity_login.xml" value="0.297593921485859" />
+        <entry key="..\:/Users/hadar/Desktop/CS/android-chat/android-ex3/android/app/src/main/res/layout/activity_main.xml" value="0.21504916631038906" />
+        <entry key="..\:/Users/hadar/Desktop/CS/android-chat/android-ex3/android/app/src/main/res/layout/activity_register.xml" value="0.30141085934159895" />
+        <entry key="..\:/Users/hadar/Desktop/CS/android-chat/android-ex3/android/app/src/main/res/layout/contact.xml" value="0.22" />
+        <entry key="..\:/Users/hadar/Desktop/CS/android-chat/android-ex3/android/app/src/main/res/layout/fragment_chat_list.xml" value="0.15256410256410258" />
+        <entry key="..\:/Users/hadar/Desktop/CS/android-chat/android-ex3/android/app/src/main/res/layout/fragment_conversation.xml" value="0.30141085934159895" />
+        <entry key="..\:/Users/hadar/Desktop/CS/android-chat/android-ex3/android/app/src/main/res/layout/msg_reciever.xml" value="0.30141085934159895" />
+        <entry key="..\:/Users/hadar/Desktop/CS/android-chat/android-ex3/android/app/src/main/res/layout/msg_sender.xml" value="0.30141085934159895" />
         <entry key="..\:/Users/noamc/android-ex3/android/app/src/main/res/drawable/background_msg.xml" value="0.1" />
         <entry key="..\:/Users/noamc/android-ex3/android/app/src/main/res/drawable/background_recieve_msg.xml" value="0.1" />
         <entry key="..\:/Users/noamc/android-ex3/android/app/src/main/res/drawable/border_contact.xml" value="0.1" />
