@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.ex3.androidchat.ConversationActivity;
 import com.ex3.androidchat.R;
+import com.ex3.androidchat.RegisterActivity;
 import com.ex3.androidchat.models.Contact;
 
 import androidx.annotation.NonNull;
