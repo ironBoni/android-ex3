@@ -32,7 +32,7 @@ public class ConversationFragment extends Fragment {
         // Inflate the layout for this fragment
         service = new UserService();
         service.loadContacts();
-        contacts = service.getById(Client.getUser()).getContacts();
+        contacts = service.getById(Client.getUserId()).getContacts();
         ContactsAdapter uAdapter = new ContactsAdapter(contacts, getContext());
         binding = FragmentConversationBinding.inflate(getLayoutInflater());
         binding.recycleView.setAdapter(uAdapter);

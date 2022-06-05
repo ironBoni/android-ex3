@@ -10,9 +10,8 @@ import android.widget.TextView;
 
 import com.ex3.androidchat.ConversationActivity;
 import com.ex3.androidchat.R;
-import com.ex3.androidchat.RegisterActivity;
 import com.ex3.androidchat.models.Contact;
-import com.ex3.androidchat.services.DownloadPhotoAsyncTask;
+import com.ex3.androidchat.services.GetByAsyncTask;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,7 +41,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         holder.nickName.setText(contact.getName());
         holder.lastMsgTime.setText(contact.getLastdate());
 
-    new DownloadPhotoAsyncTask((ImageView) holder.picture).execute(contact.getProfileImage());
+         new GetByAsyncTask((ImageView) holder.picture).execute(contact.getProfileImage());
         //holder.picture.setImageResource(R.drawable.default_avatar);
         holder.lastMsg.setText(contact.getLast());
         holder.itemView.setOnClickListener(new View.OnClickListener() {

@@ -48,7 +48,7 @@ public class ConversationAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
-        if(messages.get(position).getSenderUsername().equals(Client.getUser())) {
+        if(messages.get(position).getSenderUsername().equals(Client.getUserId())) {
             return viewTypeSender;
         }
         return viewTypeReceiver;

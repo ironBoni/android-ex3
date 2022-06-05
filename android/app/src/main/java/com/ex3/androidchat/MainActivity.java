@@ -12,10 +12,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.ex3.androidchat.adapters.ContactsAdapter;
-import com.ex3.androidchat.adapters.FragAdapter;
 import com.ex3.androidchat.models.Contact;
 import com.ex3.androidchat.models.User;
 import com.ex3.androidchat.services.UserService;
@@ -44,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         service.loadContacts();
 //        contacts = currentUser.getContacts();
         //static array
-        contacts = service.getById(Client.getUser()).getContacts();
+        contacts = service.getById(Client.getUserId()).getContacts();
         /*contacts.add(new Contact("0","hadar","localhost:3000", "hey there",0,"31.05.22"));
         contacts.add(new Contact("1","noam","localhost:3000", "hey there",1,"31.05.22"));
         contacts.add(new Contact("2","dvir","localhost:3000", "hey there",2,"31.05.22"));
