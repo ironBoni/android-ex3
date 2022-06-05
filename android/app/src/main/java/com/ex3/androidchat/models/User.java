@@ -11,10 +11,10 @@ public class User {
     }
 
     ArrayList<Contact> contacts;
-    LocalDateTime lastdate;
+    String lastdate;
     public User() { }
 
-    public User(String id, String password, String last, String profileImage, String name, String server, LocalDateTime lastdate) {
+    public User(String id, String password, String last, String profileImage, String name, String server, String lastdate) {
         this.id = id;
         this.password = password;
         this.last = last;
@@ -56,7 +56,11 @@ public class User {
         return profileImage;
     }
 
-    public LocalDateTime getLastdate() {
+    public String getLastdate() {
         return lastdate;
+    }
+
+    public String getServer() {
+        return server;
     }
 }

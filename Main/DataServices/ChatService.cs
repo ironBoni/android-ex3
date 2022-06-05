@@ -191,6 +191,26 @@ namespace Models.DataServices {
             }
         }
 
+        public void UpdateLastMessage(int chatId, Message message)
+        {
+            using (var db = new ItemsContext())
+            {
+                var chat = db.Chats.Include(x => x.Users).ToList().Find(x => x.Id == chatId);
+                if (chat == null) return;
+                var usersTalking = chat.Users;
+                if (usersTalking == null) return;
+                foreach (var user in usersTalking)
+                {
+                    var currentUser = db.Users.Include(x => x.Contacts).ToList().Find(x => x.Username == user.Username);
+                    var otherUser = usersTalking.Find(x => x.Username != user.Username);
+                    var contact = currentUser.Contacts.Find(x => x.ContactId == otherUser.Username);
+                    contact.Last = message.Text;
+                    contact.Lastdate = DateTime.Now;
+                }
+                db.SaveChanges();
+            }
+        }
+
         public bool AddMessage(int chatId, Message message)
         {
             try
@@ -201,6 +221,7 @@ namespace Models.DataServices {
                     if (chat == null) return false;
                     var chatMessages = chat.Messages;
                     chatMessages.Add(message);
+                    UpdateLastMessage(chatId, message);
                     db.SaveChanges();
                     return true;
                 }

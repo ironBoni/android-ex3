@@ -13,9 +13,6 @@ import android.widget.Toast;
 import com.ex3.androidchat.services.IUserService;
 import com.ex3.androidchat.services.UserService;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 public class LoginActivity extends AppCompatActivity {
     Button buttonRegister, buttonLogin;
     EditText txtUserId, txtPassword;
@@ -77,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
         boolean isLoginOk = userService.isLoginOk(txtUserId.getText().toString(), txtPassword.getText().toString());
         if(isLoginOk) {
             Client.setToken("abcd");
-            Client.setUser(txtUserId.getText().toString());
+            Client.setUserId(txtUserId.getText().toString());
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
         } else {

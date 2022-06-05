@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ex3.androidchat.Client;
-import com.ex3.androidchat.R;
 import com.ex3.androidchat.adapters.ContactsAdapter;
 import com.ex3.androidchat.databinding.FragmentChatListBinding;
 import com.ex3.androidchat.models.Contact;
@@ -34,7 +33,7 @@ public class ChatListFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentChatListBinding.inflate(inflater, container, false);
         service = new UserService();
-        contacts = service.getContacts(Client.getUser());
+        contacts = service.getById(Client.getUserId()).getContacts();
         ContactsAdapter adapter = new ContactsAdapter(contacts, getContext());
         binding.chatListRecyclerView.setAdapter(adapter);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());

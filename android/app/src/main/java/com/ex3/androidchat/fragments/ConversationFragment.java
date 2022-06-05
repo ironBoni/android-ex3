@@ -9,16 +9,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ex3.androidchat.Client;
 import com.ex3.androidchat.R;
 import com.ex3.androidchat.adapters.ContactsAdapter;
 import com.ex3.androidchat.databinding.FragmentConversationBinding;
 import com.ex3.androidchat.models.Contact;
+import com.ex3.androidchat.services.UserService;
 
 import java.util.ArrayList;
 
 public class ConversationFragment extends Fragment {
     FragmentConversationBinding binding;
-
+    UserService service;
     public ConversationFragment() {
         // Required empty public constructor
     }
@@ -28,7 +30,9 @@ public class ConversationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
+        service = new UserService();
+        service.loadContacts();
+        contacts = service.getById(Client.getUserId()).getContacts();
         ContactsAdapter uAdapter = new ContactsAdapter(contacts, getContext());
         binding = FragmentConversationBinding.inflate(getLayoutInflater());
         binding.recycleView.setAdapter(uAdapter);
