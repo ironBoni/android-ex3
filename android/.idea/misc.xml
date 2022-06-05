@@ -3,6 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/dvir/Desktop/chat/android/app/src/main/res/layout/activity_conversation.xml" value="0.17831813576494426" />
+        <entry key="..\:/Users/dvir/Desktop/chat/android/app/src/main/res/layout/activity_login.xml" value="0.17831813576494426" />
+        <entry key="..\:/Users/dvir/Desktop/chat/android/app/src/main/res/layout/activity_main.xml" value="0.17831813576494426" />
+        <entry key="..\:/Users/dvir/Desktop/chat/android/app/src/main/res/layout/activity_register.xml" value="0.26313405797101447" />
+        <entry key="..\:/Users/dvir/Desktop/chat/android/app/src/main/res/layout/contact.xml" value="0.17831813576494426" />
+        <entry key="..\:/Users/dvir/Desktop/chat/android/app/src/main/res/layout/fragment_chat_list.xml" value="0.17831813576494426" />
+        <entry key="..\:/Users/dvir/Desktop/chat/android/app/src/main/res/layout/msg_reciever.xml" value="0.4" />
+        <entry key="..\:/Users/dvir/Desktop/chat/android/app/src/main/res/layout/msg_sender.xml" value="0.264" />
         <entry key="..\:/Users/hadar/Desktop/CS/android-chat/android-ex3/android/app/src/main/res/drawable/ic_android_black_24dp.xml" value="0.2535" />
         <entry key="..\:/Users/hadar/Desktop/CS/android-chat/android-ex3/android/app/src/main/res/layout/activity_add_user.xml" value="0.293790546802595" />
         <entry key="..\:/Users/hadar/Desktop/CS/android-chat/android-ex3/android/app/src/main/res/layout/activity_chat_detail.xml" value="0.30141085934159895" />
