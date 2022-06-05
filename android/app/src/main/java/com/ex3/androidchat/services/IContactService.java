@@ -6,6 +6,6 @@ import java.util.ArrayList;
 
 public interface IContactService {
     ArrayList<Contact> getContacts(String username);
-    boolean addContact(String id, String name, String server);
+    boolean addContact(String addTo, String id, String name, String server, String last, String lastDate, String profileImage);
     boolean removeContact(String username);
 }
