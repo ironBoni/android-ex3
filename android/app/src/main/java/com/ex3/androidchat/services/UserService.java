@@ -123,8 +123,13 @@ public class UserService implements  IUserService {
         return false;
     }
 
-    @Override
-    public String getFullServerUrl(String url) {
+
+    public String getFullServerUrl(String url)
+    {
+        if (!url.endsWith("/"))
+            url = url + "/";
+        if (!url.startsWith("http://"))
+            url = "http://" + url;
         return url;
     }
 

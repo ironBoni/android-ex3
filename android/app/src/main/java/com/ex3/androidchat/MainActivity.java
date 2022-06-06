@@ -72,7 +72,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if(id == R.id.settings) {
-            // settings
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
         } else {
             // logout
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
