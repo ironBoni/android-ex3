@@ -23,6 +23,7 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:imeOptions="actionGo"
             android:id="@+id/txtEnterMsg"
             android:layout_marginStart="5dp"
             android:layout_marginLeft="5dp"
@@ -37,7 +38,7 @@
         <ImageView
             android:layout_width="52dp"
             android:layout_height="52dp"
-            android:id="@+id/btnSend"
+            android:id="@+id/btnSendConv"
             android:layout_marginLeft="5dp"
             android:layout_marginEnd="3dp"
             android:layout_marginRight="5dp"
