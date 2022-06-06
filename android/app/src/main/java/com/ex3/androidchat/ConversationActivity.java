@@ -28,7 +28,8 @@ public class ConversationActivity extends AppCompatActivity {
     ActivityConversationBinding binding;
     ImageView backButton, btnSendConv;
     ChatService service =  new ChatService();
-
+    Chat conversition;
+    ArrayList<Message> messages;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +47,6 @@ public class ConversationActivity extends AppCompatActivity {
         new GetByAsyncTask((ImageView) view).execute(image);
 
         RecyclerView recyclerView = findViewById(R.id.messagesView);
-        Chat conversition;
         try {
             conversition = service.GetChatByParticipants(Client.getUserId(), friendId);
         } catch(Exception ex) {
@@ -61,8 +61,8 @@ public class ConversationActivity extends AppCompatActivity {
             service.Create(new Chat(participants, messages));
             conversition = service.GetChatByParticipants(Client.getUserId(), friendId);
         }
-        ArrayList<Message> test = conversition.getMessages();
-        ConversationAdapter adapter = new ConversationAdapter(conversition.getMessages(),this);
+        messages = conversition.getMessages();
+        ConversationAdapter adapter = new ConversationAdapter(messages,this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -80,9 +80,15 @@ public class ConversationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 EditText txtMsg = (EditText) findViewById(R.id.txtEnterMsg);
-                addNewMessage(friendId, txtMsg.getText().toString());
+                int position = addNewMessage(friendId, txtMsg.getText().toString());
                 txtMsg.setText("");
+                //adapter.notifyItemInserted(position);
+                //ArrayList<Message> newMessages = conversition.getMessages();
+                //messages.clear();
+                //messages.addAll(newMessages);
                 adapter.notifyDataSetChanged();
+                //ConversationAdapter adapter = new ConversationAdapter(messages,getApplicationContext());
+                recyclerView.setAdapter(adapter);
             }
         });
 
@@ -92,9 +98,15 @@ public class ConversationActivity extends AppCompatActivity {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     EditText txtMsg = (EditText) findViewById(R.id.txtEnterMsg);
-                    addNewMessage(friendId, txtMsg.getText().toString());
+                    //int position = addNewMessage(friendId, txtMsg.getText().toString());
                     txtMsg.setText("");
+                    //adapter.notifyItemInserted(position);
+                    //ArrayList<Message> newMessages = conversition.getMessages();
+                    //messages.clear();
+                    //messages.addAll(newMessages);
                     adapter.notifyDataSetChanged();
+                    //ConversationAdapter adapter = new ConversationAdapter(messages,getApplicationContext());
+                    recyclerView.setAdapter(adapter);
                     return true;
                 }
                 return false;
@@ -102,8 +114,9 @@ public class ConversationActivity extends AppCompatActivity {
         });
     }
 
-    private void addNewMessage(String friendId, String text) {
+    private int addNewMessage(String friendId, String text) {
         Chat conversation = service.GetChatByParticipants(Client.getUserId(), friendId);
-        conversation.addMessage(text, Client.getUserId());
+        int positionInserted = conversation.addMessage(text, Client.getUserId());
+        return positionInserted;
     }
 }
