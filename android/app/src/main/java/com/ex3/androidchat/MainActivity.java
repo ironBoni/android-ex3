@@ -1,11 +1,5 @@
 package com.ex3.androidchat;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,7 +7,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
+import androidx.viewpager.widget.ViewPager;
+
 import com.ex3.androidchat.adapters.ContactsAdapter;
+import com.ex3.androidchat.database.AppDB;
+import com.ex3.androidchat.database.ContactDao;
 import com.ex3.androidchat.models.Contact;
 import com.ex3.androidchat.models.User;
 import com.ex3.androidchat.services.UserService;
@@ -30,27 +33,27 @@ public class MainActivity extends AppCompatActivity {
     User currentUser;
     FloatingActionButton addContact;
      UserService service;
+     ContactDao contactDao;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().setTitle(R.string.happy_chat);
 
+        AppDB db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "ContactDB")
+                .allowMainThreadQueries()
+                .build();
+
+        contactDao = db.contactDao();
+
         addContact = findViewById(R.id.addContact);
         RecyclerView recyclerView = findViewById(R.id.rvChatList);
         service = new UserService();
         service.loadContacts();
-//        contacts = currentUser.getContacts();
-        //static array
-        contacts = service.getById(Client.getUserId()).getContacts();
-        /*contacts.add(new Contact("0","hadar","localhost:3000", "hey there",0,"31.05.22"));
-        contacts.add(new Contact("1","noam","localhost:3000", "hey there",1,"31.05.22"));
-        contacts.add(new Contact("2","dvir","localhost:3000", "hey there",2,"31.05.22"));
-        contacts.add(new Contact("3","linda","localhost:3000", "hey there",3,"31.05.22"));*/
+        //contacts = service.getById(Client.getUserId()).getContacts();
         ContactsAdapter adapter = new ContactsAdapter(contacts, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
             addContact.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

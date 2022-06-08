@@ -1,14 +1,14 @@
 package com.ex3.androidchat.models;
 
-import android.content.Context;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import com.ex3.androidchat.Client;
-import com.ex3.androidchat.R;
-
-import java.time.LocalDateTime;
-
+@Entity
 public class Contact {
-    String id, name, server, last;
+    @PrimaryKey(autoGenerate = true)
+    String id;
+    String name, server, last;
     String profileImage;
     String lastdate;
 
