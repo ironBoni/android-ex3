@@ -35,7 +35,7 @@ public class UserService implements  IUserService {
     public boolean isContactOf(User user, String secondId) {
         User otherUser = getById(secondId);
         for(Contact contact : user.getContacts()) {
-            if(contact.getId() == secondId)
+            if(contact.getContactId() == secondId)
                 return true;
         }
         return false;
@@ -78,7 +78,7 @@ public class UserService implements  IUserService {
         Contact contactToRemove = null;
         
         for(Contact contact : contacts) {
-            if(contact.getId().equals(username)) {
+            if(contact.getContactId().equals(username)) {
                 contactToRemove = contact;        
             }
         }

@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.rvChatList);
         service = new UserService();
         service.loadContacts();
-        //contacts = service.getById(Client.getUserId()).getContacts();
+        contacts = service.getById(Client.getUserId()).getContacts();
         ContactsAdapter adapter = new ContactsAdapter(contacts, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

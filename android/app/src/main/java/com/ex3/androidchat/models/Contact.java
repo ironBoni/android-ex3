@@ -1,19 +1,27 @@
 package com.ex3.androidchat.models;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.ex3.androidchat.Client;
+
+import java.util.Random;
+
 @Entity
 public class Contact {
     @PrimaryKey(autoGenerate = true)
-    String id;
-    String name, server, last;
-    String profileImage;
-    String lastdate;
+    public int id;
+    public String contactId;
+    public String name, server, last;
+    public String profileImage;
+    public String lastdate;
 
-    public Contact(String id, String name, String server, String last, String profileImage, String lastdate) {
-        this.id = id;
+    public Contact() { }
+    @Ignore
+    public Contact(String contactId, String name, String server, String last, String profileImage, String lastdate) {
+        this.id = new Random().nextInt(900000) + 100000;
+        this.contactId = contactId;
         this.name = name;
         this.server = server;
         this.last = last;
@@ -21,8 +29,10 @@ public class Contact {
         this.lastdate = lastdate;
     }
 
-    public Contact(String id, String name, String server) {
+    @Ignore
+    public Contact(int id, String contactId, String name, String server) {
         this.id = id;
+        this.contactId = contactId;
         this.name = name;
         this.server = server;
         this.last = null;
@@ -30,9 +40,22 @@ public class Contact {
         this.profileImage = Client.defaultImage;
     }
 
-    public String getId() {
+
+    @Ignore
+    public Contact(String contactId, String name, String server) {
+        this.id = new Random().nextInt(900000) + 100000;
+        this.contactId = contactId;
+        this.name = name;
+        this.server = server;
+        this.last = null;
+        this.lastdate = null;
+        this.profileImage = Client.defaultImage;
+    }
+
+    public int getId() {
         return id;
     }
+    public String getContactId() { return contactId; }
 
     public String getName() {
         return name;
