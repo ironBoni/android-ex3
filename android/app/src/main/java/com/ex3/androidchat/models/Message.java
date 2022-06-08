@@ -4,6 +4,13 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.ex3.androidchat.services.ChatService;
+
+import org.w3c.dom.Text;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class Message {
     int id;
     String type, text, senderUsername, fileName;
@@ -27,9 +34,22 @@ public class Message {
         this.sent = sent;
     }
 
-
+/*
     public Message(int id, String text, String senderUsername) {
         this(id, "text", text, senderUsername, "30.05.2022 16:26");
+    }*/
+
+    //@RequiresApi(api = Build.VERSION_CODES.O)
+    public Message(int id, String text, String senderUsername) {
+        this.text = text;
+        this.id = id;
+        this.senderUsername = senderUsername;
+        sent = true;
+        type = "text";
+        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        //LocalDateTime now = LocalDateTime.now();
+        writtenIn = "08/06/2022 18:06";
+        fileName = "";
     }
 
     public Message(int id, String type, String text, String senderUsername, String writtenIn, String fileName) {

@@ -39,4 +39,13 @@ public class Chat {
     public ArrayList<Message> getMessages() {
         return messages;
     }
+    public void addMessage(String message, String senderId) {
+        int maxId = 0;
+        for(Message m : messages) {
+            if(m.getId() > maxId) {
+                maxId = m.getId();
+            }
+        }
+        messages.add(new Message(maxId + 1, message, senderId));
+    }
 }

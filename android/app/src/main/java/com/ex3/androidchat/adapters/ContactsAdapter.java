@@ -8,13 +8,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.ex3.androidchat.ConversationActivity;
 import com.ex3.androidchat.R;
 import com.ex3.androidchat.models.Contact;
 import com.ex3.androidchat.services.GetByAsyncTask;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
@@ -48,7 +48,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ConversationActivity.class);
-                intent.putExtra("id", contact.getId());
+                intent.putExtra("id", contact.getContactId());
                 intent.putExtra("nickname", contact.getName());
                 intent.putExtra("server", contact.getServer());
                 intent.putExtra("image", contact.getProfileImage());

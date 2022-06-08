@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ex3.androidchat.Client;
 import com.ex3.androidchat.R;
+import com.ex3.androidchat.models.Chat;
 import com.ex3.androidchat.models.Message;
+import com.ex3.androidchat.services.ChatService;
 
 import java.util.ArrayList;
 
@@ -19,11 +21,25 @@ public class ConversationAdapter extends RecyclerView.Adapter {
     Context context;
     int viewTypeSender = 1;
     int viewTypeReceiver = 2;
+    ChatService service;
     public ConversationAdapter(ArrayList<Message> messages, Context context) {
         this.messages = messages;
         this.context = context;
+        this.service = new ChatService();
     }
 
+    public void addNewMessage(String text) {
+        Chat chat = service.GetChatByParticipants(Client.getUserId(), Client.getFriendId());
+        int maxId = 0;
+        for(Message m : chat.getMessages()) {
+            if(m.getId() > maxId) {
+                maxId = m.getId();
+            }
+        }
+        int newId = maxId + 1;
+        messages.add(new Message(newId, text, Client.getUserId()));
+        this.notifyDataSetChanged();
+    }
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
