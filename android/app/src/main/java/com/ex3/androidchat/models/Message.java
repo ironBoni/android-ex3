@@ -39,16 +39,16 @@ public class Message {
         this(id, "text", text, senderUsername, "30.05.2022 16:26");
     }*/
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    //@RequiresApi(api = Build.VERSION_CODES.O)
     public Message(int id, String text, String senderUsername) {
         this.text = text;
         this.id = id;
         this.senderUsername = senderUsername;
         sent = true;
         type = "text";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        LocalDateTime now = LocalDateTime.now();
-        writtenIn = formatter.format(now);
+        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        //LocalDateTime now = LocalDateTime.now();
+        writtenIn = "08/06/2022 18:06";
         fileName = "";
     }
 

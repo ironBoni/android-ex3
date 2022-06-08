@@ -39,7 +39,7 @@ public class Chat {
     public ArrayList<Message> getMessages() {
         return messages;
     }
-    public int addMessage(String message, String senderId) {
+    public void addMessage(String message, String senderId) {
         int maxId = 0;
         for(Message m : messages) {
             if(m.getId() > maxId) {
@@ -47,6 +47,5 @@ public class Chat {
             }
         }
         messages.add(new Message(maxId + 1, message, senderId));
-        return getMessages().size() - 1;
     }
 }

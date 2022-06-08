@@ -38,6 +38,7 @@ public class ConversationActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         String friendId =  getIntent().getStringExtra("id");
+        Client.setFriendId(friendId);
         String nickname =  getIntent().getStringExtra("nickname");
         String server =  getIntent().getStringExtra("server");
         String image =  getIntent().getStringExtra("image");
@@ -80,15 +81,9 @@ public class ConversationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 EditText txtMsg = (EditText) findViewById(R.id.txtEnterMsg);
-                int position = addNewMessage(friendId, txtMsg.getText().toString());
+                adapter.addNewMessage(txtMsg.getText().toString());
                 txtMsg.setText("");
-                //adapter.notifyItemInserted(position);
-                //ArrayList<Message> newMessages = conversition.getMessages();
-                //messages.clear();
-                //messages.addAll(newMessages);
                 adapter.notifyDataSetChanged();
-                //ConversationAdapter adapter = new ConversationAdapter(messages,getApplicationContext());
-                recyclerView.setAdapter(adapter);
             }
         });
 
@@ -98,15 +93,9 @@ public class ConversationActivity extends AppCompatActivity {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     EditText txtMsg = (EditText) findViewById(R.id.txtEnterMsg);
-                    //int position = addNewMessage(friendId, txtMsg.getText().toString());
+                    adapter.addNewMessage(txtMsg.getText().toString());
                     txtMsg.setText("");
-                    //adapter.notifyItemInserted(position);
-                    //ArrayList<Message> newMessages = conversition.getMessages();
-                    //messages.clear();
-                    //messages.addAll(newMessages);
                     adapter.notifyDataSetChanged();
-                    //ConversationAdapter adapter = new ConversationAdapter(messages,getApplicationContext());
-                    recyclerView.setAdapter(adapter);
                     return true;
                 }
                 return false;
@@ -114,9 +103,8 @@ public class ConversationActivity extends AppCompatActivity {
         });
     }
 
-    private int addNewMessage(String friendId, String text) {
+    private void addNewMessage(String friendId, String text) {
         Chat conversation = service.GetChatByParticipants(Client.getUserId(), friendId);
-        int positionInserted = conversation.addMessage(text, Client.getUserId());
-        return positionInserted;
+        conversation.addMessage(text, Client.getUserId());
     }
 }

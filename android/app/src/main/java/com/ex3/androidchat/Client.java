@@ -22,6 +22,16 @@ public class Client {
     private static String token = "";
     private static IUserService userService = new UserService();
     private static String userId = "";
+
+    public static String getFriendId() {
+        return friendId;
+    }
+
+    public static void setFriendId(String friendId) {
+        Client.friendId = friendId;
+    }
+
+    private static String friendId = "";
     public static String defaultImage = "https://www.stignatius.co.uk/wp-content/uploads/2020/10/default-user-icon.jpg";
     public static String getUserId() {
         return userId;
