@@ -15,6 +15,7 @@ import androidx.room.Room;
 import androidx.viewpager.widget.ViewPager;
 
 import com.ex3.androidchat.adapters.ContactsAdapter;
+import com.ex3.androidchat.api.ContactsAPI;
 import com.ex3.androidchat.database.AppDB;
 import com.ex3.androidchat.database.ContactDao;
 import com.ex3.androidchat.models.Contact;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AndroidChat.context = getApplicationContext();
         setContentView(R.layout.activity_main);
         getSupportActionBar().setTitle(R.string.happy_chat);
 
@@ -51,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
         service = new UserService();
         service.loadContacts();
         contacts = service.getById(Client.getUserId()).getContacts();
+        ContactsAPI contactsAPI = new ContactsAPI();
+        contactsAPI.get();
+
         ContactsAdapter adapter = new ContactsAdapter(contacts, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
