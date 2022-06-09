@@ -9,6 +9,7 @@ import com.ex3.androidchat.models.contacts.PutContactRequest;
 import com.ex3.androidchat.models.contacts.PutMessageRequest;
 import com.ex3.androidchat.models.contacts.SendMessageRequest;
 import com.ex3.androidchat.models.contacts.UserModel;
+import com.ex3.androidchat.models.invitations.InvitationRequest;
 import com.ex3.androidchat.models.login.LoginRequest;
 import com.ex3.androidchat.models.login.LoginResponse;
 import com.ex3.androidchat.models.login.TokenResponse;
@@ -67,7 +68,7 @@ public interface WebServiceAPI {
     Call<Void> putContact(@Path("id") String id, @Body PutContactRequest req, @Header("Authorization") String token);
 
     @POST("invitations")
-    Call<Void> sendInvitation();
+    Call<Void> sendInvitation(@Body InvitationRequest req);
 
     @GET("login/{id}")
     Call<TokenResponse> getToken(@Path("id") String id);

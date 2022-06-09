@@ -48,7 +48,7 @@ public class ConversationActivity extends AppCompatActivity {
                 .baseUrl(hisServer + "api/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        WebServiceAPI hisServiceAPI = retrofit.create(WebServiceAPI.class);
+        WebServiceAPI hisServiceAPI = hisRetrofit.create(WebServiceAPI.class);
 
         Call<Void> call = hisServiceAPI.transfer(new TransferRequest(Client.getUserId(), friendId, msg));
         call.enqueue(new Callback<Void>() {
@@ -97,7 +97,7 @@ public class ConversationActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<GetUserDetailsResponse> call, Throwable t) {
-
+                Log.e(getString(R.string.retrofit), t.getMessage());
             }
         });
     }
@@ -177,7 +177,7 @@ public class ConversationActivity extends AppCompatActivity {
             Log.e("Conversation", ex.getMessage());
             Toast.makeText(this, "Contact could not be loaded.", Toast.LENGTH_SHORT).show();
         }
-        messages = conversition.getMessages();
+        //messages = conversition.getMessages();
 
         Call<List<MessageResponse>> allMessages = webServiceAPI.getMessagesById(friendId, Client.getToken());
         allMessages.enqueue(new Callback<List<MessageResponse>>() {
