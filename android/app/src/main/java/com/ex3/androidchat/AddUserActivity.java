@@ -2,11 +2,13 @@ package com.ex3.androidchat;
 
 import static java.util.UUID.randomUUID;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
@@ -27,6 +29,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AddUserActivity extends AppCompatActivity {
     Button cAdd;
+    ImageView backButton;
     EditText cName, cNickname, cServer;
     ContactDao contactDao;
     Retrofit retrofit;
@@ -35,6 +38,7 @@ public class AddUserActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        backButton = findViewById(R.id.btnBackAddUser);
         setContentView(R.layout.activity_add_user);
         retrofit = new Retrofit.Builder()
                 .baseUrl(getApplicationContext().getString(R.string.BaseUrl))
@@ -53,6 +57,14 @@ public class AddUserActivity extends AppCompatActivity {
         cNickname = findViewById(R.id.cNickname);
         cServer = findViewById(R.id.cServer);
 
+        backButton = findViewById(R.id.btnBackAddUser);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddUserActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
         cAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,6 +77,9 @@ public class AddUserActivity extends AppCompatActivity {
                 contactDao.insert(new Contact(id, hisId, hisNickname, hisServer));
                 sendInvitationToHisServer(hisId, hisNickname, hisServer);
                 addContactInServer(hisId, hisNickname, hisServer);
+
+                Intent intent = new Intent(AddUserActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -86,6 +101,7 @@ public class AddUserActivity extends AppCompatActivity {
 
     private void sendInvitationToHisServer(String friendId, String friendNickname, String friendServer) {
         friendServer = Utils.getFullServerUrl(friendServer);
+        friendServer = Utils.getAndroidServer(friendServer);
         Retrofit hisRetrofit = new Retrofit.Builder()
                 .baseUrl(friendServer + "api/")
                 .addConverterFactory(GsonConverterFactory.create())

@@ -28,18 +28,21 @@ namespace AspWebApi.Controllers {
             return userService.GetAll().Select(x => new UserModel(x.Username, x.Nickname,
                 x.Password, x.ProfileImage, x.Server)).ToList();
         }
-
-        // GET api/<UsersController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
         // POST api/<UsersController>
         [HttpPost]
         public void Post([FromBody] string value)
         {
+        }
+
+        [HttpGet]
+        [Route("/api/users/{id}")]
+        public UserModel Get(string id)
+        {
+            using (var db = new ItemsContext())
+            {
+                var user = db.Users.ToList().Find(user => user.Username == id);
+                return new UserModel(user.Username, user.Nickname, user.Password, user.ProfileImage, user.Server);
+            }
         }
 
         // PUT api/<UsersController>/5
@@ -47,7 +50,7 @@ namespace AspWebApi.Controllers {
         public void Put([FromBody] ChangeServerRequest request)
         {
             Current.Username = User.Claims.SingleOrDefault(i => i.Type.EndsWith("UserId"))?.Value;
-            using(var db = new ItemsContext())
+            using (var db = new ItemsContext())
             {
                 var user = db.Users.ToList().Find(user => user.Username == Current.Username);
                 user.Server = request.Server;
@@ -55,7 +58,8 @@ namespace AspWebApi.Controllers {
                 {
                     db.SaveChanges();
                     Response.StatusCode = 204;
-                } catch(Exception ex)
+                }
+                catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
                     Response.StatusCode = 404;

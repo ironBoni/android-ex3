@@ -12,7 +12,6 @@ namespace AspWebApi.Models.Contacts {
 
         public string Server { get; set; }
 
-        public List<Chat> Chats { get; set; }
         public List<ContactModel> Contacts { get; set; }
         public UserModel()
         {
