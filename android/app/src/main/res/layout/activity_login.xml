@@ -36,8 +36,9 @@
             android:inputType="textPersonName"
             android:minHeight="48dp"
             android:padding="8dp"
+            android:textSize="20dp"
             android:textColor="@color/black"
-            android:textColorHint="@color/grayLight" />
+            android:textColorHint="@color/white" />
 
         <EditText
             android:id="@+id/txtPassword"
@@ -49,8 +50,9 @@
             android:inputType="textPassword"
             android:minHeight="48dp"
             android:padding="8dp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/grayLight" />
+            android:textSize="20dp"
+            android:textColorHint="@color/white"
+            android:textColor="@color/black" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -64,6 +66,7 @@
                 android:layout_marginTop="8dp"
                 android:backgroundTint="@color/registerColor"
                 android:padding="13dp"
+                android:textSize="19dp"
                 android:text="Login"
                 android:textAllCaps="false"
                 app:cornerRadius="9dp" />
@@ -72,7 +75,8 @@
                 android:id="@+id/btnSignup"
                 android:layout_width="155dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
+                android:layout_marginLeft="12dp"
+                android:textSize="19dp"
                 android:layout_marginTop="8dp"
                 android:backgroundTint="@color/registerColor"
                 android:padding="13dp"

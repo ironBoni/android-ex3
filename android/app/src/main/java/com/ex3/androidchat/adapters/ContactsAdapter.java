@@ -52,8 +52,19 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Contact contact = contacts.get(position);
 
-        String date = contact.getLastdate().split(" ")[0].substring(0,5);
-        String hour = contact.getLastdate().split(" ")[1];
+        String date;
+        String hour;
+
+        if(contact.getLastdate() != null && contact.getLastdate().split(" ").length == 2
+        && contact.getLastdate().split(" ")[0].length() >=6) {
+            date = contact.getLastdate().split(" ")[0].substring(0, 5);
+            hour = contact.getLastdate().split(" ")[1];
+        }
+
+        else {
+            date = "";
+            hour = "";
+        }
 
         //holder.lastMsgTime.setText(hour + "\n" + date);
         holder.lastMsgTime.setText(date);

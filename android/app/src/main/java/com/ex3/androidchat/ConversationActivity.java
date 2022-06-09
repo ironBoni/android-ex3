@@ -17,6 +17,7 @@ import com.ex3.androidchat.adapters.ConversationAdapter;
 import com.ex3.androidchat.api.interfaces.WebServiceAPI;
 import com.ex3.androidchat.databinding.ActivityConversationBinding;
 import com.ex3.androidchat.models.Chat;
+import com.ex3.androidchat.models.Utils;
 import com.ex3.androidchat.models.contacts.GetUserDetailsResponse;
 import com.ex3.androidchat.models.contacts.MessageResponse;
 import com.ex3.androidchat.models.contacts.SendMessageRequest;
@@ -44,6 +45,7 @@ public class ConversationActivity extends AppCompatActivity {
 
 
     private void sendMessageToForeignServer(String friendId, String msg, String hisServer) {
+        hisServer = Utils.getAndroidServer(hisServer);
         Retrofit hisRetrofit = new Retrofit.Builder()
                 .baseUrl(hisServer + "api/")
                 .addConverterFactory(GsonConverterFactory.create())
