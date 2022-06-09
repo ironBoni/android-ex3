@@ -83,7 +83,7 @@ public interface WebServiceAPI {
     Call<ArrayList<UserModel>> getUsers(@Header("Authorization") String token);
 
     @GET("chats")
-    Call<List<Chat>> getChats(@Header("Authorization") String token);
+    Call<ArrayList<Chat>> getChats(@Header("Authorization") String token);
 
     @POST("register")
     Call<Void> register(@Body RegisterRequest req);

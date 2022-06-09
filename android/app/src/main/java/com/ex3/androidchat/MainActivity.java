@@ -71,15 +71,15 @@ public class MainActivity extends AppCompatActivity {
         service = new UserService();
         //bservice.loadContacts();
 
-        Call<List<Chat>> call = webServiceAPI.getChats(Client.getToken());
-        call.enqueue(new Callback<List<Chat>>() {
+        Call<ArrayList<Chat>> call = webServiceAPI.getChats(Client.getToken());
+        call.enqueue(new Callback<ArrayList<Chat>>() {
             @Override
-            public void onResponse(Call<List<Chat>> call, Response<List<Chat>> response) {
+            public void onResponse(Call<ArrayList<Chat>> call, Response<ArrayList<Chat>> response) {
                 ChatService.setChats(response.body());
             }
 
             @Override
-            public void onFailure(Call<List<Chat>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<Chat>> call, Throwable t) {
                 Log.e("retrofit", t.getMessage());
             }
         });

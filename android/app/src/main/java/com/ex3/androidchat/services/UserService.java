@@ -94,10 +94,10 @@ public class UserService implements  IUserService {
     }
 
     @Override
-    public boolean addContact(String addTo, String id, String name, String server, String last, String lastDate, String profileImage) {
+    public boolean addContact(String addTo, String contactId, String name, String server, String last, String lastDate, String profileImage) {
         User addToUser = getById(addTo);
         if(addToUser == null) return false;
-        return addToUser.getContacts().add(new Contact(id, name, server, last, profileImage, lastDate));
+        return addToUser.getContacts().add(new Contact(contactId, name, server, last, profileImage, lastDate));
     }
 
     @Override

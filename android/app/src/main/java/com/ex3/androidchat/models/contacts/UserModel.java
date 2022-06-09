@@ -2,13 +2,22 @@ package com.ex3.androidchat.models.contacts;
 
 import com.ex3.androidchat.models.Chat;
 import com.ex3.androidchat.models.Contact;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserModel {
-    public String id, name, password, profileImage, server;
+    public String id;
+
+    @SerializedName("name")
+    public String name;
+    public String password, profileImage, server;
+
+    @SerializedName("chats")
     public List<Chat> chats;
+
+    @SerializedName("contacts")
     public ArrayList<Contact> contacts;
 
     public UserModel() {

@@ -1,5 +1,7 @@
 package com.ex3.androidchat;
 
+import static java.util.UUID.randomUUID;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -58,7 +60,9 @@ public class AddUserActivity extends AppCompatActivity {
                 String hisId = cName.getText().toString();
                 String hisNickname = cNickname.getText().toString();
                 String hisServer = cServer.getText().toString();
-                contactDao.insert(new Contact(hisId, hisNickname, hisServer));
+                String id = randomUUID().toString();
+
+                contactDao.insert(new Contact(id, hisId, hisNickname, hisServer));
                 sendInvitationToHisServer(hisId, hisNickname, hisServer);
                 addContactInServer(hisId, hisNickname, hisServer);
             }

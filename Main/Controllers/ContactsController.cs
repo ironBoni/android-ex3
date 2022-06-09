@@ -173,7 +173,7 @@ namespace AspWebApi.Controllers {
         {
             Current.Username = User.Claims.SingleOrDefault(i => i.Type.EndsWith("UserId"))?.Value;
 
-            var result = userService.GetContacts(Current.Username).Find(contact => contact.Id == username);
+            var result = userService.GetContacts(Current.Username).Find(contact => contact.ContactId == username);
             if (result == null)
                 return NotFound();
             return Ok(result);
@@ -185,7 +185,7 @@ namespace AspWebApi.Controllers {
         {
             Current.Username = User.Claims.SingleOrDefault(i => i.Type.EndsWith("UserId"))?.Value;
 
-            var contact = userService.GetContacts(Current.Username).Find(c => c.Id == id);
+            var contact = userService.GetContacts(Current.Username).Find(c => c.ContactId == id);
             if (contact == null)
                 return StatusCode(400);
 

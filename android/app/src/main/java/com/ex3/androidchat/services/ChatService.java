@@ -1,7 +1,6 @@
 package com.ex3.androidchat.services;
 
 import com.ex3.androidchat.models.Chat;
-import com.ex3.androidchat.models.Message;
 import com.ex3.androidchat.models.contacts.MessageResponse;
 
 import java.util.ArrayList;
@@ -60,7 +59,7 @@ public class ChatService implements IChatService {
         return chats;
     }
 
-    public static void setChats(List<Chat> list) {
+    public static void setChats(ArrayList<Chat> list) {
         chats = new ArrayList<>(list);
     }
 

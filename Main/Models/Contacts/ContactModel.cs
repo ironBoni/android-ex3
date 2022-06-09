@@ -1,6 +1,7 @@
 ﻿namespace AspWebApi.Models.Contacts {
     public class ContactModel {
         public string Id { get; set; }
+        public string ContactId { get; set; }
 
         public string Name { get; set; }
 
@@ -16,9 +17,10 @@
         {
         }
 
-        public ContactModel(string id, string name, string server, string last, string lastdate, string profileImage)
+        public ContactModel(string id, string contactId, string name, string server, string last, string lastdate, string profileImage)
         {
             Id = id;
+            ContactId = contactId;
             Name = name;
             Server = server;
             Last = last;
