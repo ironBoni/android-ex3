@@ -2,7 +2,6 @@ package com.ex3.androidchat.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,19 +12,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ex3.androidchat.AndroidChat;
-import com.ex3.androidchat.Client;
 import com.ex3.androidchat.ConversationActivity;
 import com.ex3.androidchat.R;
 import com.ex3.androidchat.api.interfaces.WebServiceAPI;
 import com.ex3.androidchat.models.Contact;
-import com.ex3.androidchat.models.contacts.MessageResponse;
 import com.ex3.androidchat.services.GetByAsyncTask;
 
 import java.util.ArrayList;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -57,23 +51,14 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Contact contact = contacts.get(position);
-        Call<MessageResponse> call = webServiceAPI.getLastMessage(contact.getContactId(), Client.getToken());
-        call.enqueue(new Callback<MessageResponse>() {
-            @Override
-            public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
-                if(response.body() == null) {
-                    Log.e("retrofit", "response body is null");
-                    return;
-                }
-                holder.lastMsgTime.setText(response.body().getCreated());
-                holder.lastMsg.setText(response.body().getContent());
-            }
 
-            @Override
-            public void onFailure(Call<MessageResponse> call, Throwable t) {
-                Log.e(AndroidChat.context.getString(R.string.retrofit), t.getMessage());
-            }
-        });
+        String date = contact.getLastdate().split(" ")[0].substring(0,5);
+        String hour = contact.getLastdate().split(" ")[1];
+
+        //holder.lastMsgTime.setText(hour + "\n" + date);
+        holder.lastMsgTime.setText(date);
+        holder.lastMsgHour.setText(hour);
+        holder.lastMsg.setText(contact.getLast());
         holder.nickName.setText(contact.getName());
 
          new GetByAsyncTask((ImageView) holder.picture).execute(contact.getProfileImage());
@@ -86,6 +71,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
                 intent.putExtra("nickname", contact.getName());
                 intent.putExtra("server", contact.getServer());
                 intent.putExtra("image", contact.getProfileImage());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
         });

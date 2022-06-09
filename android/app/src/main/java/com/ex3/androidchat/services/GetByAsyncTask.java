@@ -7,6 +7,8 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class GetByAsyncTask extends AsyncTask<String, Void, Bitmap> {
     ImageView imageView;
@@ -17,6 +19,18 @@ public class GetByAsyncTask extends AsyncTask<String, Void, Bitmap> {
 
     @Override
     protected Bitmap doInBackground(String... urlStrings) {
+        try {
+            URL url = new URL(urlStrings[0]);
+            // here means it is URL, then do nothing
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            // otherwise it's bitmap, then update the image.
+            String imageBytesStr = urlStrings[0];
+            byte[] imageBytes = imageBytesStr.getBytes();
+            Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+            return bitmap;
+        }
+
         try {
             String url = urlStrings[0];
             Bitmap image = null;

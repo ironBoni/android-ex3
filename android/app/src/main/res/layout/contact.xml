@@ -71,7 +71,6 @@
             android:layout_height="wrap_content"
             android:paddingTop="6dp"
             android:id="@+id/lastMsgHour"
-            android:text="12:17"
             android:textSize="23dp" />
     </LinearLayout>
 
