@@ -1,8 +1,5 @@
 package com.ex3.androidchat;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,28 +7,37 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.ex3.androidchat.api.interfaces.WebServiceAPI;
+import com.ex3.androidchat.models.User;
+import com.ex3.androidchat.models.register.RegisterRequest;
+import com.ex3.androidchat.services.IUserService;
+import com.ex3.androidchat.services.UserService;
+
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.ex3.androidchat.databinding.ActivityRegisterBinding;
-import com.ex3.androidchat.models.User;
-import com.ex3.androidchat.services.IUserService;
-import com.ex3.androidchat.services.UserService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class RegisterActivity extends AppCompatActivity {
     private ProgressDialog dialog;
     IUserService userService;
+    Retrofit retrofit;
+    WebServiceAPI webServiceAPI;
     EditText txtUserIdR, txtPasswordR, txtNickname, txtConfirm;
     private ImageView imageView;
 
@@ -39,6 +45,12 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AndroidChat.context = getApplicationContext();
+        retrofit = new Retrofit.Builder()
+                .baseUrl(getApplicationContext().getString(R.string.BaseUrl))
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        webServiceAPI = retrofit.create(WebServiceAPI.class);
         userService = new UserService();
         setContentView(R.layout.activity_register);
         getSupportActionBar().hide();
@@ -82,11 +94,23 @@ public class RegisterActivity extends AppCompatActivity {
                 User user = new User(txtUserIdR.getText().toString(),
                         txtNickname.getText().toString(), txtPasswordR.getText().toString(), Client.getMyServer());
                 boolean isRegisterOk = userService.create(user);
-                if (isRegisterOk) {
-                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                    startActivity(intent);
-                } else
-                    Toast.makeText(RegisterActivity.this, "User already exists", Toast.LENGTH_SHORT).show();
+                Call<Void> call =  webServiceAPI.register(new RegisterRequest(user.getId(),
+                        user.getName(), user.getPassword(), user.getProfileImage(), user.getServer()));
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.code() == 200) {
+                            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                        } else
+                            Toast.makeText(RegisterActivity.this, "User already exists", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Toast.makeText(RegisterActivity.this, "Registration denied", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             private boolean isValidConfirmPassword(String password, String confirmPassword) {

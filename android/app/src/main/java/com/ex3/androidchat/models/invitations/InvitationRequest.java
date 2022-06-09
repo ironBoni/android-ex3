@@ -3,6 +3,12 @@ package com.ex3.androidchat.models.invitations;
 public class InvitationRequest {
     String from, to, server;
 
+    public InvitationRequest(String from, String to, String server) {
+        this.from = from;
+        this.to = to;
+        this.server = server;
+    }
+
     public String getFrom() {
         return from;
     }

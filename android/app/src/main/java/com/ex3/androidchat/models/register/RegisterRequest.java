@@ -3,6 +3,17 @@ package com.ex3.androidchat.models.register;
 public class RegisterRequest {
     String id, name, password, profileImage, server;
 
+    public RegisterRequest() {
+    }
+
+    public RegisterRequest(String id, String name, String password, String profileImage, String server) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+        this.profileImage = profileImage;
+        this.server = server;
+    }
+
     public String getId() {
         return id;
     }

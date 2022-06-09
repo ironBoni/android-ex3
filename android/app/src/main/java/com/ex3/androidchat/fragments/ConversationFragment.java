@@ -1,13 +1,12 @@
 package com.ex3.androidchat.fragments;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.ex3.androidchat.Client;
 import com.ex3.androidchat.R;
@@ -31,7 +30,7 @@ public class ConversationFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         service = new UserService();
-        service.loadContacts();
+        //service.loadContacts();
         contacts = service.getById(Client.getUserId()).getContacts();
         ContactsAdapter uAdapter = new ContactsAdapter(contacts, getContext());
         binding = FragmentConversationBinding.inflate(getLayoutInflater());

@@ -7,6 +7,7 @@ using Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -76,7 +77,7 @@ namespace Models.DataServices {
             {
                 var user = db.Users.Include(x => x.Contacts).ToList().Find(u => u.Username == username);
                 var contacts = user.Contacts;
-                return contacts.Select(c => new ContactModel(c.ContactId, c.Name, c.Server, c.Last, c.Lastdate, c.ProfileImage)).ToList();
+                return contacts.Select(c => new ContactModel(c.Id, c.ContactId, c.Name, c.Server, c.Last, c.Lastdate.Value.ToString("dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture), c.ProfileImage)).ToList();
             }
          }
 
@@ -108,7 +109,7 @@ namespace Models.DataServices {
                 }
 
                 // You cannot add someone that is already in your chats.
-                if (currentContacts.Any(user => user.Id == friendToAdd))
+                if (currentContacts.Any(user => user.ContactId == friendToAdd))
                 {
                     response = "You cannot add him, because he's already in your chat list.";
                     return false;
@@ -121,11 +122,11 @@ namespace Models.DataServices {
                 currentUserObj, friend});
 
                 var newContact = new Contact(name, server, null, null, friend.ProfileImage, friendToAdd, currentUserObj.Username);
-                var newContactModel = new ContactModel(friendToAdd, name, server, null, null, friend.ProfileImage);
+                var newContactModel = new ContactModel(newContact.Id, friendToAdd, name, server, null, null, friend.ProfileImage);
                 if (!currentContacts.Contains(newContactModel))
                 {
                     db.Contacts.Add(newContact);
-                    CurrentUsers.IdToContactsDict[currentUser.Username] = db.Contacts.Where(contact => contact.OfUser == username).ToList(); ;
+                    CurrentUsers.IdToContactsDict[currentUser.Id] = db.Contacts.Where(contact => contact.OfUser == username).ToList(); ;
                 }
 
                 if(currentUserObj.Username != newContact.Username)
@@ -139,12 +140,12 @@ namespace Models.DataServices {
                     Debug.Write(ex.ToString());
                 }
                 var otherUser = db.Users.ToList().Find(x => x.Username == friendToAdd);
-                var otherContact = new Contact(currentUser.Nickname, currentUser.Server, null, null, currentUser.ProfileImage, currentUser.Username, otherUser.Username);
+                var otherContact = new Contact(currentUser.Name, currentUser.Server, null, null, currentUser.ProfileImage, currentUser.Id, otherUser.Username);
                 
                 if(GetFullServerUrl(server) == Current.Server)
                 {
 
-                    if(friendToAdd != currentUser.Username)
+                    if(friendToAdd != currentUser.Id)
                     otherUser.Contacts.Add(otherContact);
                 }
                 try
@@ -264,7 +265,7 @@ namespace Models.DataServices {
                     return false;
                 }
 
-                if (!currentContacts.Any(user => user.Id == userToRemove))
+                if (!currentContacts.Any(user => user.ContactId == userToRemove))
                 {
                     res = "You cannot add someone that is already in your chats.";
                     return false;
@@ -342,7 +343,7 @@ namespace Models.DataServices {
                 }
 
                 // You cannot add someone that is already in your chats.
-                if (currentContacts.Any(user => user.Id == from))
+                if (currentContacts.Any(user => user.ContactId == from))
                 {
                     response = "User cannot be added, because he's already in your chat list.";
                     return false;
@@ -366,7 +367,7 @@ namespace Models.DataServices {
                     name = requestor.Nickname;
                 requestor.Server = server;
 
-                var newContact = new ContactModel(from, name, server, null, null, requestor.ProfileImage);
+                var newContact = new ContactModel(Guid.NewGuid().ToString(), from, name, server, null, null, requestor.ProfileImage);
                 if (!currentContacts.Contains(newContact))
                 {
                     var contact = new Contact(name, server, null, null, requestor.ProfileImage, from, currentUser.Username);

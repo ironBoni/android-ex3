@@ -1,16 +1,13 @@
 package com.ex3.androidchat.services;
 
 import com.ex3.androidchat.models.Chat;
-import com.ex3.androidchat.models.Message;
+import com.ex3.androidchat.models.contacts.MessageResponse;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class ChatService implements IChatService {
+/*
     private static ArrayList<String> ronAndNoam = new ArrayList<String>(Arrays.asList("ron", "noam"));
     private static ArrayList<String> ronAndDvir = new ArrayList<String>(Arrays.asList("ron", "dvir"));
     private static ArrayList<String> ronAndDan = new ArrayList<String>(Arrays.asList("ron", "dan"));
@@ -47,17 +44,26 @@ public class ChatService implements IChatService {
             new Message(1, "text", "my name is Noam.", "noam", "04.06.2021, 09:56:00", true),
             new Message(2, "text", "my name is Dvir.", "dvir", "04.06.2021 10:05:00", true),
             new Message(3, "text", "Nice to meet you!", "dvir", "04.08.2021 10:30:00", true)));
+*/
 
-    private static ArrayList<Chat> chats = new ArrayList<Chat>
-            (Arrays.asList(new Chat(1, ronAndNoam, ronNoamMessages),
+    private static ArrayList<Chat> chats = new ArrayList<Chat>();
+            /*(Arrays.asList(new Chat(1, ronAndNoam, ronNoamMessages),
                     new Chat(2, ronAndDvir, ronDvirMessages),
                     new Chat(3, ronAndDan, ronDanMessages),
                     new Chat(5, ronAndIdan, ronIdanMessages),
                     new Chat(6, ronAndHadar, ronHadarMessages),
                     new Chat(7, noamAndDvir, dvirNoamMessages)));
-
+*/
     @Override
     public ArrayList<Chat> GetAll() {
+        return chats;
+    }
+
+    public static void setChats(ArrayList<Chat> list) {
+        chats = new ArrayList<>(list);
+    }
+
+    public static ArrayList<Chat> getChats() {
         return chats;
     }
 
@@ -101,7 +107,7 @@ public class ChatService implements IChatService {
     }
 
     @Override
-    public boolean AddMessage(int chatId, Message message) {
+    public boolean AddMessage(int chatId, MessageResponse message) {
         Chat chat = GetById(chatId);
         if (chat == null) return false;
         return chat.getMessages().add(message);
@@ -118,7 +124,7 @@ public class ChatService implements IChatService {
     }
 
     @Override
-    public ArrayList<Message> GetAllMessages(String username, String other) {
+    public List<MessageResponse> GetAllMessages(String username, String other) {
         Chat chat = GetChatByParticipants(username, other);
         if (chat == null) return null;
         return chat.getMessages();

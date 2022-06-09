@@ -3,6 +3,15 @@ package com.ex3.androidchat.models.transfer;
 public class TransferRequest {
     String from, to, content;
 
+    public TransferRequest() {
+    }
+
+    public TransferRequest(String from, String to, String content) {
+        this.from = from;
+        this.to = to;
+        this.content = content;
+    }
+
     public String getFrom() {
         return from;
     }

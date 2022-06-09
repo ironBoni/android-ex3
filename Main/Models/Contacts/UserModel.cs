@@ -2,9 +2,9 @@
 
 namespace AspWebApi.Models.Contacts {
     public class UserModel {
-        public string Username { get; set; }
+        public string Id { get; set; }
 
-        public string Nickname { get; set; }
+        public string Name { get; set; }
 
         public string Password { get; set; }
 
@@ -20,8 +20,8 @@ namespace AspWebApi.Models.Contacts {
 
         public UserModel(string username, string nickname, string password, string profileImage, string server)
         {
-            Username = username;
-            Nickname = nickname;
+            Id = username;
+            Name = nickname;
             Password = password;
             ProfileImage = profileImage;
             Server = server;

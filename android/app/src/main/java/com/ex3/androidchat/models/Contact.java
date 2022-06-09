@@ -1,17 +1,19 @@
 package com.ex3.androidchat.models;
 
+import static java.util.UUID.randomUUID;
+
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.ex3.androidchat.Client;
 
-import java.util.Random;
-
 @Entity
 public class Contact {
-    @PrimaryKey(autoGenerate = true)
-    public int id;
+    @PrimaryKey
+    @NonNull
+    public String id;
     public String contactId;
     public String name, server, last;
     public String profileImage;
@@ -19,8 +21,18 @@ public class Contact {
 
     public Contact() { }
     @Ignore
+    public Contact(String id, String contactId, String name, String server, String last, String profileImage, String lastdate) {
+        this.id = id;
+        this.contactId = contactId;
+        this.name = name;
+        this.server = server;
+        this.last = last;
+        this.profileImage = profileImage;
+        this.lastdate = lastdate;
+    }
+
     public Contact(String contactId, String name, String server, String last, String profileImage, String lastdate) {
-        this.id = new Random().nextInt(900000) + 100000;
+        this.id = randomUUID().toString();
         this.contactId = contactId;
         this.name = name;
         this.server = server;
@@ -30,7 +42,7 @@ public class Contact {
     }
 
     @Ignore
-    public Contact(int id, String contactId, String name, String server) {
+    public Contact(String id, String contactId, String name, String server) {
         this.id = id;
         this.contactId = contactId;
         this.name = name;
@@ -40,19 +52,7 @@ public class Contact {
         this.profileImage = Client.defaultImage;
     }
 
-
-    @Ignore
-    public Contact(String contactId, String name, String server) {
-        this.id = new Random().nextInt(900000) + 100000;
-        this.contactId = contactId;
-        this.name = name;
-        this.server = server;
-        this.last = null;
-        this.lastdate = null;
-        this.profileImage = Client.defaultImage;
-    }
-
-    public int getId() {
+    public String getId() {
         return id;
     }
     public String getContactId() { return contactId; }

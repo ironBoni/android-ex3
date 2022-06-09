@@ -19,6 +19,15 @@ public class ContactRequest {
         this.id = id;
     }
 
+    public ContactRequest() {
+    }
+
+    public ContactRequest(String id, String name, String server) {
+        this.id = id;
+        this.name = name;
+        this.server = server;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

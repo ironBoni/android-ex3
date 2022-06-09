@@ -3,6 +3,14 @@ package com.ex3.androidchat.models.login;
 public class LoginRequest {
     String username, password;
 
+    public LoginRequest(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public LoginRequest() {
+    }
+
     public String getUsername() {
         return username;
     }

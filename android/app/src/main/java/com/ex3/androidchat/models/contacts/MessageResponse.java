@@ -3,10 +3,34 @@ package com.ex3.androidchat.models.contacts;
 import java.time.LocalDateTime;
 
 public class MessageResponse {
-    int id;
-    String content, type, senderUsername, fileName;
-    LocalDateTime created;
-    boolean sent;
+    public int id;
+    public String content, type, senderUsername, fileName;
+    public String created;
+    public boolean sent;
+
+    public MessageResponse() {
+    }
+
+    public MessageResponse(int id, String content, String type, String senderUsername, String fileName, String created, boolean sent) {
+        this.id = id;
+        this.content = content;
+        this.type = type;
+        this.senderUsername = senderUsername;
+        this.fileName = fileName;
+        this.created = created;
+        this.sent = sent;
+    }
+    public MessageResponse(int id, String text, String senderUsername) {
+        this.content = text;
+        this.id = id;
+        this.senderUsername = senderUsername;
+        sent = true;
+        type = "text";
+        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        //LocalDateTime now = LocalDateTime.now();
+        created = "08/06/2022 18:06";
+        fileName = "";
+    }
 
     public int getId() {
         return id;
@@ -28,7 +52,7 @@ public class MessageResponse {
         return fileName;
     }
 
-    public LocalDateTime getCreated() {
+    public String getCreated() {
         return created;
     }
 
@@ -56,7 +80,7 @@ public class MessageResponse {
         this.fileName = fileName;
     }
 
-    public void setCreated(LocalDateTime created) {
+    public void setCreated(String created) {
         this.created = created;
     }
 

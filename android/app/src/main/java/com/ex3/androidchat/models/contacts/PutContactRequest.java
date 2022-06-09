@@ -1,7 +1,7 @@
 package com.ex3.androidchat.models.contacts;
 
 public class PutContactRequest {
-    String name, server;
+    public String name, server;
 
     public String getName() {
         return name;
@@ -9,6 +9,14 @@ public class PutContactRequest {
 
     public String getServer() {
         return server;
+    }
+
+    public PutContactRequest() {
+    }
+
+    public PutContactRequest(String name, String server) {
+        this.name = name;
+        this.server = server;
     }
 
     public void setName(String name) {

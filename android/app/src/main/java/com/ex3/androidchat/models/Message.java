@@ -1,27 +1,19 @@
 package com.ex3.androidchat.models;
 
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
-
-import com.ex3.androidchat.services.ChatService;
-
-import org.w3c.dom.Text;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 public class Message {
-    int id;
-    String type, text, senderUsername, fileName;
-    String writtenIn;
-    boolean sent;
+    public int id;
+    public String type, text, senderUsername, fileName;
+    public String writtenIn;
+    public boolean sent;
 
     public Message(int id, String text, String senderUsername, String writtenIn) {
         this.id = id;
         this.text = text;
         this.senderUsername = senderUsername;
         this.writtenIn = writtenIn;
+    }
+
+    public Message() {
     }
 
     public Message(int id, String type, String text, String senderUsername, String writtenIn, String fileName, boolean sent) {
