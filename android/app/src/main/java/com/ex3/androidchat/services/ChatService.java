@@ -1,6 +1,7 @@
 package com.ex3.androidchat.services;
 
 import com.ex3.androidchat.models.Chat;
+import com.ex3.androidchat.models.Message;
 import com.ex3.androidchat.models.contacts.MessageResponse;
 
 import java.util.ArrayList;
@@ -107,7 +108,7 @@ public class ChatService implements IChatService {
     }
 
     @Override
-    public boolean AddMessage(int chatId, MessageResponse message) {
+    public boolean AddMessage(int chatId, Message message) {
         Chat chat = GetById(chatId);
         if (chat == null) return false;
         return chat.getMessages().add(message);
@@ -124,7 +125,7 @@ public class ChatService implements IChatService {
     }
 
     @Override
-    public List<MessageResponse> GetAllMessages(String username, String other) {
+    public List<Message> GetAllMessages(String username, String other) {
         Chat chat = GetChatByParticipants(username, other);
         if (chat == null) return null;
         return chat.getMessages();

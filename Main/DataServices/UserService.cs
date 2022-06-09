@@ -77,10 +77,24 @@ namespace Models.DataServices {
             {
                 var user = db.Users.Include(x => x.Contacts).ToList().Find(u => u.Username == username);
                 var contacts = user.Contacts;
-                return contacts.Select(c => new ContactModel(c.Id, c.ContactId, c.Name, c.Server, c.Last, c.Lastdate.Value.ToString("dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture), c.ProfileImage)).ToList();
+              
+                return contacts.Select(c => new ContactModel(c.Id, c.ContactId, c.Name, c.Server, c.Last, getDate(c.Lastdate), c.ProfileImage)).ToList();
             }
          }
 
+        public static string getDate(DateTime? lastdate)
+        {
+            if (lastdate == null)
+                return "";
+            return lastdate.Value.ToString("dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+        }
+
+        public static string getDateString(DateTime lastdate)
+        {
+            if (lastdate == null)
+                return "";
+            return lastdate.ToString("dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+        }
 
         public bool AddContact(string friendToAdd, string name, string server, out string response)
         {

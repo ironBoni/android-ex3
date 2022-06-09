@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ex3.androidchat.Client;
 import com.ex3.androidchat.R;
 import com.ex3.androidchat.models.Chat;
+import com.ex3.androidchat.models.Message;
 import com.ex3.androidchat.models.contacts.MessageResponse;
 import com.ex3.androidchat.services.ChatService;
 
@@ -32,7 +33,7 @@ public class ConversationAdapter extends RecyclerView.Adapter {
     public void addNewMessage(String text) {
         Chat chat = service.GetChatByParticipants(Client.getUserId(), Client.getFriendId());
         int maxId = 0;
-        for(MessageResponse m : chat.getMessages()) {
+        for(Message m : chat.getMessages()) {
             if(m.getId() > maxId) {
                 maxId = m.getId();
             }

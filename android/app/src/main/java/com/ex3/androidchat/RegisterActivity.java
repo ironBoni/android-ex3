@@ -3,6 +3,7 @@ package com.ex3.androidchat;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import com.ex3.androidchat.models.register.RegisterRequest;
 import com.ex3.androidchat.services.IUserService;
 import com.ex3.androidchat.services.UserService;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,6 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
     private ImageView imageView;
 
     int SELECT_PICTURE = 200;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,7 +86,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
 
-
             private void createUser() {
                 dialog.show();
                 userService = new UserService();
@@ -91,10 +93,18 @@ public class RegisterActivity extends AppCompatActivity {
                 txtPasswordR = findViewById(R.id.txtPasswordR);
                 txtNickname = findViewById(R.id.txtNickname);
                 txtConfirm = findViewById(R.id.txtConfirm);
+
+                BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
+                Bitmap bitmap = drawable.getBitmap();
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
+                byte[] byteArray = byteArrayOutputStream.toByteArray();
+                String imageBytesStr = String.valueOf(byteArray);
+
                 User user = new User(txtUserIdR.getText().toString(),
-                        txtNickname.getText().toString(), txtPasswordR.getText().toString(), Client.getMyServer());
+                        txtNickname.getText().toString(), txtPasswordR.getText().toString(), imageBytesStr);
                 boolean isRegisterOk = userService.create(user);
-                Call<Void> call =  webServiceAPI.register(new RegisterRequest(user.getId(),
+                Call<Void> call = webServiceAPI.register(new RegisterRequest(user.getId(),
                         user.getName(), user.getPassword(), user.getProfileImage(), user.getServer()));
                 call.enqueue(new Callback<Void>() {
                     @Override
@@ -102,12 +112,15 @@ public class RegisterActivity extends AppCompatActivity {
                         if (response.code() == 200) {
                             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                             startActivity(intent);
-                        } else
+                        } else {
+                            dialog.hide();
                             Toast.makeText(RegisterActivity.this, "User already exists", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
+                        dialog.hide();
                         Toast.makeText(RegisterActivity.this, "Registration denied", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -187,6 +200,7 @@ public class RegisterActivity extends AppCompatActivity {
         // with the returned requestCode
         startActivityForResult(Intent.createChooser(i, "Select Picture"), SELECT_PICTURE);
     }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -198,7 +212,6 @@ public class RegisterActivity extends AppCompatActivity {
             if (requestCode == SELECT_PICTURE) {
                 // Get the url of the image from data
                 Uri selectedImageUri = data.getData();
-
 
 
                 if (null != selectedImageUri) {
