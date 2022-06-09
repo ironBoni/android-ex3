@@ -3,11 +3,11 @@ package com.ex3.androidchat;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -94,12 +94,14 @@ public class RegisterActivity extends AppCompatActivity {
                 txtNickname = findViewById(R.id.txtNickname);
                 txtConfirm = findViewById(R.id.txtConfirm);
 
-                BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
-                Bitmap bitmap = drawable.getBitmap();
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
-                byte[] byteArray = byteArrayOutputStream.toByteArray();
-                String imageBytesStr = String.valueOf(byteArray);
+                imageView.setDrawingCacheEnabled(true);
+                imageView.buildDrawingCache();
+                Bitmap bitmap = Bitmap.createBitmap(imageView.getDrawingCache());
+
+                ByteArrayOutputStream byteArrayOutputStream = new  ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG,100, byteArrayOutputStream);
+                byte[] b=byteArrayOutputStream.toByteArray();
+                String imageBytesStr = Base64.encodeToString(b, Base64.DEFAULT);
 
                 User user = new User(txtUserIdR.getText().toString(),
                         txtNickname.getText().toString(), txtPasswordR.getText().toString(), imageBytesStr);
