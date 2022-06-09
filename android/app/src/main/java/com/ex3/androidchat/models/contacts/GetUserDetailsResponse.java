@@ -1,7 +1,7 @@
 package com.ex3.androidchat.models.contacts;
 
 public class GetUserDetailsResponse {
-    String server, name, profileImage;
+    public String server, name, profileImage;
 
     public String getServer() {
         return server;
@@ -17,6 +17,15 @@ public class GetUserDetailsResponse {
 
     public void setServer(String server) {
         this.server = server;
+    }
+
+    public GetUserDetailsResponse() {
+    }
+
+    public GetUserDetailsResponse(String server, String name, String profileImage) {
+        this.server = server;
+        this.name = name;
+        this.profileImage = profileImage;
     }
 
     public void setName(String name) {

@@ -7,6 +7,7 @@ using Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -76,7 +77,7 @@ namespace Models.DataServices {
             {
                 var user = db.Users.Include(x => x.Contacts).ToList().Find(u => u.Username == username);
                 var contacts = user.Contacts;
-                return contacts.Select(c => new ContactModel(c.ContactId, c.Name, c.Server, c.Last, c.Lastdate, c.ProfileImage)).ToList();
+                return contacts.Select(c => new ContactModel(c.ContactId, c.Name, c.Server, c.Last, c.Lastdate.Value.ToString("dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture), c.ProfileImage)).ToList();
             }
          }
 

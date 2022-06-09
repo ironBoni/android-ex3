@@ -4,10 +4,6 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.ex3.androidchat.models.User;
-import com.ex3.androidchat.services.IUserService;
-import com.ex3.androidchat.services.UserService;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -20,7 +16,6 @@ import java.util.Map;
 public class Client {
     private static String dataServer = "http://localhost:5186/api/";
     private static String token = "";
-    private static IUserService userService = new UserService();
     private static String userId = "";
 
     public static String getFriendId() {
@@ -35,9 +30,6 @@ public class Client {
     public static String defaultImage = "https://www.stignatius.co.uk/wp-content/uploads/2020/10/default-user-icon.jpg";
     public static String getUserId() {
         return userId;
-    }
-    public static User getUser() {
-        return userService.getById(userId);
     }
 
     public static void setUserId(String username) {

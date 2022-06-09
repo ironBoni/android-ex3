@@ -5,24 +5,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ex3.androidchat.Client;
 import com.ex3.androidchat.R;
 import com.ex3.androidchat.models.Chat;
-import com.ex3.androidchat.models.Message;
+import com.ex3.androidchat.models.contacts.MessageResponse;
 import com.ex3.androidchat.services.ChatService;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class ConversationAdapter extends RecyclerView.Adapter {
-    ArrayList<Message> messages;
+    List<MessageResponse> messages;
     Context context;
     int viewTypeSender = 1;
     int viewTypeReceiver = 2;
     ChatService service;
-    public ConversationAdapter(ArrayList<Message> messages, Context context) {
+    public ConversationAdapter(List<MessageResponse> messages, Context context) {
         this.messages = messages;
         this.context = context;
         this.service = new ChatService();
@@ -31,13 +32,13 @@ public class ConversationAdapter extends RecyclerView.Adapter {
     public void addNewMessage(String text) {
         Chat chat = service.GetChatByParticipants(Client.getUserId(), Client.getFriendId());
         int maxId = 0;
-        for(Message m : chat.getMessages()) {
+        for(MessageResponse m : chat.getMessages()) {
             if(m.getId() > maxId) {
                 maxId = m.getId();
             }
         }
         int newId = maxId + 1;
-        messages.add(new Message(newId, text, Client.getUserId()));
+        messages.add(new MessageResponse(newId, text, Client.getUserId()));
         this.notifyDataSetChanged();
     }
     @NonNull
@@ -53,12 +54,12 @@ public class ConversationAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        Message msg = messages.get(position);
+        MessageResponse msg = messages.get(position);
 
         if(holder.getClass() == ViewHolderSend.class) {
-            ((ViewHolderSend)holder).messageSent.setText(msg.getText());
+            ((ViewHolderSend)holder).messageSent.setText(msg.getContent());
         } else {
-            ((ViewHolderReceive)holder).messageReceived.setText(msg.getText());
+            ((ViewHolderReceive)holder).messageReceived.setText(msg.getContent());
         }
     }
 

@@ -1,68 +1,119 @@
 package com.ex3.androidchat;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 import com.ex3.androidchat.adapters.ConversationAdapter;
+import com.ex3.androidchat.api.interfaces.WebServiceAPI;
 import com.ex3.androidchat.databinding.ActivityConversationBinding;
 import com.ex3.androidchat.models.Chat;
-import com.ex3.androidchat.models.Message;
+import com.ex3.androidchat.models.contacts.GetUserDetailsResponse;
+import com.ex3.androidchat.models.contacts.MessageResponse;
+import com.ex3.androidchat.models.contacts.SendMessageRequest;
+import com.ex3.androidchat.models.transfer.TransferRequest;
 import com.ex3.androidchat.services.ChatService;
 import com.ex3.androidchat.services.GetByAsyncTask;
+import com.ex3.androidchat.services.UserService;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ConversationActivity extends AppCompatActivity {
     ActivityConversationBinding binding;
     ImageView backButton, btnSendConv;
     ChatService service =  new ChatService();
     Chat conversition;
-    ArrayList<Message> messages;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityConversationBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-        getSupportActionBar().hide();
+    List<MessageResponse> messages;
+    Retrofit retrofit;
+    WebServiceAPI webServiceAPI;
 
-        String friendId =  getIntent().getStringExtra("id");
-        Client.setFriendId(friendId);
-        String nickname =  getIntent().getStringExtra("nickname");
-        String server =  getIntent().getStringExtra("server");
-        String image =  getIntent().getStringExtra("image");
-        binding.contactNickname.setText(nickname);
 
-        ImageView view = findViewById(R.id.user_image);
-        new GetByAsyncTask((ImageView) view).execute(image);
+    private void sendMessageToForeignServer(String friendId, String msg, String hisServer) {
+        Retrofit hisRetrofit = new Retrofit.Builder()
+                .baseUrl(hisServer + "api/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        WebServiceAPI hisServiceAPI = retrofit.create(WebServiceAPI.class);
 
-        RecyclerView recyclerView = findViewById(R.id.messagesView);
-        try {
-            conversition = service.GetChatByParticipants(Client.getUserId(), friendId);
-        } catch(Exception ex) {
-            ArrayList<Message> messages = new ArrayList<Message>(Arrays.asList(
-                    new Message(1, "text", "my name is " + nickname, friendId, "04.06.2021, 09:56:00", false),
-                    new Message(2, "text", "my name is " + Client.getUser().getName(), Client.getUserId(), "04.06.2021 10:05:00", true),
-                    new Message(3, "text", "Nice to meet you!", friendId, "04.08.2021 10:30:00", false)));
+        Call<Void> call = hisServiceAPI.transfer(new TransferRequest(Client.getUserId(), friendId, msg));
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.d("retrofit", "Transferred successfully");
+            }
 
-            ArrayList<String> participants = new ArrayList<>();
-            participants.add(friendId);
-            participants.add(Client.getUserId());
-            service.Create(new Chat(participants, messages));
-            conversition = service.GetChatByParticipants(Client.getUserId(), friendId);
-        }
-        messages = conversition.getMessages();
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("retrofit", t.getMessage().toString());
+            }
+        });
+    }
+
+    private void sendMessageToServer(String friendId, String msg) {
+        Call<Void> call = webServiceAPI.sendMessage(friendId, new SendMessageRequest(msg), Client.getToken());
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.d("retrofit", "sent message to server successfully.");
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("retrofit", t.getMessage());
+            }
+        });
+
+        Call<GetUserDetailsResponse> getServerCall = webServiceAPI.getServerByUsername(friendId, Client.getToken());
+        getServerCall.enqueue(new Callback<GetUserDetailsResponse>() {
+            @Override
+            public void onResponse(Call<GetUserDetailsResponse> call, Response<GetUserDetailsResponse> response) {
+                if(response.body() == null) {
+                    Log.d("retrofit", "got empty body");
+                    return;
+                }
+                String hisServer = response.body().server;
+                UserService userService = new UserService();
+                hisServer = userService.getFullServerUrl(hisServer);
+                String myServer = Client.getMyServer();
+                if(myServer.indexOf(hisServer) < 0 && hisServer.indexOf(myServer) < 0) {
+                    sendMessageToForeignServer(friendId, msg, hisServer);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetUserDetailsResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+
+    private void sendMessage(String friendId, ConversationAdapter adapter) {
+        EditText txtMsg = (EditText) findViewById(R.id.txtEnterMsg);
+        String msg = txtMsg.getText().toString();
+        adapter.addNewMessage(msg);
+        txtMsg.setText("");
+        adapter.notifyDataSetChanged();
+        sendMessageToServer(friendId, msg);
+    }
+
+    private void continueOnCreateOnResponse(List<MessageResponse> allMessages, RecyclerView recyclerView, String friendId) {
+        messages = allMessages;
         ConversationAdapter adapter = new ConversationAdapter(messages,this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -80,10 +131,7 @@ public class ConversationActivity extends AppCompatActivity {
         btnSendConv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText txtMsg = (EditText) findViewById(R.id.txtEnterMsg);
-                adapter.addNewMessage(txtMsg.getText().toString());
-                txtMsg.setText("");
-                adapter.notifyDataSetChanged();
+                sendMessage(friendId, adapter);
             }
         });
 
@@ -92,13 +140,55 @@ public class ConversationActivity extends AppCompatActivity {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    EditText txtMsg = (EditText) findViewById(R.id.txtEnterMsg);
-                    adapter.addNewMessage(txtMsg.getText().toString());
-                    txtMsg.setText("");
-                    adapter.notifyDataSetChanged();
+                    sendMessage(friendId, adapter);
                     return true;
                 }
                 return false;
+            }
+        });
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityConversationBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        getSupportActionBar().hide();
+        retrofit = new Retrofit.Builder()
+                .baseUrl(getApplicationContext().getString(R.string.BaseUrl))
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        webServiceAPI = retrofit.create(WebServiceAPI.class);
+
+        String friendId =  getIntent().getStringExtra("id");
+        Client.setFriendId(friendId);
+        String nickname =  getIntent().getStringExtra("nickname");
+        String server =  getIntent().getStringExtra("server");
+        String image =  getIntent().getStringExtra("image");
+        binding.contactNickname.setText(nickname);
+
+        ImageView view = findViewById(R.id.user_image);
+        new GetByAsyncTask((ImageView) view).execute(image);
+
+        RecyclerView recyclerView = findViewById(R.id.messagesView);
+        try {
+            conversition = service.GetChatByParticipants(Client.getUserId(), friendId);
+        } catch(Exception ex) {
+            Log.e("Conversation", ex.getMessage());
+            Toast.makeText(this, "Contact could not be loaded.", Toast.LENGTH_SHORT).show();
+        }
+        messages = conversition.getMessages();
+
+        Call<List<MessageResponse>> allMessages = webServiceAPI.getMessagesById(friendId, Client.getToken());
+        allMessages.enqueue(new Callback<List<MessageResponse>>() {
+            @Override
+            public void onResponse(Call<List<MessageResponse>> call, Response<List<MessageResponse>> response) {
+                continueOnCreateOnResponse(response.body(), recyclerView, friendId);
+            }
+
+            @Override
+            public void onFailure(Call<List<MessageResponse>> call, Throwable t) {
+                Log.e("retrofit", t.getMessage());
             }
         });
     }

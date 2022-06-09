@@ -1,10 +1,9 @@
 package com.ex3.androidchat.models;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class User {
-    String id, password, last, name, server, profileImage;
+    public String id, password, last, name, server, profileImage;
 
     public ArrayList<Contact> getContacts() {
         return contacts;

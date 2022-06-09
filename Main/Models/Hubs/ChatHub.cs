@@ -4,6 +4,7 @@ using Models;
 using Models.DataServices;
 using Models.DataServices.Interfaces;
 using System.Collections.Concurrent;
+using System.Globalization;
 
 namespace AspWebApi.Models.Hubs {
     public class ChatHub : Hub {
@@ -27,11 +28,11 @@ namespace AspWebApi.Models.Hubs {
             if (userToConnection.ContainsKey(to)) {
                 var connectionIds = userToConnection[to];
                 foreach(var conId in connectionIds)
-                    await Clients.Client(conId).SendAsync(ReceiveMessage, new MessageResponse(id, content, DateTime.Now, true, from));
+                    await Clients.Client(conId).SendAsync(ReceiveMessage, new MessageResponse(id, content, DateTime.Now.ToString("dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture), true, from));
             }
             else
                 await Clients.AllExcept(Context.ConnectionId)
-                .SendAsync(ReceiveMessage, new MessageResponse(id, content, DateTime.Now, true, from));
+                .SendAsync(ReceiveMessage, new MessageResponse(id, content, DateTime.Now.ToString("dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture), true, from));
         }
        
         public async Task SetIdInServer(string username)

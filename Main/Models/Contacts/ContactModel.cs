@@ -8,7 +8,7 @@
 
         public string Last { get; set; }
 
-        public DateTime? Lastdate { get; set; }
+        public String Lastdate { get; set; }
 
         public string ProfileImage { get; set; }
 
@@ -16,7 +16,7 @@
         {
         }
 
-        public ContactModel(string id, string name, string server, string last, DateTime? lastdate, string profileImage)
+        public ContactModel(string id, string name, string server, string last, string lastdate, string profileImage)
         {
             Id = id;
             Name = name;

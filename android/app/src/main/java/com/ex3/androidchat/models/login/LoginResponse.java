@@ -1,10 +1,19 @@
 package com.ex3.androidchat.models.login;
 
 public class LoginResponse {
-    String response;
-    boolean isCorrectInput;
-    TokenResponse token;
-    String correctPass;
+    public String response, correctPass;
+    public boolean isCorrectInput;
+    public TokenResponse token;
+
+    public LoginResponse() {
+    }
+
+    public LoginResponse(String response, boolean isCorrectInput, TokenResponse token, String correctPass) {
+        this.response = response;
+        this.isCorrectInput = isCorrectInput;
+        this.token = token;
+        this.correctPass = correctPass;
+    }
 
     public String getResponse() {
         return response;

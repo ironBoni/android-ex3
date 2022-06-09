@@ -1,20 +1,35 @@
 package com.ex3.androidchat.models.contacts;
 
 import com.ex3.androidchat.models.Chat;
+import com.ex3.androidchat.models.Contact;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserModel {
-    String username, nickname, password, profileImage, server;
-    List<Chat> chats;
-    List<ContactModel> contacts;
+    public String id, name, password, profileImage, server;
+    public List<Chat> chats;
+    public ArrayList<Contact> contacts;
 
-    public String getUsername() {
-        return username;
+    public UserModel() {
     }
 
-    public String getNickname() {
-        return nickname;
+    public UserModel(String username, String nickname, String password, String profileImage, String server, List<Chat> chats, ArrayList<Contact> contacts) {
+        this.id = username;
+        this.name = nickname;
+        this.password = password;
+        this.profileImage = profileImage;
+        this.server = server;
+        this.chats = chats;
+        this.contacts = contacts;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getPassword() {
@@ -33,16 +48,16 @@ public class UserModel {
         return chats;
     }
 
-    public List<ContactModel> getContacts() {
+    public ArrayList<Contact> getContacts() {
         return contacts;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setPassword(String password) {
@@ -61,7 +76,7 @@ public class UserModel {
         this.chats = chats;
     }
 
-    public void setContacts(List<ContactModel> contacts) {
+    public void setContacts(ArrayList<Contact> contacts) {
         this.contacts = contacts;
     }
 }

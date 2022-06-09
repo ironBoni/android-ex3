@@ -19,11 +19,16 @@ public interface ContactDao {
     Contact get(int id);
 
     @Insert
-    abstract void insert(Contact contacts);
+    void insert(Contact contacts);
 
+    @Insert
+    void insertList(List<Contact> contacts);
     @Update
     void update(Contact contacts);
 
     @Delete
     void delete(Contact contacts);
+
+    @Delete
+    void deleteList(List<Contact> contacts);
 }
