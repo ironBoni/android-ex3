@@ -103,7 +103,7 @@
         android:background="@color/chatBackground">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/messagesView"
+            android:id="@+id/messagesViewConv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/toolBar"
@@ -114,10 +114,10 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_alignParentBottom="true"
-            android:id="@+id/convLayout">
+            android:id="@+id/convLayoutConv">
 
             <EditText
-                android:id="@+id/txtEnterMsg"
+                android:id="@+id/txtEnterMsgConv"
                 android:layout_width="329dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
@@ -134,7 +134,7 @@
             <ImageView
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:id="@+id/btnSendConv"
+                android:id="@+id/btnSendConvConv"
                 android:layout_marginLeft="5dp"
                 android:layout_marginEnd="3dp"
                 android:layout_marginRight="5dp"
@@ -145,7 +145,7 @@
         </LinearLayout>
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolBar"
+            android:id="@+id/toolBarConv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/mainColor"
@@ -157,7 +157,7 @@
                 android:layout_height="match_parent">
 
                 <ImageView
-                    android:id="@+id/btnBack"
+                    android:id="@+id/btnBackConv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/back"
@@ -167,7 +167,7 @@
                     app:layout_constraintVertical_bias="0.431" />
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/card_view"
+                    android:id="@+id/card_viewConv"
                     android:layout_width="61dp"
                     android:layout_height="61dp"
                     android:layout_marginStart="6dp"
@@ -177,11 +177,11 @@
                     app:cardCornerRadius="40dp"
                     app:cardPreventCornerOverlap="false"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/btnBack"
+                    app:layout_constraintStart_toEndOf="@+id/btnBackConv"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
-                        android:id="@+id/user_image"
+                        android:id="@+id/user_imageConv"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@color/grayLight"
@@ -199,18 +199,18 @@
                     app:layout_constraintStart_toEndOf="@+id/btnBack"
                     app:layout_constraintTop_toTopOf="parent"/>-->
                 <TextView
-                    android:id="@+id/contactNickname"
+                    android:id="@+id/contactNicknameConv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="6dp"
                     android:text="Contact Name"
                     android:textSize="21sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/card_view"
+                    app:layout_constraintStart_toEndOf="@+id/card_viewConv"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
-                    android:id="@+id/some"
+                    android:id="@+id/someConv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="13dp"

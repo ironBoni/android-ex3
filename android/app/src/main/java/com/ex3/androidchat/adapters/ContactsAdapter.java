@@ -13,7 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ex3.androidchat.AndroidChat;
+import com.ex3.androidchat.Client;
 import com.ex3.androidchat.ConversationActivity;
+import com.ex3.androidchat.MainActivity;
 import com.ex3.androidchat.R;
 import com.ex3.androidchat.api.interfaces.WebServiceAPI;
 import com.ex3.androidchat.models.Contact;
@@ -29,7 +31,15 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     Context context;
     Retrofit retrofit;
     WebServiceAPI webServiceAPI;
+    private MainActivity listener;
 
+    public void addListener(MainActivity activity) {
+        listener = activity;
+    }
+
+    private void notifyListeners(Contact contact) {
+        listener.onChooseContact(contact);
+    }
     public ContactsAdapter(ArrayList<Contact> contacts, Context context) {
         this.contacts = contacts;
         this.context = context;
@@ -78,10 +88,13 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    Client.setFriendId(contact.getContactId());
+                    Client.setFriendNickname(contact.getName());
+                    Client.setFriendServer(contact.getServer());
+                    Client.setFriendImage(contact.getProfileImage());
+                    notifyListeners(contact);
                 }
             });
-
             return;
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {

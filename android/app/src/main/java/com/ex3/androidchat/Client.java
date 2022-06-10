@@ -18,6 +18,9 @@ public class Client {
     private static String dataServer = "http://localhost:5186/api/";
     private static String token = "";
     private static String userId = "";
+    private static String friendNickname = "";
+    private static String friendServer = "";
+    private static String friendImage = "";
 
     public static String getFriendId() {
         return friendId;
@@ -47,6 +50,30 @@ public class Client {
 
     public static String getToken() {
         return token;
+    }
+
+    public static String getFriendNickname() {
+        return friendNickname;
+    }
+
+    public static void setFriendNickname(String friendNickname) {
+        Client.friendNickname = friendNickname;
+    }
+
+    public static String getFriendServer() {
+        return friendServer;
+    }
+
+    public static void setFriendServer(String friendServer) {
+        Client.friendServer = friendServer;
+    }
+
+    public static String getFriendImage() {
+        return friendImage;
+    }
+
+    public static void setFriendImage(String friendImage) {
+        Client.friendImage = friendImage;
     }
 
     public static Response sendPost(String resUrl, Map<String, Object> bodyMap) {
