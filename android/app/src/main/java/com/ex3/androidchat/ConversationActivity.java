@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ex3.androidchat.adapters.ConversationAdapter;
 import com.ex3.androidchat.api.interfaces.WebServiceAPI;
 import com.ex3.androidchat.databinding.ActivityConversationBinding;
+import com.ex3.androidchat.events.IEventListener;
 import com.ex3.androidchat.models.Chat;
 import com.ex3.androidchat.models.Utils;
 import com.ex3.androidchat.models.contacts.GetUserDetailsResponse;
@@ -34,7 +35,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ConversationActivity extends AppCompatActivity {
+public class ConversationActivity extends AppCompatActivity implements IEventListener<String> {
     ActivityConversationBinding binding;
     ImageView backButton, btnSendConv;
     ChatService service =  new ChatService();
@@ -157,7 +158,7 @@ public class ConversationActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         getSupportActionBar().hide();
         retrofit = new Retrofit.Builder()
-                .baseUrl(getApplicationContext().getString(R.string.BaseUrl))
+                .baseUrl(Client.getMyServer())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         webServiceAPI = retrofit.create(WebServiceAPI.class);
@@ -198,5 +199,14 @@ public class ConversationActivity extends AppCompatActivity {
     private void addNewMessage(String friendId, String text) {
         Chat conversation = service.GetChatByParticipants(Client.getUserId(), friendId);
         conversation.addMessage(text, Client.getUserId());
+    }
+
+    @Override
+    public void update(String element) {
+        retrofit = new Retrofit.Builder()
+                .baseUrl(Client.getMyServer())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        webServiceAPI = retrofit.create(WebServiceAPI.class);
     }
 }

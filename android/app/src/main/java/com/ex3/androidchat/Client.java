@@ -15,12 +15,21 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class Client {
-    private static String dataServer = "http://localhost:5186/api/";
+    private static String dataServer = "http://10.0.2.2:5186/api/";
     private static String token = "";
     private static String userId = "";
     private static String friendNickname = "";
     private static String friendServer = "";
     private static String friendImage = "";
+    private static boolean isNightModeOn = false;
+
+    public static boolean isIsNightModeOn() {
+        return isNightModeOn;
+    }
+
+    public static void setIsNightModeOn(boolean isNightModeOn) {
+        Client.isNightModeOn = isNightModeOn;
+    }
 
     public static String getFriendId() {
         return friendId;
@@ -160,5 +169,9 @@ public class Client {
             Log.d("Exception", e.toString());
             return null;
         }
+    }
+
+    public static void setMyServer(String myServer) {
+        dataServer = myServer;
     }
 }

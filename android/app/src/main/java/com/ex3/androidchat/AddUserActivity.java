@@ -3,6 +3,7 @@ package com.ex3.androidchat;
 import static java.util.UUID.randomUUID;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +17,7 @@ import androidx.room.Room;
 import com.ex3.androidchat.api.interfaces.WebServiceAPI;
 import com.ex3.androidchat.database.AppDB;
 import com.ex3.androidchat.database.ContactDao;
+import com.ex3.androidchat.events.IEventListener;
 import com.ex3.androidchat.models.Contact;
 import com.ex3.androidchat.models.Utils;
 import com.ex3.androidchat.models.contacts.ContactRequest;
@@ -27,7 +29,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class AddUserActivity extends AppCompatActivity {
+public class AddUserActivity extends AppCompatActivity implements IEventListener<String> {
     Button cAdd;
     ImageView backButton;
     EditText cName, cNickname, cServer;
@@ -41,7 +43,7 @@ public class AddUserActivity extends AppCompatActivity {
         backButton = findViewById(R.id.btnBackAddUser);
         setContentView(R.layout.activity_add_user);
         retrofit = new Retrofit.Builder()
-                .baseUrl(getApplicationContext().getString(R.string.BaseUrl))
+                .baseUrl(Client.getMyServer())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         webServiceAPI = retrofit.create(WebServiceAPI.class);
@@ -56,6 +58,13 @@ public class AddUserActivity extends AppCompatActivity {
         cName = findViewById(R.id.cName);
         cNickname = findViewById(R.id.cNickname);
         cServer = findViewById(R.id.cServer);
+
+        int currentNightMode = getApplicationContext().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            cName.setTextColor(getResources().getColor(R.color.black));
+            cNickname.setTextColor(getResources().getColor(R.color.black));
+            cServer.setTextColor(getResources().getColor(R.color.black));
+        }
 
         backButton = findViewById(R.id.btnBackAddUser);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -122,4 +131,12 @@ public class AddUserActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void update(String element) {
+        retrofit = new Retrofit.Builder()
+                .baseUrl(Client.getMyServer())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        webServiceAPI = retrofit.create(WebServiceAPI.class);
+    }
 }

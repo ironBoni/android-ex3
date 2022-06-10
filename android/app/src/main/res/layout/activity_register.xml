@@ -35,7 +35,6 @@
             android:hint="User Id"
             android:inputType="textPersonName"
             android:padding="8dp"
-            android:textColor="@color/black"
             android:textColorHint="@color/grayLight" />
 
         <EditText
@@ -47,7 +46,6 @@
             android:hint="Nickname"
             android:inputType="textPersonName"
             android:padding="8dp"
-            android:textColor="@color/black"
             android:textColorHint="@color/grayLight" />
 
         <EditText
@@ -59,7 +57,6 @@
             android:hint="Password"
             android:inputType="textPassword"
             android:padding="8dp"
-            android:textColor="@color/black"
             android:textColorHint="@color/grayLight" />
 
         <EditText
@@ -71,7 +68,6 @@
             android:hint="Confirm Password"
             android:inputType="textPassword"
             android:padding="8dp"
-            android:textColor="@color/black"
             android:textColorHint="@color/grayLight" />
 
 
@@ -85,10 +81,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
-                android:backgroundTint="@color/registerColor"
+                android:backgroundTint="@color/white"
                 android:padding="13dp"
                 android:text="Upload Picture"
                 android:textAllCaps="false"
+                android:textColor="@color/black"
                 app:cornerRadius="9dp" />
 
             <ImageView
@@ -103,11 +100,13 @@
             android:layout_width="155dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:backgroundTint="@color/registerColor"
+            android:backgroundTint="@color/white"
             android:padding="13dp"
             android:text="Register"
             android:textAllCaps="false"
-            app:cornerRadius="9dp" />
+            android:textColor="@color/black"
+            app:cornerRadius="9dp"
+            app:rippleColor="@color/black" />
 
 
     </LinearLayout>

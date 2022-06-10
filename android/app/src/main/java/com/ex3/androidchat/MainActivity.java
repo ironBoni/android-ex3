@@ -28,8 +28,7 @@ import com.ex3.androidchat.api.ContactsAPI;
 import com.ex3.androidchat.api.interfaces.WebServiceAPI;
 import com.ex3.androidchat.database.AppDB;
 import com.ex3.androidchat.database.ContactDao;
-import com.ex3.androidchat.events.ChoseContactListener;
-import com.ex3.androidchat.events.IChoseContactListener;
+import com.ex3.androidchat.events.IEventListener;
 import com.ex3.androidchat.models.Chat;
 import com.ex3.androidchat.models.Contact;
 import com.ex3.androidchat.models.User;
@@ -54,7 +53,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity implements IChoseContactListener {
+public class MainActivity extends AppCompatActivity implements IEventListener<String> {
     ViewPager pager;
     TabLayout tabMenu;
     Retrofit retrofit;
@@ -209,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements IChoseContactList
 
         contactDao = db.contactDao();
         retrofit = new Retrofit.Builder()
-                .baseUrl(AndroidChat.context.getString(R.string.BaseUrl))
+                .baseUrl(Client.getMyServer())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         webServiceAPI = retrofit.create(WebServiceAPI.class);
@@ -267,7 +266,6 @@ public class MainActivity extends AppCompatActivity implements IChoseContactList
                 contactsAPI.get();
 
                 ContactsAdapter adapter = new ContactsAdapter(contacts, getApplicationContext());
-                ChoseContactListener choseContactListener = new ChoseContactListener();
                 adapter.addListener(MainActivity.this);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -343,8 +341,7 @@ public class MainActivity extends AppCompatActivity implements IChoseContactList
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onChooseContact(Contact c) {
+    public void update(Contact c) {
         ImageView imageWelcome = findViewById(R.id.imgViewConv);
         if(imageWelcome == null)
             return;
@@ -354,5 +351,14 @@ public class MainActivity extends AppCompatActivity implements IChoseContactList
         if(layout == null) return;
         layout.setVisibility(View.VISIBLE);
         beginConversationLandScape(c.getContactId(), c.getName(), c.getProfileImage());
+    }
+
+    @Override
+    public void update(String element) {
+        retrofit = new Retrofit.Builder()
+                .baseUrl(Client.getMyServer())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        webServiceAPI = retrofit.create(WebServiceAPI.class);
     }
 }

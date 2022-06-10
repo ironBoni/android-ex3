@@ -1,6 +1,8 @@
 package com.ex3.androidchat;
 
+import android.app.UiModeManager;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,8 +14,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ex3.androidchat.api.interfaces.WebServiceAPI;
+import com.ex3.androidchat.events.IEventListener;
 import com.ex3.androidchat.models.settings.ChangeServerRequest;
 import com.ex3.androidchat.services.UserService;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -22,23 +27,55 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SettingsActivity extends AppCompatActivity {
-    Button btnSaveChanges;
+    Button btnSaveChanges, btnChangeTheme;
     ImageView btnBack;
     EditText txtSettingsServer;
     UserService userService;
     Retrofit retrofit;
     WebServiceAPI webServiceAPI;
+    private UiModeManager uiModeManager;
+    private ArrayList<IEventListener<String>> listeners;
+
+
+    // update listeners that the server has been changed.
+    public void addListener(IEventListener<String> listener) {
+        listeners.add(listener);
+    }
+
+    private void notifyListeners() {
+        for (IEventListener<String> listener : listeners) {
+            listener.update(Client.getMyServer());
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        uiModeManager = (UiModeManager) getSystemService(UI_MODE_SERVICE);
+        listeners = new ArrayList<>();
         setContentView(R.layout.activity_settings);
         AndroidChat.context = getApplicationContext();
         retrofit = new Retrofit.Builder()
-                .baseUrl(getApplicationContext().getString(R.string.BaseUrl))
+                .baseUrl(Client.getMyServer())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         webServiceAPI = retrofit.create(WebServiceAPI.class);
+
+        btnChangeTheme = findViewById(R.id.btnChangeTheme);
+        btnChangeTheme.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int currentNightMode = getApplicationContext().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+                if (currentNightMode == Configuration.UI_MODE_NIGHT_NO ||
+                        currentNightMode == Configuration.UI_MODE_TYPE_UNDEFINED)
+                    turnOnNightMode();
+                else {
+                    uiModeManager.setNightMode(UiModeManager.MODE_NIGHT_NO);
+                    Toast.makeText(SettingsActivity.this, "night mode is OFF!", Toast.LENGTH_SHORT).show();
+                    Client.setIsNightModeOn(false);
+                }
+            }
+        });
 
         getSupportActionBar().setTitle(R.string.settings);
 
@@ -61,6 +98,8 @@ public class SettingsActivity extends AppCompatActivity {
                 String server = txtSettingsServer.getText().toString();
                 userService.getById(Client.getUserId()).setServer(server);
 
+                Client.setMyServer(server);
+                notifyListeners();
                 Call<Void> call = webServiceAPI.changeSettings(new ChangeServerRequest(server), Client.getToken());
                 call.enqueue(new Callback<Void>() {
                     @Override
@@ -75,5 +114,11 @@ public class SettingsActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    private void turnOnNightMode() {
+        uiModeManager.setNightMode(UiModeManager.MODE_NIGHT_YES);
+        Client.setIsNightModeOn(true);
+        Toast.makeText(SettingsActivity.this, "night mode is ON!", Toast.LENGTH_SHORT).show();
     }
 }
