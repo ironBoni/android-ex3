@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SettingsActivity"
-    android:background="@drawable/main_background">
+    android:background="@drawable/main_background"
+    tools:context=".SettingsActivity">
 
     <ImageView
         android:id="@+id/btnBackSettings"
@@ -44,10 +44,17 @@
             android:orientation="vertical">
 
             <Button
+                android:id="@+id/btnChangeTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Change Color Theme"
+                android:textAllCaps="false" />
+
+            <Button
                 android:id="@+id/btnSaveSettings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Save Settings"/>
+                android:text="Save Settings" />
         </LinearLayout>
 
     </LinearLayout>

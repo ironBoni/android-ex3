@@ -21,6 +21,15 @@ public class Client {
     private static String friendNickname = "";
     private static String friendServer = "";
     private static String friendImage = "";
+    private static boolean isNightModeOn = false;
+
+    public static boolean isIsNightModeOn() {
+        return isNightModeOn;
+    }
+
+    public static void setIsNightModeOn(boolean isNightModeOn) {
+        Client.isNightModeOn = isNightModeOn;
+    }
 
     public static String getFriendId() {
         return friendId;

@@ -1,5 +1,6 @@
 package com.ex3.androidchat;
 
+import android.app.UiModeManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,12 +26,13 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SettingsActivity extends AppCompatActivity {
-    Button btnSaveChanges;
+    Button btnSaveChanges, btnChangeTheme;
     ImageView btnBack;
     EditText txtSettingsServer;
     UserService userService;
     Retrofit retrofit;
     WebServiceAPI webServiceAPI;
+    private UiModeManager uiModeManager;
     private ArrayList<IEventListener<String>> listeners;
 
 
@@ -48,6 +50,7 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        uiModeManager = (UiModeManager) getSystemService(UI_MODE_SERVICE);
         listeners = new ArrayList<>();
         setContentView(R.layout.activity_settings);
         AndroidChat.context = getApplicationContext();
@@ -56,6 +59,22 @@ public class SettingsActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         webServiceAPI = retrofit.create(WebServiceAPI.class);
+
+        btnChangeTheme = findViewById(R.id.btnChangeTheme);
+        btnChangeTheme.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!Client.isIsNightModeOn()) {
+                    uiModeManager.setNightMode(UiModeManager.MODE_NIGHT_YES);
+                    Client.setIsNightModeOn(true);
+                    Toast.makeText(SettingsActivity.this, "night mode is ON!", Toast.LENGTH_SHORT).show();
+                } else {
+                    uiModeManager.setNightMode(UiModeManager.MODE_NIGHT_NO);
+                    Toast.makeText(SettingsActivity.this, "night mode is OFF!", Toast.LENGTH_SHORT).show();
+                    Client.setIsNightModeOn(false);
+                }
+            }
+        });
 
         getSupportActionBar().setTitle(R.string.settings);
 
