@@ -1,5 +1,6 @@
 package com.ex3.androidchat;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -51,6 +52,8 @@ public class Client {
     public static Response sendPost(String resUrl, Map<String, Object> bodyMap) {
         return doPost(resUrl, bodyMap);
     }
+
+    public static Bitmap image;
 
     @Nullable
     private static Response doPost(String resUrl, Map<String, Object> bodyMap) {
