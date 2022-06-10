@@ -1,14 +1,18 @@
 package com.ex3.androidchat;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,14 +22,22 @@ import androidx.room.Room;
 import androidx.viewpager.widget.ViewPager;
 
 import com.ex3.androidchat.adapters.ContactsAdapter;
+import com.ex3.androidchat.adapters.ConversationAdapter;
 import com.ex3.androidchat.api.ContactsAPI;
 import com.ex3.androidchat.api.interfaces.WebServiceAPI;
 import com.ex3.androidchat.database.AppDB;
 import com.ex3.androidchat.database.ContactDao;
+import com.ex3.androidchat.events.ChoseContactListener;
+import com.ex3.androidchat.events.IChoseContactListener;
 import com.ex3.androidchat.models.Chat;
 import com.ex3.androidchat.models.Contact;
 import com.ex3.androidchat.models.User;
+import com.ex3.androidchat.models.Utils;
+import com.ex3.androidchat.models.contacts.GetUserDetailsResponse;
+import com.ex3.androidchat.models.contacts.MessageResponse;
+import com.ex3.androidchat.models.contacts.SendMessageRequest;
 import com.ex3.androidchat.models.contacts.UserModel;
+import com.ex3.androidchat.models.transfer.TransferRequest;
 import com.ex3.androidchat.services.ChatService;
 import com.ex3.androidchat.services.GetByAsyncTask;
 import com.ex3.androidchat.services.UserService;
@@ -41,7 +53,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements IChoseContactListener {
     ViewPager pager;
     TabLayout tabMenu;
     Retrofit retrofit;
@@ -49,8 +61,127 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Contact> contacts = new ArrayList<>();
     User currentUser;
     FloatingActionButton addContact;
-     UserService service;
-     ContactDao contactDao;
+    UserService service;
+    ContactDao contactDao;
+    ImageView backButton, btnSendConv;
+    ChatService chatService = new ChatService();
+    Chat conversition;
+    List<MessageResponse> messages;
+
+    // for landscape.
+
+    private void addNewMessage(String friendId, String text) {
+        Chat conversation = chatService.GetChatByParticipants(Client.getUserId(), friendId);
+        conversation.addMessage(text, Client.getUserId());
+    }
+
+    private void sendMessageToForeignServer(String friendId, String msg, String hisServer) {
+        hisServer = Utils.getAndroidServer(hisServer);
+        Retrofit hisRetrofit = new Retrofit.Builder()
+                .baseUrl(hisServer + "api/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        WebServiceAPI hisServiceAPI = hisRetrofit.create(WebServiceAPI.class);
+
+        Call<Void> call = hisServiceAPI.transfer(new TransferRequest(Client.getUserId(), friendId, msg));
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.d("retrofit", "Transferred successfully");
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("retrofit", t.getMessage().toString());
+            }
+        });
+    }
+
+    private void sendMessageToServer(String friendId, String msg) {
+        Call<Void> call = webServiceAPI.sendMessage(friendId, new SendMessageRequest(msg), Client.getToken());
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.d("retrofit", "sent message to server successfully.");
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("retrofit", t.getMessage());
+            }
+        });
+
+        Call<GetUserDetailsResponse> getServerCall = webServiceAPI.getServerByUsername(friendId, Client.getToken());
+        getServerCall.enqueue(new Callback<GetUserDetailsResponse>() {
+            @Override
+            public void onResponse(Call<GetUserDetailsResponse> call, Response<GetUserDetailsResponse> response) {
+                if(response.body() == null) {
+                    Log.d("retrofit", "got empty body");
+                    return;
+                }
+                String hisServer = response.body().server;
+                UserService userService = new UserService();
+                hisServer = userService.getFullServerUrl(hisServer);
+                String myServer = Client.getMyServer();
+                if(myServer.indexOf(hisServer) < 0 && hisServer.indexOf(myServer) < 0) {
+                    sendMessageToForeignServer(friendId, msg, hisServer);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetUserDetailsResponse> call, Throwable t) {
+                Log.e(getString(R.string.retrofit), t.getMessage());
+            }
+        });
+    }
+
+
+    private void sendMessage(String friendId, ConversationAdapter adapter) {
+        EditText txtMsg = (EditText) findViewById(R.id.txtEnterMsgConv);
+        String msg = txtMsg.getText().toString();
+        adapter.addNewMessage(msg);
+        txtMsg.setText("");
+        adapter.notifyDataSetChanged();
+        sendMessageToServer(friendId, msg);
+    }
+
+    private void continueOnCreateOnResponse(List<MessageResponse> allMessages, RecyclerView recyclerView, String friendId) {
+        messages = allMessages;
+        if(messages == null)
+            return;
+        ConversationAdapter adapter = new ConversationAdapter(messages,this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        backButton = findViewById(R.id.btnBackConv);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btnSendConv = findViewById(R.id.btnSendConvConv);
+        btnSendConv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendMessage(friendId, adapter);
+            }
+        });
+
+        EditText txtMsg = (EditText) findViewById(R.id.txtEnterMsgConv);
+        txtMsg.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    sendMessage(friendId, adapter);
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,8 +217,19 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(getApplicationContext().getString(R.string.retrofit), t.getMessage());
             }
         });
+
+        if (AndroidChat.context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            String friendId =  Client.getFriendId();
+            String nickname =  Client.getFriendNickname();
+            String server =  Client.getFriendServer();
+            String image =  Client.getFriendServer();
+
+            beginConversationLandScape(friendId, nickname, image);
+        }
+
         addContact = findViewById(R.id.addContact);
         RecyclerView recyclerView = findViewById(R.id.rvChatList);
+        service = new UserService();
         //bservice.loadContacts();
 
         Call<ArrayList<Chat>> call = webServiceAPI.getChats(Client.getToken());
@@ -108,32 +250,62 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Call<List<Contact>> callContacts = webServiceAPI.getContacts(Client.getToken());
-
         callContacts.enqueue(new Callback<List<Contact>>() {
-         @Override
-         public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
-             contacts = new ArrayList<>(response.body());
-             ContactsAPI contactsAPI = new ContactsAPI();
-             contactsAPI.get();
+            @Override
+            public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
+                contacts = new ArrayList<>(response.body());
+                ContactsAPI contactsAPI = new ContactsAPI();
+                contactsAPI.get();
 
-             ContactsAdapter adapter = new ContactsAdapter(contacts, getApplicationContext());
-             recyclerView.setAdapter(adapter);
-             recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-             addContact.setOnClickListener(new View.OnClickListener() {
-                 @Override
-                 public void onClick(View v) {
-                     Intent intent = new Intent(MainActivity.this, AddUserActivity.class);
-                     startActivity(intent);
-                 }
-             });
+                ContactsAdapter adapter = new ContactsAdapter(contacts, getApplicationContext());
+                ChoseContactListener choseContactListener = new ChoseContactListener();
+                adapter.addListener(MainActivity.this);
+                recyclerView.setAdapter(adapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                addContact.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(MainActivity.this, AddUserActivity.class);
+                        startActivity(intent);
+                    }
+                });
 
-         }
+            }
 
-         @Override
-         public void onFailure(Call<List<Contact>> call, Throwable t) {
+            @Override
+            public void onFailure(Call<List<Contact>> call, Throwable t) {
                 Log.e("retrofit", t.getMessage());
-         }
-         });
+            }
+        });
+    }
+
+    private void beginConversationLandScape(String friendId, String nickname, String image) {
+        TextView contactNickname = findViewById(R.id.contactNicknameConv);
+        contactNickname.setText(nickname);
+        ImageView view = findViewById(R.id.user_imageConv);
+        new GetByAsyncTask((ImageView) view).execute(image);
+
+        RecyclerView recyclerView = findViewById(R.id.messagesViewConv);
+        try {
+            conversition = chatService.GetChatByParticipants(Client.getUserId(), friendId);
+        } catch(Exception ex) {
+            Log.e("Conversation", ex.getMessage());
+            Toast.makeText(this, "Contact could not be loaded.", Toast.LENGTH_SHORT).show();
+        }
+        //messages = conversition.getMessages();
+
+        Call<List<MessageResponse>> allMessages = webServiceAPI.getMessagesById(friendId, Client.getToken());
+        allMessages.enqueue(new Callback<List<MessageResponse>>() {
+            @Override
+            public void onResponse(Call<List<MessageResponse>> call, Response<List<MessageResponse>> response) {
+                continueOnCreateOnResponse(response.body(), recyclerView, friendId);
+            }
+
+            @Override
+            public void onFailure(Call<List<MessageResponse>> call, Throwable t) {
+                Log.e("retrofit", t.getMessage());
+            }
+        });
     }
 
     private void updateImage(UserModel user) {
@@ -142,7 +314,7 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inf =getMenuInflater();
+        MenuInflater inf = getMenuInflater();
         inf.inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
@@ -150,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.settings) {
+        if (id == R.id.settings) {
             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(intent);
         } else {
@@ -160,5 +332,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onChooseContact(Contact c) {
+        beginConversationLandScape(c.getContactId(), c.getName(), c.getProfileImage());
     }
 }

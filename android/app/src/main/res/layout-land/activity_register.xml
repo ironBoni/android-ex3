@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_background"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".RegisterActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginRight="28dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+
+        <EditText
+            android:id="@+id/txtUserIdR"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="13dp"
+            android:layout_marginBottom="9dp"
+            android:ems="8"
+            android:hint="User Id"
+            android:inputType="textPersonName"
+            android:padding="8dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/grayLight" />
+
+        <EditText
+            android:id="@+id/txtNickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="9dp"
+            android:ems="8"
+            android:hint="Nickname"
+            android:inputType="textPersonName"
+            android:padding="8dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/grayLight" />
+
+        <EditText
+            android:id="@+id/txtPasswordR"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="9dp"
+            android:ems="8"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:padding="8dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/grayLight" />
+
+        <EditText
+            android:id="@+id/txtConfirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="9dp"
+            android:ems="8"
+            android:hint="Confirm Password"
+            android:inputType="textPassword"
+            android:padding="8dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/grayLight" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/btnUploadProfile"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:backgroundTint="@color/registerColor"
+                android:padding="13dp"
+                android:text="Upload Picture"
+                android:textAllCaps="false"
+                app:cornerRadius="9dp" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="213dp"
+                android:layout_height="130dp"
+                app:srcCompat="@drawable/default_avatar" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnRegister"
+            android:layout_width="155dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@color/registerColor"
+            android:padding="13dp"
+            android:text="Register"
+            android:textAllCaps="false"
+            app:cornerRadius="9dp" />
+
+
+    </LinearLayout>
+</LinearLayout>
