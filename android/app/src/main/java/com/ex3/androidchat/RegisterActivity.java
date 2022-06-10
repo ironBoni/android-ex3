@@ -18,6 +18,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ex3.androidchat.api.interfaces.WebServiceAPI;
+import com.ex3.androidchat.events.IEventListener;
 import com.ex3.androidchat.models.User;
 import com.ex3.androidchat.models.register.RegisterRequest;
 import com.ex3.androidchat.services.IUserService;
@@ -35,7 +36,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity implements IEventListener<String> {
     private ProgressDialog dialog;
     IUserService userService;
     Retrofit retrofit;
@@ -50,7 +51,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         AndroidChat.context = getApplicationContext();
         retrofit = new Retrofit.Builder()
-                .baseUrl(getApplicationContext().getString(R.string.BaseUrl))
+                .baseUrl(Client.getMyServer())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         webServiceAPI = retrofit.create(WebServiceAPI.class);
@@ -235,4 +236,12 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void update(String element) {
+        retrofit = new Retrofit.Builder()
+                .baseUrl(Client.getMyServer())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        webServiceAPI = retrofit.create(WebServiceAPI.class);
+    }
 }

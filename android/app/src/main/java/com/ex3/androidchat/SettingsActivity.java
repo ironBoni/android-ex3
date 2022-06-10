@@ -12,8 +12,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ex3.androidchat.api.interfaces.WebServiceAPI;
+import com.ex3.androidchat.events.IEventListener;
 import com.ex3.androidchat.models.settings.ChangeServerRequest;
 import com.ex3.androidchat.services.UserService;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,14 +31,28 @@ public class SettingsActivity extends AppCompatActivity {
     UserService userService;
     Retrofit retrofit;
     WebServiceAPI webServiceAPI;
+    private ArrayList<IEventListener<String>> listeners;
+
+
+    // update listeners that the server has been changed.
+    public void addListener(IEventListener<String> listener) {
+        listeners.add(listener);
+    }
+
+    private void notifyListeners() {
+        for(IEventListener<String> listener: listeners) {
+            listener.update(Client.getMyServer());
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        listeners = new ArrayList<>();
         setContentView(R.layout.activity_settings);
         AndroidChat.context = getApplicationContext();
         retrofit = new Retrofit.Builder()
-                .baseUrl(getApplicationContext().getString(R.string.BaseUrl))
+                .baseUrl(Client.getMyServer())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         webServiceAPI = retrofit.create(WebServiceAPI.class);
@@ -61,6 +78,8 @@ public class SettingsActivity extends AppCompatActivity {
                 String server = txtSettingsServer.getText().toString();
                 userService.getById(Client.getUserId()).setServer(server);
 
+                Client.setMyServer(server);
+                notifyListeners();
                 Call<Void> call = webServiceAPI.changeSettings(new ChangeServerRequest(server), Client.getToken());
                 call.enqueue(new Callback<Void>() {
                     @Override

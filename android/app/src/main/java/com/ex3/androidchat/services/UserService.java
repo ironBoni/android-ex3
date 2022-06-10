@@ -1,7 +1,6 @@
 package com.ex3.androidchat.services;
 
-import com.ex3.androidchat.AndroidChat;
-import com.ex3.androidchat.R;
+import com.ex3.androidchat.Client;
 import com.ex3.androidchat.api.interfaces.WebServiceAPI;
 import com.ex3.androidchat.models.Chat;
 import com.ex3.androidchat.models.Contact;
@@ -19,7 +18,7 @@ public class UserService implements  IUserService {
 
     public UserService() {
         retrofit = new Retrofit.Builder()
-                .baseUrl(AndroidChat.context.getString(R.string.BaseUrl))
+                .baseUrl(Client.getMyServer())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         webServiceAPI = retrofit.create(WebServiceAPI.class);

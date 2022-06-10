@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class Client {
-    private static String dataServer = "http://localhost:5186/api/";
+    private static String dataServer = "http://10.0.2.2:5186/api/";
     private static String token = "";
     private static String userId = "";
     private static String friendNickname = "";
@@ -160,5 +160,9 @@ public class Client {
             Log.d("Exception", e.toString());
             return null;
         }
+    }
+
+    public static void setMyServer(String myServer) {
+        dataServer = myServer;
     }
 }

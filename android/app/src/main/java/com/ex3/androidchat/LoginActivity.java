@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ex3.androidchat.api.interfaces.WebServiceAPI;
+import com.ex3.androidchat.events.IEventListener;
 import com.ex3.androidchat.models.contacts.UserModel;
 import com.ex3.androidchat.models.login.LoginRequest;
 import com.ex3.androidchat.models.login.LoginResponse;
@@ -26,7 +27,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements IEventListener<String> {
     Button buttonRegister, buttonLogin;
     EditText txtUserId, txtPassword;
     ProgressDialog dialog;
@@ -40,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         AndroidChat.context = getApplicationContext();
         this.userService = new UserService();
         retrofit = new Retrofit.Builder()
-                .baseUrl(getApplicationContext().getString(R.string.BaseUrl))
+                .baseUrl(Client.getMyServer())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         webServiceAPI = retrofit.create(WebServiceAPI.class);
@@ -132,5 +133,14 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         //boolean isLoginOk = userService.isLoginOk(txtUserId.getText().toString(), txtPassword.getText().toString());
+    }
+
+    @Override
+    public void update(String element) {
+        retrofit = new Retrofit.Builder()
+                .baseUrl(Client.getMyServer())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        webServiceAPI = retrofit.create(WebServiceAPI.class);
     }
 }

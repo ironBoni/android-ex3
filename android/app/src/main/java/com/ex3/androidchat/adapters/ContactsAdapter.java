@@ -18,6 +18,7 @@ import com.ex3.androidchat.ConversationActivity;
 import com.ex3.androidchat.MainActivity;
 import com.ex3.androidchat.R;
 import com.ex3.androidchat.api.interfaces.WebServiceAPI;
+import com.ex3.androidchat.events.IEventListener;
 import com.ex3.androidchat.models.Contact;
 import com.ex3.androidchat.services.GetByAsyncTask;
 
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHolder> {
+public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHolder> implements IEventListener<String> {
     ArrayList<Contact> contacts;
     Context context;
     Retrofit retrofit;
@@ -38,13 +39,13 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     }
 
     private void notifyListeners(Contact contact) {
-        listener.onChooseContact(contact);
+        listener.update(contact);
     }
     public ContactsAdapter(ArrayList<Contact> contacts, Context context) {
         this.contacts = contacts;
         this.context = context;
         retrofit = new Retrofit.Builder()
-                .baseUrl(AndroidChat.context.getString(R.string.BaseUrl))
+                .baseUrl(Client.getMyServer())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         webServiceAPI = retrofit.create(WebServiceAPI.class);
@@ -114,6 +115,15 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     @Override
     public int getItemCount() {
         return contacts.size();
+    }
+
+    @Override
+    public void update(String element) {
+        retrofit = new Retrofit.Builder()
+                .baseUrl(Client.getMyServer())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        webServiceAPI = retrofit.create(WebServiceAPI.class);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

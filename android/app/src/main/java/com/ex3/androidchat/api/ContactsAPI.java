@@ -4,9 +4,7 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.ex3.androidchat.AndroidChat;
 import com.ex3.androidchat.Client;
-import com.ex3.androidchat.R;
 import com.ex3.androidchat.api.interfaces.WebServiceAPI;
 import com.ex3.androidchat.database.ContactDao;
 import com.ex3.androidchat.models.Contact;
@@ -30,7 +28,7 @@ public class ContactsAPI {
         /*this.postListData = postListData;
         this.dao = dao;*/
         retrofit = new Retrofit.Builder()
-                .baseUrl(AndroidChat.context.getString(R.string.BaseUrl))
+                .baseUrl(Client.getMyServer())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         webServiceAPI = retrofit.create(WebServiceAPI.class);
