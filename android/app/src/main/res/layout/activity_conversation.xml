@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ConversationActivity"
-    android:background="@color/chatBackground">
+    android:background="@drawable/background_chat"
+    tools:context=".ConversationActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messagesView"
@@ -15,68 +15,70 @@
         android:layout_marginBottom="3dp" />
 
     <LinearLayout
+        android:id="@+id/convLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
-        android:id="@+id/convLayout">
+        android:orientation="horizontal">
+
         <EditText
+            android:id="@+id/txtEnterMsg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:imeOptions="actionGo"
-            android:id="@+id/txtEnterMsg"
             android:layout_marginStart="5dp"
             android:layout_marginLeft="5dp"
             android:layout_weight="2"
             android:background="@drawable/background_msg"
             android:ems="8"
-            android:padding="9dp"
             android:hint="   Please enter a message"
+            android:imeOptions="actionGo"
             android:inputType="textPersonName"
-            android:paddingBottom="8dp"/>
+            android:padding="9dp"
+            android:paddingBottom="8dp"
+            android:textColor="@color/white" />
 
         <ImageView
+            android:id="@+id/btnSendConv"
             android:layout_width="52dp"
             android:layout_height="52dp"
-            android:id="@+id/btnSendConv"
+            android:layout_marginStart="3dp"
             android:layout_marginLeft="5dp"
             android:layout_marginEnd="3dp"
             android:layout_marginRight="5dp"
-            android:layout_marginStart="3dp"
             android:layout_weight="0"
-            android:src="@drawable/send_button"
-            ></ImageView>
+            android:src="@drawable/send_button"></ImageView>
     </LinearLayout>
 
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/toolBar"
         android:background="@color/mainColor"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <ImageView
+                android:id="@+id/btnBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/btnBack"
+                android:src="@drawable/back"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.431"
-                android:src="@drawable/back"
-                />
+                app:layout_constraintVertical_bias="0.431" />
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/card_view"
                 android:layout_width="61dp"
                 android:layout_height="61dp"
                 android:layout_marginStart="6dp"
                 android:layout_marginTop="5dp"
                 android:background="@color/grayLight"
                 android:padding="6dp"
-                android:id="@+id/card_view"
                 app:cardCornerRadius="40dp"
                 app:cardPreventCornerOverlap="false"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -102,24 +104,24 @@
                 app:layout_constraintStart_toEndOf="@+id/btnBack"
                 app:layout_constraintTop_toTopOf="parent"/>-->
             <TextView
+                android:id="@+id/contactNickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/contactNickname"
-                android:textSize="21sp"
                 android:layout_marginLeft="6dp"
                 android:text="Contact Name"
+                android:textSize="21sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/card_view"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
+                android:id="@+id/some"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/some"
                 android:layout_marginEnd="13dp"
                 android:layout_marginRight="13dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="parent"/>
+                app:layout_constraintEnd_toStartOf="parent" />
 
             <!--<ImageView
                 android:layout_width="wrap_content"

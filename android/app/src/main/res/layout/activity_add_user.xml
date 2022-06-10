@@ -45,20 +45,20 @@
             android:layout_width="match_parent"
             android:layout_height="65dp"
             android:ems="10"
-            android:textSize="28dp"
-            android:textColorHint="@color/white"
+            android:hint="Nickname"
             android:inputType="textPersonName"
-            android:hint="Nickname" />
+            android:textColorHint="@color/white"
+            android:textSize="28dp" />
 
         <EditText
             android:id="@+id/cServer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:textSize="28dp"
-            android:textColorHint="@color/white"
+            android:hint="Server"
             android:inputType="textPersonName"
-            android:hint="Server" />
+            android:textColorHint="@color/white"
+            android:textSize="28dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -81,7 +81,6 @@
         android:layout_height="68dp"
         android:gravity="center"
         android:text="@string/add_new_contact"
-        android:textColor="@color/white"
         android:textSize="25dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"

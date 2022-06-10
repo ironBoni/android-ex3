@@ -2,6 +2,7 @@ package com.ex3.androidchat;
 
 import android.app.UiModeManager;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -42,7 +43,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void notifyListeners() {
-        for(IEventListener<String> listener: listeners) {
+        for (IEventListener<String> listener : listeners) {
             listener.update(Client.getMyServer());
         }
     }
@@ -64,11 +65,11 @@ public class SettingsActivity extends AppCompatActivity {
         btnChangeTheme.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!Client.isIsNightModeOn()) {
-                    uiModeManager.setNightMode(UiModeManager.MODE_NIGHT_YES);
-                    Client.setIsNightModeOn(true);
-                    Toast.makeText(SettingsActivity.this, "night mode is ON!", Toast.LENGTH_SHORT).show();
-                } else {
+                int currentNightMode = getApplicationContext().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+                if (currentNightMode == Configuration.UI_MODE_NIGHT_NO ||
+                        currentNightMode == Configuration.UI_MODE_TYPE_UNDEFINED)
+                    turnOnNightMode();
+                else {
                     uiModeManager.setNightMode(UiModeManager.MODE_NIGHT_NO);
                     Toast.makeText(SettingsActivity.this, "night mode is OFF!", Toast.LENGTH_SHORT).show();
                     Client.setIsNightModeOn(false);
@@ -113,5 +114,11 @@ public class SettingsActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    private void turnOnNightMode() {
+        uiModeManager.setNightMode(UiModeManager.MODE_NIGHT_YES);
+        Client.setIsNightModeOn(true);
+        Toast.makeText(SettingsActivity.this, "night mode is ON!", Toast.LENGTH_SHORT).show();
     }
 }

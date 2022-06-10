@@ -36,7 +36,6 @@
             android:inputType="textPersonName"
             android:minHeight="48dp"
             android:padding="8dp"
-            android:textColor="@color/black"
             android:textColorHint="@color/white"
             android:textSize="20dp" />
 
@@ -50,7 +49,6 @@
             android:inputType="textPassword"
             android:minHeight="48dp"
             android:padding="8dp"
-            android:textColor="@color/black"
             android:textColorHint="@color/white"
             android:textSize="20dp" />
 
@@ -65,10 +63,11 @@
                 android:layout_width="155dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:backgroundTint="@color/registerColor"
+                android:backgroundTint="@color/white"
                 android:padding="13dp"
                 android:text="Login"
                 android:textAllCaps="false"
+                android:textColor="@color/black"
                 android:textSize="19dp"
                 app:cornerRadius="9dp" />
 
@@ -78,10 +77,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="8dp"
-                android:backgroundTint="@color/registerColor"
+                android:backgroundTint="@color/white"
                 android:padding="13dp"
                 android:text="Register"
                 android:textAllCaps="false"
+                android:textColor="@color/black"
                 android:textSize="19dp"
                 app:cornerRadius="9dp" />
         </LinearLayout>
