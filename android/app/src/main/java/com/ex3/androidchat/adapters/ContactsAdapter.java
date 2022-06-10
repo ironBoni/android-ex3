@@ -2,6 +2,7 @@ package com.ex3.androidchat.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,13 +56,11 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         String date;
         String hour;
 
-        if(contact.getLastdate() != null && contact.getLastdate().split(" ").length == 2
-        && contact.getLastdate().split(" ")[0].length() >=6) {
+        if (contact.getLastdate() != null && contact.getLastdate().split(" ").length == 2
+                && contact.getLastdate().split(" ")[0].length() >= 6) {
             date = contact.getLastdate().split(" ")[0].substring(0, 5);
             hour = contact.getLastdate().split(" ")[1];
-        }
-
-        else {
+        } else {
             date = "";
             hour = "";
         }
@@ -72,8 +71,19 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         holder.lastMsg.setText(contact.getLast());
         holder.nickName.setText(contact.getName());
 
-         new GetByAsyncTask((ImageView) holder.picture).execute(contact.getProfileImage());
+        new GetByAsyncTask((ImageView) holder.picture).execute(contact.getProfileImage());
         //holder.picture.setImageResource(R.drawable.default_avatar);
+
+        if (AndroidChat.context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
+            return;
+        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,6 +106,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView picture;
         TextView nickName, lastMsg, lastMsgTime, lastMsgHour;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             picture = itemView.findViewById(R.id.image);
@@ -103,6 +114,11 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
             lastMsg = itemView.findViewById(R.id.lastMsg);
             lastMsgTime = itemView.findViewById(R.id.lastMsgTime);
             lastMsgHour = itemView.findViewById(R.id.lastMsgHour);
+
+            if (AndroidChat.context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                /*picture.setMaxWidth(40);
+                picture.setMaxWidth(40);*/
+            }
         }
     }
 }

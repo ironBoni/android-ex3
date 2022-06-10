@@ -7,8 +7,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,9 +23,7 @@ import com.ex3.androidchat.database.ContactDao;
 import com.ex3.androidchat.models.Chat;
 import com.ex3.androidchat.models.Contact;
 import com.ex3.androidchat.models.User;
-import com.ex3.androidchat.models.contacts.UserModel;
 import com.ex3.androidchat.services.ChatService;
-import com.ex3.androidchat.services.GetByAsyncTask;
 import com.ex3.androidchat.services.UserService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
@@ -59,10 +55,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getSupportActionBar().setTitle(R.string.happy_chat);
 
-        service = new UserService();
-        TextView txtNickname = findViewById(R.id.txtViewNickname);
-        txtNickname.setText(Client.getUserId());
-
         AppDB db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "ContactDB")
                 .allowMainThreadQueries()
                 .build();
@@ -74,31 +66,16 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         webServiceAPI = retrofit.create(WebServiceAPI.class);
 
-        Call<UserModel> callUser = webServiceAPI.getUser(Client.getUserId(), Client.getToken());
-        callUser.enqueue(new Callback<UserModel>() {
-            @Override
-            public void onResponse(Call<UserModel> call, Response<UserModel> response) {
-                updateImage(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<UserModel> call, Throwable t) {
-                Log.e(getApplicationContext().getString(R.string.retrofit), t.getMessage());
-            }
-        });
         addContact = findViewById(R.id.addContact);
         RecyclerView recyclerView = findViewById(R.id.rvChatList);
+        service = new UserService();
         //bservice.loadContacts();
 
         Call<ArrayList<Chat>> call = webServiceAPI.getChats(Client.getToken());
         call.enqueue(new Callback<ArrayList<Chat>>() {
             @Override
             public void onResponse(Call<ArrayList<Chat>> call, Response<ArrayList<Chat>> response) {
-                try {
-                    ChatService.setChats(response.body());
-                } catch(Exception exception) {
-                    Log.e("main activity", exception.getMessage());
-                }
+                ChatService.setChats(response.body());
             }
 
             @Override
@@ -108,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Call<List<Contact>> callContacts = webServiceAPI.getContacts(Client.getToken());
-
         callContacts.enqueue(new Callback<List<Contact>>() {
          @Override
          public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
@@ -136,10 +112,6 @@ public class MainActivity extends AppCompatActivity {
          });
     }
 
-    private void updateImage(UserModel user) {
-        ImageView view = findViewById(R.id.imageUser);
-        new GetByAsyncTask((ImageView) view).execute(user.getProfileImage());
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inf =getMenuInflater();
