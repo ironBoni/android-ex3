@@ -7,6 +7,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ex3.androidchat.adapters.ConversationAdapter;
 import com.ex3.androidchat.api.interfaces.WebServiceAPI;
-import com.ex3.androidchat.databinding.ActivityConversationBinding;
 import com.ex3.androidchat.events.IEventListener;
 import com.ex3.androidchat.models.Chat;
 import com.ex3.androidchat.models.Utils;
@@ -36,9 +36,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ConversationActivity extends AppCompatActivity implements IEventListener<String> {
-    ActivityConversationBinding binding;
     ImageView backButton, btnSendConv;
     ChatService service =  new ChatService();
+    ConversationAdapter adapter;
     Chat conversition;
     ArrayList<MessageResponse> messages;
     Retrofit retrofit;
@@ -110,17 +110,13 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
         EditText txtMsg = (EditText) findViewById(R.id.txtEnterMsg);
         String msg = txtMsg.getText().toString();
         adapter.addNewMessage(msg);
-        txtMsg.setText("");
-        adapter.notifyDataSetChanged();
+        txtMsg.setText("");;
         sendMessageToServer(friendId, msg);
     }
 
     private void continueOnCreateOnResponse(ArrayList<MessageResponse> allMessages, RecyclerView recyclerView, String friendId) {
         messages = allMessages;
-        ConversationAdapter adapter = new ConversationAdapter(messages,this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
+        adapter.setMessages(messages);
         backButton = findViewById(R.id.btnBack);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,8 +150,7 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityConversationBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        setContentView(R.layout.activity_conversation);
         getSupportActionBar().hide();
         retrofit = new Retrofit.Builder()
                 .baseUrl(Client.getMyServer())
@@ -168,12 +163,23 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
         String nickname =  getIntent().getStringExtra("nickname");
         String server =  getIntent().getStringExtra("server");
         String image =  getIntent().getStringExtra("image");
-        binding.contactNickname.setText(nickname);
+
+        TextView contactNickname = findViewById(R.id.contactNickname);
+        if(contactNickname != null)
+            contactNickname.setText(nickname);
 
         ImageView view = findViewById(R.id.user_image);
         new GetByAsyncTask((ImageView) view).execute(image);
 
         RecyclerView recyclerView = findViewById(R.id.messagesView);
+        ConversationAdapter adapter = new ConversationAdapter(messages,this);
+        this.adapter = adapter;
+        recyclerView.setAdapter(adapter);
+
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(manager);
+
         try {
             conversition = service.GetChatByParticipants(Client.getUserId(), friendId);
         } catch(Exception ex) {
