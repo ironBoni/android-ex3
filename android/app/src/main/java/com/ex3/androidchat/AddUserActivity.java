@@ -3,6 +3,7 @@ package com.ex3.androidchat;
 import static java.util.UUID.randomUUID;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -57,6 +58,13 @@ public class AddUserActivity extends AppCompatActivity implements IEventListener
         cName = findViewById(R.id.cName);
         cNickname = findViewById(R.id.cNickname);
         cServer = findViewById(R.id.cServer);
+
+        int currentNightMode = getApplicationContext().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            cName.setTextColor(getResources().getColor(R.color.black));
+            cNickname.setTextColor(getResources().getColor(R.color.black));
+            cServer.setTextColor(getResources().getColor(R.color.black));
+        }
 
         backButton = findViewById(R.id.btnBackAddUser);
         backButton.setOnClickListener(new View.OnClickListener() {
