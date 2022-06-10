@@ -1,5 +1,6 @@
 package com.ex3.androidchat.services;
 
+import com.ex3.androidchat.Client;
 import com.ex3.androidchat.models.Chat;
 import com.ex3.androidchat.models.Message;
 import com.ex3.androidchat.models.contacts.MessageResponse;
@@ -58,6 +59,15 @@ public class ChatService implements IChatService {
     @Override
     public ArrayList<Chat> GetAll() {
         return chats;
+    }
+
+    public static ArrayList<MessageResponse> toMessagesResponses(ArrayList<Message> messages) {
+        ArrayList<MessageResponse> list = new ArrayList<>();
+        for(Message m : messages) {
+            list.add(new MessageResponse(m.getId(), m.getText(), m.getType(), m.getSenderUsername(),
+                    m.getFileName(), m.getWrittenIn(), m.getSenderUsername() == Client.getUserId()));
+        }
+        return list;
     }
 
     public static void setChats(ArrayList<Chat> list) {

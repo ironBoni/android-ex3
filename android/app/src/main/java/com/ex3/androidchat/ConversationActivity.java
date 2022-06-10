@@ -26,7 +26,7 @@ import com.ex3.androidchat.services.ChatService;
 import com.ex3.androidchat.services.GetByAsyncTask;
 import com.ex3.androidchat.services.UserService;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,7 +39,7 @@ public class ConversationActivity extends AppCompatActivity {
     ImageView backButton, btnSendConv;
     ChatService service =  new ChatService();
     Chat conversition;
-    List<MessageResponse> messages;
+    ArrayList<MessageResponse> messages;
     Retrofit retrofit;
     WebServiceAPI webServiceAPI;
 
@@ -114,7 +114,7 @@ public class ConversationActivity extends AppCompatActivity {
         sendMessageToServer(friendId, msg);
     }
 
-    private void continueOnCreateOnResponse(List<MessageResponse> allMessages, RecyclerView recyclerView, String friendId) {
+    private void continueOnCreateOnResponse(ArrayList<MessageResponse> allMessages, RecyclerView recyclerView, String friendId) {
         messages = allMessages;
         ConversationAdapter adapter = new ConversationAdapter(messages,this);
         recyclerView.setAdapter(adapter);
@@ -181,15 +181,15 @@ public class ConversationActivity extends AppCompatActivity {
         }
         //messages = conversition.getMessages();
 
-        Call<List<MessageResponse>> allMessages = webServiceAPI.getMessagesById(friendId, Client.getToken());
-        allMessages.enqueue(new Callback<List<MessageResponse>>() {
+        Call<ArrayList<MessageResponse>> allMessages = webServiceAPI.getMessagesById(friendId, Client.getToken());
+        allMessages.enqueue(new Callback<ArrayList<MessageResponse>>() {
             @Override
-            public void onResponse(Call<List<MessageResponse>> call, Response<List<MessageResponse>> response) {
+            public void onResponse(Call<ArrayList<MessageResponse>> call, Response<ArrayList<MessageResponse>> response) {
                 continueOnCreateOnResponse(response.body(), recyclerView, friendId);
             }
 
             @Override
-            public void onFailure(Call<List<MessageResponse>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<MessageResponse>> call, Throwable t) {
                 Log.e("retrofit", t.getMessage());
             }
         });

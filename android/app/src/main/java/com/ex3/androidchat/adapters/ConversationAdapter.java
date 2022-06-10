@@ -16,15 +16,15 @@ import com.ex3.androidchat.models.Message;
 import com.ex3.androidchat.models.contacts.MessageResponse;
 import com.ex3.androidchat.services.ChatService;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class ConversationAdapter extends RecyclerView.Adapter {
-    List<MessageResponse> messages;
+    ArrayList<MessageResponse> messages;
     Context context;
     int viewTypeSender = 1;
     int viewTypeReceiver = 2;
     ChatService service;
-    public ConversationAdapter(List<MessageResponse> messages, Context context) {
+    public ConversationAdapter(ArrayList<MessageResponse> messages, Context context) {
         this.messages = messages;
         this.context = context;
         this.service = new ChatService();

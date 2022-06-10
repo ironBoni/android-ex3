@@ -35,7 +35,7 @@ public interface WebServiceAPI {
     Call<List<Contact>> getContacts(@Header("Authorization") String token);
 
     @GET("contacts/{id}/messages")
-    Call<List<MessageResponse>> getMessagesById(@Path("id") String id, @Header("Authorization") String token);
+    Call<ArrayList<MessageResponse>> getMessagesById(@Path("id") String id, @Header("Authorization") String token);
 
     @GET("contacts/{id}/messages/last")
     Call<MessageResponse> getLastMessage(@Path("id") String id, @Header("Authorization") String token);

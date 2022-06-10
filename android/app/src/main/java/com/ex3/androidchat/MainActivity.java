@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements IChoseContactList
     ImageView backButton, btnSendConv;
     ChatService chatService = new ChatService();
     Chat conversition;
-    List<MessageResponse> messages;
+    ArrayList<MessageResponse> messages;
 
     // for landscape.
 
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements IChoseContactList
                 .build();
         WebServiceAPI hisServiceAPI = hisRetrofit.create(WebServiceAPI.class);
 
-        Call<Void> call = hisServiceAPI.transfer(new TransferRequest(Client.getUserId(), friendId, msg));
+        Call<Void> call = hisServiceAPI.transfer(new TransferRequest(Client.getUserId(), Client.getFriendId(), msg));
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -98,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements IChoseContactList
     }
 
     private void sendMessageToServer(String friendId, String msg) {
-        Call<Void> call = webServiceAPI.sendMessage(friendId, new SendMessageRequest(msg), Client.getToken());
+        Call<Void> call = webServiceAPI.sendMessage(Client.getFriendId(), new SendMessageRequest(msg), Client.getToken());
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -124,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements IChoseContactList
                 hisServer = userService.getFullServerUrl(hisServer);
                 String myServer = Client.getMyServer();
                 if(myServer.indexOf(hisServer) < 0 && hisServer.indexOf(myServer) < 0) {
-                    sendMessageToForeignServer(friendId, msg, hisServer);
+                    sendMessageToForeignServer(Client.getFriendId(), msg, hisServer);
                 }
             }
 
@@ -142,16 +143,24 @@ public class MainActivity extends AppCompatActivity implements IChoseContactList
         adapter.addNewMessage(msg);
         txtMsg.setText("");
         adapter.notifyDataSetChanged();
-        sendMessageToServer(friendId, msg);
+        sendMessageToServer(Client.getFriendId(), msg);
     }
 
-    private void continueOnCreateOnResponse(List<MessageResponse> allMessages, RecyclerView recyclerView, String friendId) {
+    private void continueOnCreateOnResponse(ArrayList<MessageResponse> allMessages, String friendId) {
+        RecyclerView recyclerViewConv = findViewById(R.id.messagesViewConv);
+
         messages = allMessages;
-        if(messages == null)
-            return;
-        ConversationAdapter adapter = new ConversationAdapter(messages,this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        if(messages == null) {
+            Chat chat = chatService.GetChatByParticipants(Client.getUserId(), Client.getFriendId());
+
+            if(chat.getMessages() == null) return;
+            messages = ChatService.toMessagesResponses(new ArrayList<>(chat.getMessages()));
+        }
+
+        if(messages == null) return;
+        ConversationAdapter adapter = new ConversationAdapter(messages,MainActivity.this);
+        recyclerViewConv.setAdapter(adapter);
+        recyclerViewConv.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
         backButton = findViewById(R.id.btnBackConv);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -166,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements IChoseContactList
         btnSendConv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendMessage(friendId, adapter);
+                sendMessage(Client.getFriendId(), adapter);
             }
         });
 
@@ -175,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements IChoseContactList
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    sendMessage(friendId, adapter);
+                    sendMessage(Client.getFriendId(), adapter);
                     return true;
                 }
                 return false;
@@ -224,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements IChoseContactList
             String server =  Client.getFriendServer();
             String image =  Client.getFriendServer();
 
-            beginConversationLandScape(friendId, nickname, image);
+            //beginConversationLandScape(friendId, nickname, image);
         }
 
         addContact = findViewById(R.id.addContact);
@@ -294,15 +303,15 @@ public class MainActivity extends AppCompatActivity implements IChoseContactList
         }
         //messages = conversition.getMessages();
 
-        Call<List<MessageResponse>> allMessages = webServiceAPI.getMessagesById(friendId, Client.getToken());
-        allMessages.enqueue(new Callback<List<MessageResponse>>() {
+        Call<ArrayList<MessageResponse>> allMessages = webServiceAPI.getMessagesById(Client.getFriendId(), Client.getToken());
+        allMessages.enqueue(new Callback<ArrayList<MessageResponse>>() {
             @Override
-            public void onResponse(Call<List<MessageResponse>> call, Response<List<MessageResponse>> response) {
-                continueOnCreateOnResponse(response.body(), recyclerView, friendId);
+            public void onResponse(Call<ArrayList<MessageResponse>> call, Response<ArrayList<MessageResponse>> response) {
+                continueOnCreateOnResponse(response.body(), Client.getFriendId());
             }
 
             @Override
-            public void onFailure(Call<List<MessageResponse>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<MessageResponse>> call, Throwable t) {
                 Log.e("retrofit", t.getMessage());
             }
         });
@@ -336,6 +345,14 @@ public class MainActivity extends AppCompatActivity implements IChoseContactList
 
     @Override
     public void onChooseContact(Contact c) {
+        ImageView imageWelcome = findViewById(R.id.imgViewConv);
+        if(imageWelcome == null)
+            return;
+        imageWelcome.setVisibility(View.GONE);
+
+        RelativeLayout layout  = findViewById(R.id.convRelativeLayout);
+        if(layout == null) return;
+        layout.setVisibility(View.VISIBLE);
         beginConversationLandScape(c.getContactId(), c.getName(), c.getProfileImage());
     }
 }
