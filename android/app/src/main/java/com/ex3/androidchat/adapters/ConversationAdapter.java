@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ex3.androidchat.Client;
@@ -20,12 +21,36 @@ import java.util.ArrayList;
 
 public class ConversationAdapter extends RecyclerView.Adapter {
     ArrayList<MessageResponse> messages;
+    MutableLiveData<ArrayList<MessageResponse>> liveMessages;
+
+    public MutableLiveData<ArrayList<MessageResponse>> getLiveMessages() {
+        return liveMessages;
+    }
+
+    public void setLiveMessages(MutableLiveData<ArrayList<MessageResponse>> liveMessages) {
+        this.liveMessages = liveMessages;
+        notifyDataSetChanged();
+    }
+
+    public ArrayList<MessageResponse> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(ArrayList<MessageResponse> messages) {
+        this.messages = messages;
+        this.liveMessages.setValue(messages);
+        notifyDataSetChanged();
+    }
+
     Context context;
     int viewTypeSender = 1;
     int viewTypeReceiver = 2;
     ChatService service;
     public ConversationAdapter(ArrayList<MessageResponse> messages, Context context) {
         this.messages = messages;
+
+        liveMessages = new MutableLiveData<>();
+        liveMessages.setValue(messages);
         this.context = context;
         this.service = new ChatService();
     }
@@ -40,7 +65,8 @@ public class ConversationAdapter extends RecyclerView.Adapter {
         }
         int newId = maxId + 1;
         messages.add(new MessageResponse(newId, text, Client.getUserId()));
-        this.notifyDataSetChanged();
+        setMessages(messages);
+        //this.notifyDataSetChanged();
     }
     @NonNull
     @Override
@@ -74,6 +100,7 @@ public class ConversationAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
+        if(messages == null) return 0;
         return messages.size();
     }
 
