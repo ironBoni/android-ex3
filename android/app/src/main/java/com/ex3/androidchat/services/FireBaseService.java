@@ -11,6 +11,8 @@ import com.ex3.androidchat.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+
+//only basic ready for push notification as hemi did
 public class FireBaseService extends FirebaseMessagingService {
     public FireBaseService() {
     }
