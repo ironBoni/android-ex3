@@ -1,10 +1,14 @@
 package com.ex3.androidchat.models;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import java.util.ArrayList;
 import java.util.List;
-
+@Entity
 public class Chat {
     private static int staticId = 16;
+    @PrimaryKey
     public int id;
     public ArrayList<String> participants;
     public ArrayList<Message> messages;

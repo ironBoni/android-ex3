@@ -1,2 +1,7 @@
-package com.ex3.androidchat.database;public interface ChatDao {
+package com.ex3.androidchat.database;
+
+import androidx.room.Dao;
+
+@Dao
+public interface ChatDao {
 }

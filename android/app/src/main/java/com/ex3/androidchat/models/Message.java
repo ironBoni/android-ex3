@@ -1,6 +1,11 @@
 package com.ex3.androidchat.models;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity
 public class Message {
+    @PrimaryKey(autoGenerate = true)
     public int id;
     public String type, text, senderUsername, fileName;
     public String writtenIn;
