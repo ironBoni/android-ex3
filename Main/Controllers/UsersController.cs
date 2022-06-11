@@ -1,4 +1,6 @@
 ﻿using AspWebApi.Models.Contacts;
+using AspWebApi.Models.Login;
+using AspWebApi.Models.PushNotifications;
 using AspWebApi.Models.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -45,32 +47,12 @@ namespace AspWebApi.Controllers {
             }
         }
 
-        // PUT api/<UsersController>/5
-        [HttpPut]
-        public void Put([FromBody] ChangeServerRequest request)
+        [HttpPost]
+        [Route("/api/users/setTokenForPush")]
+        public void SetTokenForPush([FromBody] TokenResponse tokenRes)
         {
             Current.Username = User.Claims.SingleOrDefault(i => i.Type.EndsWith("UserId"))?.Value;
-            using (var db = new ItemsContext())
-            {
-                var user = db.Users.ToList().Find(user => user.Username == Current.Username);
-                user.Server = request.Server;
-                try
-                {
-                    db.SaveChanges();
-                    Response.StatusCode = 204;
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                    Response.StatusCode = 404;
-                }
-            }
-        }
-
-        // DELETE api/<UsersController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            PushNotificationsManager.addUser(Current.Username, tokenRes.Token);
         }
     }
 }

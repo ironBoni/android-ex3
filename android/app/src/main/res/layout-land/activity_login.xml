@@ -63,11 +63,11 @@
                 android:layout_width="155dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/registerColor"
                 android:padding="13dp"
                 android:text="Login"
                 android:textAllCaps="false"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="19dp"
                 app:cornerRadius="9dp" />
 
@@ -77,11 +77,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="8dp"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/registerColor"
                 android:padding="13dp"
                 android:text="Register"
                 android:textAllCaps="false"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="19dp"
                 app:cornerRadius="9dp" />
         </LinearLayout>

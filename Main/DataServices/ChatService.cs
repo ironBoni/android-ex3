@@ -231,5 +231,10 @@ namespace Models.DataServices {
                 return false;
             }
         }
+
+        public bool AddMessage(int chatId, int messageId, string content, string from, bool sent)
+        {
+            return AddMessage(chatId, new Message(messageId, content, from, sent));
+        }
     }
 }

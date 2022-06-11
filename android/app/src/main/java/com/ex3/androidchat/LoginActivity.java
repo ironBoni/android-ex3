@@ -16,8 +16,10 @@ import com.ex3.androidchat.events.IEventListener;
 import com.ex3.androidchat.models.contacts.UserModel;
 import com.ex3.androidchat.models.login.LoginRequest;
 import com.ex3.androidchat.models.login.LoginResponse;
+import com.ex3.androidchat.models.login.TokenResponse;
 import com.ex3.androidchat.services.IUserService;
 import com.ex3.androidchat.services.UserService;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 
@@ -38,6 +40,9 @@ public class LoginActivity extends AppCompatActivity implements IEventListener<S
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+
+        //initNotificationsService();
         AndroidChat.context = getApplicationContext();
         this.userService = new UserService();
         retrofit = new Retrofit.Builder()
@@ -48,7 +53,6 @@ public class LoginActivity extends AppCompatActivity implements IEventListener<S
 
         txtUserId = findViewById(R.id.txtUserId);
         txtPassword = findViewById(R.id.txtPassword);
-        setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
 
         dialog = new ProgressDialog(LoginActivity.this);
@@ -86,6 +90,32 @@ public class LoginActivity extends AppCompatActivity implements IEventListener<S
         }
     }
 
+    private void initNotificationsService() {
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(LoginActivity.this, instanceIdResult -> {
+            Client.firebaseToken =  instanceIdResult.getToken();
+            if(Client.firebaseToken == "") return;
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Call <Void> call = webServiceAPI.setTokenForPush(new TokenResponse(Client.firebaseToken),
+                            Client.getToken());
+                    call.enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            Log.d("firebase", "set token in server");
+                        }
+
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Log.e("firebase", t.getMessage());
+                        }
+                    });
+                }
+            });
+            t.run();
+        });
+    }
+
     private void setUsers() {
         Call<ArrayList<UserModel>> call = webServiceAPI.getUsers(Client.getToken());
         call.enqueue(new Callback<ArrayList<UserModel>>() {
@@ -114,6 +144,8 @@ public class LoginActivity extends AppCompatActivity implements IEventListener<S
                 if(response.body().isCorrectInput()) {
                     String token = response.body().getToken().getToken();
                     Client.setToken("Bearer " + token);
+                    initNotificationsService();
+
                     Client.setUserId(txtUserId.getText().toString());
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);

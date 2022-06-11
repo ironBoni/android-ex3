@@ -33,6 +33,8 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     Retrofit retrofit;
     WebServiceAPI webServiceAPI;
     private MainActivity listener;
+    private final int MAX_LENGTH_OF_MESSAGE = 18;
+    private final int MAX_LENGTH_OF_PREVIEW = 14;
 
     public void addListener(MainActivity activity) {
         listener = activity;
@@ -79,7 +81,16 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         //holder.lastMsgTime.setText(hour + "\n" + date);
         holder.lastMsgTime.setText(date);
         holder.lastMsgHour.setText(hour);
-        holder.lastMsg.setText(contact.getLast());
+
+        if(contact.getLast() == null)
+            holder.lastMsg.setText(null);
+        else if(contact.getLast().length() < MAX_LENGTH_OF_MESSAGE)
+            holder.lastMsg.setText(contact.getLast());
+        else {
+            String msg = contact.getLast().substring(0, MAX_LENGTH_OF_PREVIEW);
+            msg = msg + "...";
+            holder.lastMsg.setText(msg);
+        }
         holder.nickName.setText(contact.getName());
 
         new GetByAsyncTask((ImageView) holder.picture).execute(contact.getProfileImage());

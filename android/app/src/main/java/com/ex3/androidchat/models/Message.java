@@ -1,5 +1,8 @@
 package com.ex3.androidchat.models;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Message {
     public int id;
     public String type, text, senderUsername, fileName;
@@ -38,9 +41,9 @@ public class Message {
         this.senderUsername = senderUsername;
         sent = true;
         type = "text";
-        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        //LocalDateTime now = LocalDateTime.now();
-        writtenIn = "08/06/2022 18:06";
+        java.util.Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        writtenIn = formatter.format(date);
         fileName = "";
     }
 
