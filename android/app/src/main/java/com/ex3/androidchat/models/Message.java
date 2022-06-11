@@ -47,7 +47,7 @@ public class Message {
         sent = true;
         type = "text";
         java.util.Date date = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         writtenIn = formatter.format(date);
         fileName = "";
     }

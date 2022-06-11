@@ -37,7 +37,7 @@
             android:minHeight="48dp"
             android:padding="8dp"
             android:textColor="@color/black"
-            android:textColorHint="@color/grayLight"
+            android:textColorHint="@color/white"
             android:textSize="20dp"/>
 
         <EditText
@@ -51,7 +51,7 @@
             android:minHeight="48dp"
             android:padding="8dp"
             android:textColor="@color/black"
-            android:textColorHint="@color/grayLight"
+            android:textColorHint="@color/white"
             android:textSize="20dp" />
 
         <LinearLayout
