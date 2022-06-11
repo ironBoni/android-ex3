@@ -11,6 +11,9 @@ public class Utils {
     }
 
     public static String getAndroidServer(String friendServer) {
+        friendServer = getFullServerUrl(friendServer);
+        if(!friendServer.endsWith("api/"))
+            friendServer = friendServer + "api/";
         return  friendServer.replace("localhost", "10.0.2.2").replace("127.0.0.1", "10.0.2.2");
     }
 }

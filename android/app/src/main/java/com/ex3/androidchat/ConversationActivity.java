@@ -109,6 +109,8 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
     private void sendMessage(String friendId, ConversationAdapter adapter) {
         EditText txtMsg = (EditText) findViewById(R.id.txtEnterMsg);
         String msg = txtMsg.getText().toString();
+        if(msg.isEmpty()) return;
+
         adapter.addNewMessage(msg);
         txtMsg.setText("");;
         sendMessageToServer(friendId, msg);
