@@ -43,6 +43,7 @@ import com.ex3.androidchat.services.GetByAsyncTask;
 import com.ex3.androidchat.services.UserService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -197,6 +198,10 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
         AndroidChat.context = getApplicationContext();
         setContentView(R.layout.activity_main);
         getSupportActionBar().setTitle(R.string.happy_chat);
+        //firebase
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(MainActivity.this, instanceIdResult -> {
+            String newToken = instanceIdResult.getToken();
+        });
 
         service = new UserService();
         TextView txtNickname = findViewById(R.id.txtViewNickname);
