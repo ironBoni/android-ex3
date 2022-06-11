@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ex3.androidchat.AndroidChat;
@@ -29,6 +30,27 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHolder> implements IEventListener<String> {
     ArrayList<Contact> contacts;
+    MutableLiveData<ArrayList<Contact>> liveContacts;
+
+    public MutableLiveData<ArrayList<Contact>> getLiveContacts() {
+        return liveContacts;
+    }
+
+    public void setLiveContacts(MutableLiveData<ArrayList<Contact>> liveContacts) {
+        this.liveContacts = liveContacts;
+        notifyDataSetChanged();
+    }
+
+    public ArrayList<Contact> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(ArrayList<Contact> newContacts) {
+        this.contacts = newContacts;
+        this.liveContacts.postValue(newContacts);
+        notifyDataSetChanged();
+    }
+
     Context context;
     Retrofit retrofit;
     WebServiceAPI webServiceAPI;
@@ -45,6 +67,8 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     }
     public ContactsAdapter(ArrayList<Contact> contacts, Context context) {
         this.contacts = contacts;
+        this.liveContacts = new MutableLiveData<>();
+        liveContacts.postValue(contacts);
         this.context = context;
         retrofit = new Retrofit.Builder()
                 .baseUrl(Client.getMyServer())
@@ -112,6 +136,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Client.setFriendId(contact.getContactId());
                 Intent intent = new Intent(context, ConversationActivity.class);
                 intent.putExtra("id", contact.getContactId());
                 intent.putExtra("nickname", contact.getName());

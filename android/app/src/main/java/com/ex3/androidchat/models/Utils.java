@@ -23,4 +23,11 @@ public class Utils {
             friendServer = friendServer + "api/";
         return  friendServer.replace("localhost", "10.0.2.2").replace("127.0.0.1", "10.0.2.2");
     }
+
+    public static String getLastWord(String sentence) {
+        String[] parts = sentence.split(" ");
+        if(parts.length <= 1)
+            return sentence;
+        return parts[parts.length - 1];
+    }
 }

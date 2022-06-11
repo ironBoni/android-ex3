@@ -184,6 +184,7 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);
+        Client.conversationActivity = ConversationActivity.this;
 
         final View activityRootView = findViewById(R.id.mainConvlayout);
         lastViewHeight = findViewById(Window.ID_ANDROID_CONTENT).getHeight();
@@ -244,7 +245,8 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
         new GetByAsyncTask((ImageView) view).execute(image);
 
         RecyclerView recyclerView = findViewById(R.id.messagesView);
-        ConversationAdapter adapter = new ConversationAdapter(messages, this);
+        ConversationAdapter adapter = new ConversationAdapter(messages, this, recyclerView);
+        NotificationsService.conversationAdapter = adapter;
         recyclerView.scrollToPosition(adapter.getItemCount() - 1);
 
         this.adapter = adapter;

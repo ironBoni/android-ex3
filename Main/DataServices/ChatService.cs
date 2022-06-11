@@ -228,7 +228,7 @@ namespace Models.DataServices {
             } catch(Exception ex)
             {
                 Debug.WriteLine(ex.ToString());
-                return false;
+                return true;
             }
         }
 

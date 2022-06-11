@@ -5,6 +5,9 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.ex3.androidchat.models.Contact;
+import com.ex3.androidchat.models.Message;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -12,10 +15,12 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Map;
 
 public class Client {
     public static String firebaseToken = "";
+    public static NotificationsService notifyService;
     private static String dataServer = "http://10.0.2.2:5186/api/";
     private static String token = "";
     private static String userId = "";
@@ -23,7 +28,10 @@ public class Client {
     private static String friendServer = "";
     private static String friendImage = "";
     private static boolean isNightModeOn = false;
-
+    public static MainActivity mainActivity;
+    public static ConversationActivity conversationActivity;
+    public static ArrayList<Message> messages;
+    public static ArrayList<Contact> contacts;
     public static boolean isIsNightModeOn() {
         return isNightModeOn;
     }

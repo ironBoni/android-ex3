@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.ex3.androidchat.Client;
+import com.ex3.androidchat.NotificationsService;
 import com.ex3.androidchat.adapters.ContactsAdapter;
 import com.ex3.androidchat.databinding.FragmentChatListBinding;
 import com.ex3.androidchat.models.Contact;
@@ -34,6 +35,8 @@ public class ChatListFragment extends Fragment {
         service = new UserService();
         contacts = service.getById(Client.getUserId()).getContacts();
         ContactsAdapter adapter = new ContactsAdapter(contacts, getContext());
+        NotificationsService.contactsAdapter = adapter;
+
         binding.chatListRecyclerView.setAdapter(adapter);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         binding.chatListRecyclerView.setLayoutManager(manager);

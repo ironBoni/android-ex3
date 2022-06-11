@@ -161,7 +161,8 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
         }
 
         if(messages == null) return;
-        ConversationAdapter adapter = new ConversationAdapter(messages,MainActivity.this);
+        ConversationAdapter adapter = new ConversationAdapter(messages,MainActivity.this, recyclerViewConv);
+        NotificationsService.conversationAdapter = adapter;
         recyclerViewConv.scrollToPosition(adapter.getItemCount() - 1);
         recyclerViewConv.setAdapter(adapter);
         recyclerViewConv.setLayoutManager(new LinearLayoutManager(MainActivity.this));
@@ -201,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
         super.onCreate(savedInstanceState);
         AndroidChat.context = getApplicationContext();
         setContentView(R.layout.activity_main);
+        Client.mainActivity = MainActivity.this;
         getSupportActionBar().setTitle(R.string.happy_chat);
 
         service = new UserService();
@@ -271,6 +273,8 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
                 contactsAPI.get();
 
                 ContactsAdapter adapter = new ContactsAdapter(contacts, getApplicationContext());
+
+                NotificationsService.contactsAdapter = adapter;
                 adapter.addListener(MainActivity.this);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
