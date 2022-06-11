@@ -31,8 +31,8 @@ public class NotificationsService extends FirebaseMessagingService {
                 if(c.getContactId().equals(fromUserId)) {
                     c.last = content;
                     java.util.Date date = new Date();
-                    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-                    c.lastdate = "11/06/2022 19:22";
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                    c.lastdate = formatter.format(date);
                     break;
                 }
             }
