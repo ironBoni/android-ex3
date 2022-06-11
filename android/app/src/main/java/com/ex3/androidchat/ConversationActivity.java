@@ -112,8 +112,11 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
         if(msg.isEmpty()) return;
 
         adapter.addNewMessage(msg);
-        txtMsg.setText("");;
+        txtMsg.setText("");
         sendMessageToServer(friendId, msg);
+
+        RecyclerView recyclerView = findViewById(R.id.messagesView);
+        recyclerView.scrollToPosition(adapter.getItemCount() - 1);
     }
 
     private void continueOnCreateOnResponse(ArrayList<MessageResponse> allMessages, RecyclerView recyclerView, String friendId) {
@@ -175,6 +178,8 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
 
         RecyclerView recyclerView = findViewById(R.id.messagesView);
         ConversationAdapter adapter = new ConversationAdapter(messages,this);
+        recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+
         this.adapter = adapter;
         recyclerView.setAdapter(adapter);
 
