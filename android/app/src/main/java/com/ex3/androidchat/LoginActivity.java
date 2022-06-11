@@ -2,6 +2,8 @@ package com.ex3.androidchat;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -55,6 +57,12 @@ public class LoginActivity extends AppCompatActivity implements IEventListener<S
         txtUserId = findViewById(R.id.txtUserId);
         txtPassword = findViewById(R.id.txtPassword);
 
+        int currentNightMode = getApplicationContext().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            if(txtUserId == null || txtPassword == null) return;
+            txtUserId.setTypeface(null, Typeface.BOLD);
+            txtPassword.setTypeface(null, Typeface.BOLD);
+        }
         txtPassword.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&

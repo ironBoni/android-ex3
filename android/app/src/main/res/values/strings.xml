@@ -15,4 +15,6 @@
 
     <string name="portrait">Portrait</string>
     <string name="landscape">Landscape</string>
+
+    <string name="loginHintTextStyle">normal</string>
 </resources>
