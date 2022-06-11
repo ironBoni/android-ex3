@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase;
 
 import com.ex3.androidchat.models.Contact;
 
-@Database(entities = {Contact.class}, version = 1)
+@Database(entities = {Contact.class,}, version = 1)
 public abstract class AppDB extends RoomDatabase {
     public abstract ContactDao contactDao();
 }
