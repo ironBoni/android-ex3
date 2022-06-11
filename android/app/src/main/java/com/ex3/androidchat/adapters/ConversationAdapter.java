@@ -14,6 +14,7 @@ import com.ex3.androidchat.Client;
 import com.ex3.androidchat.R;
 import com.ex3.androidchat.models.Chat;
 import com.ex3.androidchat.models.Message;
+import com.ex3.androidchat.models.Utils;
 import com.ex3.androidchat.models.contacts.MessageResponse;
 import com.ex3.androidchat.services.ChatService;
 
@@ -84,9 +85,13 @@ public class ConversationAdapter extends RecyclerView.Adapter {
         MessageResponse msg = messages.get(position);
 
         if(holder.getClass() == ViewHolderSend.class) {
-            ((ViewHolderSend)holder).messageSent.setText(msg.getContent());
+            ViewHolderSend sendHolder = ((ViewHolderSend)holder);
+            sendHolder.messageSent.setText(msg.getContent());
+            sendHolder.sentTime.setText(Utils.getHour(msg.getCreated()));
         } else {
-            ((ViewHolderReceive)holder).messageReceived.setText(msg.getContent());
+            ViewHolderReceive receiveHolder = ((ViewHolderReceive)holder);
+            receiveHolder.messageReceived.setText(msg.getContent());
+            receiveHolder.timeReceived.setText(Utils.getHour(msg.getCreated()));
         }
     }
 

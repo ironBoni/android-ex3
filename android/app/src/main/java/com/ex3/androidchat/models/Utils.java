@@ -10,6 +10,13 @@ public class Utils {
         return url;
     }
 
+    public static String getHour(String dateAndHour) {
+        String[] parts = dateAndHour.split(" ");
+        if(parts.length <= 1)
+            return dateAndHour;
+        return parts[1];
+    }
+
     public static String getAndroidServer(String friendServer) {
         friendServer = getFullServerUrl(friendServer);
         if(!friendServer.endsWith("api/"))
