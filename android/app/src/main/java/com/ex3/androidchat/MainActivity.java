@@ -339,6 +339,9 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
             startActivity(intent);
         } else {
             // logout
+            finish();
+            Client.setToken("");
+            Client.setUserId("");
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
         }
