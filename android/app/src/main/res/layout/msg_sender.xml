@@ -38,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="7dp"
-                android:inputType="textMultiLine|textLongMessage"
+                android:inputType="textMultiLine|textLongMessage|textNoSuggestions"
                 android:maxWidth="268dp"
                 android:minWidth="48dp"
                 android:text="Hey Guys"

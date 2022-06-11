@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="7dp"
-        android:inputType="textLongMessage|textMultiLine"
+        android:inputType="textLongMessage|textMultiLine|textNoSuggestions"
         android:maxWidth="268dp"
         android:minWidth="48dp"
         android:textSize="18dp"

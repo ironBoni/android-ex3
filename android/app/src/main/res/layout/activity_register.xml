@@ -81,11 +81,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/registerColor"
                 android:padding="13dp"
                 android:text="Upload Picture"
                 android:textAllCaps="false"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 app:cornerRadius="9dp" />
 
             <ImageView
@@ -100,11 +100,11 @@
             android:layout_width="155dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/registerColor"
             android:padding="13dp"
             android:text="Register"
             android:textAllCaps="false"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             app:cornerRadius="9dp"
             app:rippleColor="@color/black" />
 
