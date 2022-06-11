@@ -8,5 +8,6 @@ namespace Models.DataServices.Interfaces {
     public interface IChatService : IDataService<Chat, int> {
         int GetNewMsgIdInChat(int id);
         bool AddMessage(int chatId, Message message);
+        bool AddMessage(int id, int messageId, string content, string from, bool sent);
     }
 }
