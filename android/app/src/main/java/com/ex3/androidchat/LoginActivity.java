@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -53,6 +54,17 @@ public class LoginActivity extends AppCompatActivity implements IEventListener<S
 
         txtUserId = findViewById(R.id.txtUserId);
         txtPassword = findViewById(R.id.txtPassword);
+
+        txtPassword.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    doLogin();
+                    return true;
+                }
+                return false;
+            }
+        });
         getSupportActionBar().hide();
 
         dialog = new ProgressDialog(LoginActivity.this);
@@ -72,21 +84,25 @@ public class LoginActivity extends AppCompatActivity implements IEventListener<S
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                txtUserId = findViewById(R.id.txtUserId);
-                txtPassword = findViewById(R.id.txtPassword);
-                if (txtUserId.getText().toString().isEmpty()) {
-                    Toast.makeText(LoginActivity.this, "Please enter userId", Toast.LENGTH_LONG);
-                } else if (txtPassword.getText().toString().isEmpty()) {
-                    Toast.makeText(LoginActivity.this, "Please enter password", Toast.LENGTH_LONG);
-                } else {
-                    handleLogin();
-                }
+                doLogin();
             }
         });
 
         if(Client.getToken() != "") {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
+        }
+    }
+
+    private void doLogin() {
+        txtUserId = findViewById(R.id.txtUserId);
+        txtPassword = findViewById(R.id.txtPassword);
+        if (txtUserId.getText().toString().isEmpty()) {
+            Toast.makeText(LoginActivity.this, "Please enter userId", Toast.LENGTH_LONG);
+        } else if (txtPassword.getText().toString().isEmpty()) {
+            Toast.makeText(LoginActivity.this, "Please enter password", Toast.LENGTH_LONG);
+        } else {
+            handleLogin();
         }
     }
 
