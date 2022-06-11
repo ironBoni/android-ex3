@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">AndroidChat</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="happy_chat">HappyChat</string>
+    <string name="noam">Noam</string>
+    <string name="hey_friend">Hey friend!</string>
+    <string name="add_user">Add User</string>
+    <string name="add_new_contact">Add New Contact</string>
+    <string name="settings">Settings</string>
+    <string name="add_contact">add contact</string>
+    <string name="default_avatar_image">data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/bAEMABAMDBAMDBAQEBAUFBAUHCwcHBgYHDgoKCAsQDhEREA4QDxIUGhYSExgTDxAWHxcYGxsdHR0RFiAiHxwiGhwdHP/AAAsIAFoAWgEBEQD/xAAbAAEAAgMBAQAAAAAAAAAAAAAABwgCBQYBBP/EADsQAAEDAgMEBgcFCQAAAAAAAAEAAgMEBQYHERIhMUEIE1FhcYEUFiJScpGhFUJTkqIXJDIzYoOTseH/2gAIAQEAAD8AukiIiIiIiIiIuTxLmVhrCkj4a+4NdVt401O3rZB4gbm+ZC4qTpFWJshDLRc3s94ujaflqt/Ys6sJ3uRsL6uW3zOOgbWs2Gk/GCW/MhSC1zXta5rg5rhqHA6gjtBXqIiIig7ODNeehqZ8O2KcxTM9msq4z7TD+Gw8j2nyHNQGSSSSSSTqSeZXiKRcs80qzBtVHRVskk9hkdo+InU0+v32d3a3gfFWmhmjqIY5oZGyRSND2PadQ5pGoI7iFmiIi0eMb76s4Wut1GhkpYC6MHnIfZb+ohUvkkfNI+SR5fI9xc57uLiTqSfErFERWYyDxC+64Tntszy6W1ShjCePVP1LR5EOHyUrIiIo7zw2/wBnNw2ddOug2vDrB/xVVRERTd0cNv7QxFp/L6iHXx23afTVWARERaPGNi9ZsLXW1DTrKqAtjJ5SDe39QCpfJG+GR8crCyRji1zHDQtIOhB81iiIrM5CYdfasJz3KZuzLdZRIwHj1TNQ0+Z2j8lKqIiIoPzfyonr6ifEVigMs7/arKRg9p5/EYOZ7R5jmoCIIJBBBB0IPIrxFIuWeVtXjKrjra2N8Fhjdq+QjQ1Gn3Gd3a7gPFWmhhjp4Y4YWNjijaGMY0aBrQNAB3aLNERFoMU40suDqUT3WrEb3jWOBg2pZfhb2d50HetNgzNaw4xkNPFI6ir9ohtLVOAdIORa4bneHEL7MS5a4axVI+a4W5rat3Gpp3dVKfEjcfMFcVJ0dbE6Qll3ubGe7pG767K39iyWwlZJGzPpJa+Zu8OrX7bQfgADfmCujxPjCy4LoeuuVSyEhukVNGAZJNOAawcu/cAtXg3M+w40IgpZnU1w019DqdGvPwkbneW/uXZoiLkMxMd0+BbIaktbLcKjVlLTk/xO5uP9LefbuHNVNu13rb5cJ6+4VD6irnOr5Hn6AcgOQHBfEN3+12djzWxZYI2xU92knp2bhFVtEzQOwF28fNdOzpDYlazR1BanO97q5B9Ntai6Z24wubHMZWw0LHbv3OENd+Y6lcDU1U9bO+oqZpJ55Dq6SV5c53iTvWMUr4JGSRvcyRhDmvadC0jgQeRVmcoczXYspjabrIPtqnZtNkO70qMcXfEOfbx7VKSLxzmsaXOcGtaNS48AO1U8zDxa/GWKKuvDj6Gw9TSsP3Ymk6HxO9x8VyqIiIi+20XWqsdzpbjRSbFVSyCSN3eOR7jwPcVc/D16p8R2ShutLuhq4hIG+6ebT4EEeS2S4jNy9useAbrJG7Znqg2kjI4gyHQn8u0qkIiIiIisR0d726psl0tEjtTRTNnjB5Mk4j8zf1KZlEfSHJGELcNdxrxr/jeq2oiIiIimLo6E+s14Gu40I3f3Gqxi/9k=</string>
+    <string name="BaseUrl">http://10.0.2.2:5186/api/</string>
+    <string name="retrofit">retrofit</string>
+
+    <string name="portrait">Portrait</string>
+    <string name="landscape">Landscape</string>
+
+    <string name="loginHintTextStyle">bold</string>
+</resources>

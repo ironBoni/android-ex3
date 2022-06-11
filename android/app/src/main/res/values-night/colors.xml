@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="mainColor">#84B3E1</color>
+    <color name="mainColorDark">#3A8AD8</color>
+    <color name="secondColor">#02EAB4</color>
+    <color name="grayLight">#ECECEC</color>
+    <color name="happyChatColor">#0b5045</color>
+    <color name="red">#FF1E1E</color>
+    <color name="backgroundColor">#008577</color>
+    <color name="chatBackground">#E8DCD4</color>
+    <color name="nativeColor">#2B4884</color>
+    <color name="greenLight">#99EC83</color>
+    <color name="settings">#0E7483</color>
+    <color name="backgroundGrayColor">#BCCCBC</color>
+    <color name="registerColor">#38346C</color>
+    <color name="gray">#9F9F9F</color>
+    <color name="time_color">#FF000000</color>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="hint">#FFFFFFFF</color>
+</resources>
