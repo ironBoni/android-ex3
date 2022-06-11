@@ -1,33 +1,43 @@
 {
   "project_info": {
+
     "project_number": "799074311617",
     "project_id": "androidchat-e0aa0",
     "storage_bucket": "androidchat-e0aa0.appspot.com"
+
   },
   "client": [
     {
       "client_info": {
+
         "mobilesdk_app_id": "1:799074311617:android:b4be7eef24d4ce09402340",
+
         "android_client_info": {
           "package_name": "com.ex3.androidchat"
         }
       },
       "oauth_client": [
         {
+
           "client_id": "799074311617-p08pl6nrqpbe6qokandv4md7u507pbp2.apps.googleusercontent.com",
+
           "client_type": 3
         }
       ],
       "api_key": [
         {
+
           "current_key": "AIzaSyCZbJrNmlHtDwyu_96VaRLX4xMQMh8rqvg"
+
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
+
               "client_id": "799074311617-p08pl6nrqpbe6qokandv4md7u507pbp2.apps.googleusercontent.com",
+
               "client_type": 3
             }
           ]
