@@ -23,6 +23,15 @@ import java.util.ArrayList;
 public class ConversationAdapter extends RecyclerView.Adapter {
     ArrayList<MessageResponse> messages;
     MutableLiveData<ArrayList<MessageResponse>> liveMessages;
+    RecyclerView recyclerView;
+
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
+    }
+
+    public void setRecyclerView(RecyclerView recyclerView) {
+        this.recyclerView = recyclerView;
+    }
 
     public MutableLiveData<ArrayList<MessageResponse>> getLiveMessages() {
         return liveMessages;
@@ -39,28 +48,33 @@ public class ConversationAdapter extends RecyclerView.Adapter {
 
     public void setMessages(ArrayList<MessageResponse> messages) {
         this.messages = messages;
-        this.liveMessages.setValue(messages);
+        this.liveMessages.postValue(messages);
         notifyDataSetChanged();
+
+        if(recyclerView != null)
+            recyclerView.scrollToPosition(getItemCount() - 1);
     }
 
     Context context;
     int viewTypeSender = 1;
     int viewTypeReceiver = 2;
     ChatService service;
-    public ConversationAdapter(ArrayList<MessageResponse> messages, Context context) {
+
+    public ConversationAdapter(ArrayList<MessageResponse> messages, Context context, RecyclerView recyclerView) {
         this.messages = messages;
 
         liveMessages = new MutableLiveData<>();
         liveMessages.setValue(messages);
         this.context = context;
         this.service = new ChatService();
+        this.recyclerView = recyclerView;
     }
 
     public void addNewMessage(String text) {
         Chat chat = service.GetChatByParticipants(Client.getUserId(), Client.getFriendId());
         int maxId = 0;
-        for(Message m : chat.getMessages()) {
-            if(m.getId() > maxId) {
+        for (Message m : chat.getMessages()) {
+            if (m.getId() > maxId) {
                 maxId = m.getId();
             }
         }
@@ -69,11 +83,12 @@ public class ConversationAdapter extends RecyclerView.Adapter {
         setMessages(messages);
         //this.notifyDataSetChanged();
     }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if(viewType == viewTypeSender) {
-            View senderLayout = LayoutInflater.from(context).inflate(R.layout.msg_sender,parent, false);
+        if (viewType == viewTypeSender) {
+            View senderLayout = LayoutInflater.from(context).inflate(R.layout.msg_sender, parent, false);
             return new ViewHolderSend(senderLayout);
         }
         View layout = LayoutInflater.from(context).inflate(R.layout.msg_reciever, parent, false);
@@ -84,12 +99,12 @@ public class ConversationAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         MessageResponse msg = messages.get(position);
 
-        if(holder.getClass() == ViewHolderSend.class) {
-            ViewHolderSend sendHolder = ((ViewHolderSend)holder);
+        if (holder.getClass() == ViewHolderSend.class) {
+            ViewHolderSend sendHolder = ((ViewHolderSend) holder);
             sendHolder.messageSent.setText(msg.getContent());
             sendHolder.sentTime.setText(Utils.getHour(msg.getCreated()));
         } else {
-            ViewHolderReceive receiveHolder = ((ViewHolderReceive)holder);
+            ViewHolderReceive receiveHolder = ((ViewHolderReceive) holder);
             receiveHolder.messageReceived.setText(msg.getContent());
             receiveHolder.timeReceived.setText(Utils.getHour(msg.getCreated()));
         }
@@ -97,7 +112,7 @@ public class ConversationAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
-        if(messages.get(position).getSenderUsername().equals(Client.getUserId())) {
+        if (messages.get(position).getSenderUsername().equals(Client.getUserId())) {
             return viewTypeSender;
         }
         return viewTypeReceiver;
@@ -105,13 +120,14 @@ public class ConversationAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        if(messages == null) return 0;
+        if (messages == null) return 0;
         return messages.size();
     }
 
     public class ViewHolderReceive extends RecyclerView.ViewHolder {
 
         TextView messageReceived, timeReceived;
+
         public ViewHolderReceive(@NonNull View itemView) {
             super(itemView);
             messageReceived = itemView.findViewById(R.id.txtRecieve);
@@ -122,6 +138,7 @@ public class ConversationAdapter extends RecyclerView.Adapter {
     public class ViewHolderSend extends RecyclerView.ViewHolder {
 
         TextView messageSent, sentTime;
+
         public ViewHolderSend(@NonNull View itemView) {
             super(itemView);
             messageSent = itemView.findViewById(R.id.textSent);

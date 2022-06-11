@@ -62,11 +62,14 @@ namespace AspWebApi.Controllers {
 
         private async Task<string> SendNotification(TransferRequest request)
         {
-            FirebaseApp.Create(new
-                AppOptions
+            if (FirebaseApp.DefaultInstance == null)
             {
-                Credential = GoogleCredential.FromFile("privateKey.json")
-            });
+                FirebaseApp.Create(new
+                AppOptions
+                {
+                    Credential = GoogleCredential.FromFile("privateKey.json")
+                });
+            }
 
             var registrationToken = PushNotificationsManager.IdToTokens[request.To];
 
