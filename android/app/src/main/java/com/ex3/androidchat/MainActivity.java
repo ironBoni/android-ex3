@@ -35,7 +35,6 @@ import com.ex3.androidchat.models.User;
 import com.ex3.androidchat.models.Utils;
 import com.ex3.androidchat.models.contacts.GetUserDetailsResponse;
 import com.ex3.androidchat.models.contacts.MessageResponse;
-import com.ex3.androidchat.models.contacts.SendMessageRequest;
 import com.ex3.androidchat.models.contacts.UserModel;
 import com.ex3.androidchat.models.transfer.TransferRequest;
 import com.ex3.androidchat.services.ChatService;
@@ -83,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
                 .build();
         WebServiceAPI hisServiceAPI = hisRetrofit.create(WebServiceAPI.class);
 
+        if(Utils.getAndroidServer(hisServer).equals(Utils.getAndroidServer(Client.getMyServer())))
+            return;
         Call<Void> call = hisServiceAPI.transfer(new TransferRequest(Client.getUserId(), Client.getFriendId(), msg));
         call.enqueue(new Callback<Void>() {
             @Override
@@ -98,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
     }
 
     private void sendMessageToServer(String friendId, String msg) {
-        Call<Void> call = webServiceAPI.sendMessage(Client.getFriendId(), new SendMessageRequest(msg), Client.getToken());
+        Call<Void> call = webServiceAPI.transfer(new TransferRequest(Client.getUserId(), friendId, msg));
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
