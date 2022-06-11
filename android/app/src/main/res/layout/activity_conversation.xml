@@ -4,18 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/mainConvlayout"
     android:background="@drawable/background_chat"
     android:fitsSystemWindows="true"
     tools:context=".ConversationActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/messagesView"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="528dp"
-        android:layout_below="@id/toolBar"
+        android:layout_below="@id/toolBar">
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/messagesView"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
         android:layout_marginBottom="3dp"
         android:fitsSystemWindows="true"
         android:scrollbars="vertical" />
+    </RelativeLayout>
     <LinearLayout
         android:id="@+id/convLayout"
         android:layout_width="match_parent"
