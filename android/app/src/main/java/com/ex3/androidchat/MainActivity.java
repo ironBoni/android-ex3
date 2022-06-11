@@ -144,6 +144,10 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
         txtMsg.setText("");
         adapter.notifyDataSetChanged();
         sendMessageToServer(Client.getFriendId(), msg);
+
+        RecyclerView recyclerViewConv = findViewById(R.id.messagesViewConv);
+        if(recyclerViewConv != null)
+            recyclerViewConv.scrollToPosition(adapter.getItemCount() - 1);
     }
 
     private void continueOnCreateOnResponse(ArrayList<MessageResponse> allMessages, String friendId) {
@@ -159,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
 
         if(messages == null) return;
         ConversationAdapter adapter = new ConversationAdapter(messages,MainActivity.this);
+        recyclerViewConv.scrollToPosition(adapter.getItemCount() - 1);
         recyclerViewConv.setAdapter(adapter);
         recyclerViewConv.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
@@ -339,6 +344,9 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
             startActivity(intent);
         } else {
             // logout
+            finish();
+            Client.setToken("");
+            Client.setUserId("");
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
         }

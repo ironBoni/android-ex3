@@ -1,6 +1,7 @@
 package com.ex3.androidchat.models.contacts;
 
-import java.time.LocalDateTime;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MessageResponse {
     public int id;
@@ -26,9 +27,9 @@ public class MessageResponse {
         this.senderUsername = senderUsername;
         sent = true;
         type = "text";
-        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        //LocalDateTime now = LocalDateTime.now();
-        created = "08/06/2022 18:06";
+        java.util.Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        created = formatter.format(date);
         fileName = "";
     }
 

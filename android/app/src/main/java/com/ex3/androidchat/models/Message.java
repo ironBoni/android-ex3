@@ -1,7 +1,10 @@
 package com.ex3.androidchat.models;
 
+
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Entity
 public class Message {
@@ -43,9 +46,9 @@ public class Message {
         this.senderUsername = senderUsername;
         sent = true;
         type = "text";
-        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        //LocalDateTime now = LocalDateTime.now();
-        writtenIn = "08/06/2022 18:06";
+        java.util.Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        writtenIn = formatter.format(date);
         fileName = "";
     }
 

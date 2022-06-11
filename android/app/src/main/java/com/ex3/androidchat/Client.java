@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class Client {
+    public static String firebaseToken = "";
     private static String dataServer = "http://10.0.2.2:5186/api/";
     private static String token = "";
     private static String userId = "";

@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="7dp"
-        android:inputType="textLongMessage|textMultiLine"
+        android:inputType="textLongMessage|textMultiLine|textNoSuggestions"
         android:maxWidth="268dp"
         android:minWidth="48dp"
         android:textSize="18dp"
@@ -38,7 +38,7 @@
         android:layout_marginRight="3dp"
         android:layout_marginBottom="3dp"
         android:text="12:56"
-        android:textSize="9sp"
+        android:textSize="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

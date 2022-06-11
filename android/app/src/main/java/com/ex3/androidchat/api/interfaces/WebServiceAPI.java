@@ -85,6 +85,8 @@ public interface WebServiceAPI {
     @GET("users/{id}")
     Call<UserModel> getUser(@Path("id") String id, @Header("Authorization") String token);
 
+    @POST("users/setTokenForPush")
+    Call<Void> setTokenForPush(@Body TokenResponse tokenRes, @Header("Authorization") String token);
     @GET("chats")
     Call<ArrayList<Chat>> getChats(@Header("Authorization") String token);
 

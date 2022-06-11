@@ -1,5 +1,9 @@
 ﻿using AspWebApi.Models.Hubs;
+using AspWebApi.Models.PushNotifications;
 using AspWebApi.Models.Transfer;
+using FirebaseAdmin;
+using FirebaseAdmin.Messaging;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -25,8 +29,9 @@ namespace AspWebApi.Controllers {
         // POST api/<TransferController>
         [HttpPost]
         [Route("/api/transfer")]
-        public IActionResult Post([Bind("From,To,Content")] TransferRequest request)
+        public async Task<IActionResult> Post([Bind("From,To,Content")] TransferRequest request)
         {
+            string responseFromFirebase;
             var fromUser = userService.GetById(request.From);
             var toUser = userService.GetById(request.To);
             Chat chat = userService.GetChatByParticipants(fromUser, toUser);
@@ -38,15 +43,52 @@ namespace AspWebApi.Controllers {
                     toUser
                 });
                 var success = service.Create(chat);
-                if (success) { return Ok(); }
+                if (success)
+                {
+                    responseFromFirebase = await SendNotification(request);
+                    return Ok();
+                }
                 else return BadRequest();
             }
 
             var messageId = service.GetNewMsgIdInChat(chat.Id);
             // the sent is false because it was not sent from my server
-            var addSuccess = service.AddMessage(chat.Id, new Message(messageId, request.Content, request.From, false));
+
+            var addSuccess = service.AddMessage(chat.Id, messageId, request.Content, request.From, false);
             if (!addSuccess) return BadRequest();
+            responseFromFirebase = await SendNotification(request);
             return Ok();
+        }
+
+        private async Task<string> SendNotification(TransferRequest request)
+        {
+            FirebaseApp.Create(new
+                AppOptions
+            {
+                Credential = GoogleCredential.FromFile("privateKey.json")
+            });
+
+            var registrationToken = PushNotificationsManager.IdToTokens[request.To];
+
+            var message = new FirebaseAdmin.Messaging.Message()
+            {
+                Data = new Dictionary<string, string>()
+                {
+                    { "From", request.From },
+                    { "Conent", request.Content }
+                },
+                Token = registrationToken,
+                Notification = new Notification()
+                {
+                    Title = "New message: from " + request.From,
+                    Body = request.Content
+                }
+            };
+
+            // Send a message to the device corresponding to the provided
+            // registration token.
+            string response = await FirebaseMessaging.DefaultInstance.SendAsync(message);
+            return response;
         }
     }
 }

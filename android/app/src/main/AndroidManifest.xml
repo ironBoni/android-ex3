@@ -19,11 +19,13 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <service
+
             android:name=".services.FireBaseService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
+
             </intent-filter>
         </service>
 
