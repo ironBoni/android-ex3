@@ -97,3 +97,41 @@ The client can send and receive message from other clients that are
 registered in the server. Furthermore, the android client can send and receive message from other clients.
 
 The application saves local DB (Room) - for chats, contacts, etc.
+
+**React Client**
+Install packages in "react" directory<br/>
+go to the "react" directory.<br/>
+run the following command: **npm install**<br/>
+it's equivalent to these commands: <br/>
+1. npm install @microsoft/signalr
+2. npm install react-bootstrap <br/>
+After "npm install" in the **"react" directory** - run **npm start**.
+
+Example to register user IDs: noam, ron, dan <br/>
+The password is Np1234 <br/>
+**React - use instructions**
+1. Enter "react" folder and run "npm start".
+2. enter username: "noam", and password: "Np1234". <br/>
+3. To chat with Ron, click on his name in the left menu. <br/>
+4. Enter a message and click Enter or on the send-button. <br/>
+5. To make image bigger - click on it.
+   (the profile image will become bigger if you click on it).
+6. To logout - click on the top-right button.
+7. To **add a contact** click on the icon - **man-with-plus** (left-top, next to profile image)
+    You can add one of the following usernames: <br/>
+    a) ran <br/> 
+    b) yaniv <br/>
+    c) yuval <br/>
+    d) oren <br/>
+
+11. To **register**, logout (step 8) (or go to http://localhost:3000/),  
+    Click on Register in the sign in page,
+
+    fill all the fields:
+    the password has to be be at least 6 characters
+    and must contain at least 1 Capital letter and 1 digit.
+    Click Register. 
+
+**React: Packages:** react-bootstrap, @microsoft/signalr,   
+  
+The Images' sources in imageSources.txt (in the "react" directory).
