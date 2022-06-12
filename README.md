@@ -98,7 +98,7 @@ registered in the server. Furthermore, the android client can send and receive m
 
 The application saves local DB (Room) - for chats, contacts, etc.
 
-**React Client**
+**React Client** <br/>
 Install packages in "react" directory<br/>
 go to the "react" directory.<br/>
 run the following command: **npm install**<br/>
