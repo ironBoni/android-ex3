@@ -20,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
-import androidx.viewpager.widget.ViewPager;
 
 import com.ex3.androidchat.adapters.ContactsAdapter;
 import com.ex3.androidchat.adapters.ConversationAdapter;
@@ -31,7 +30,6 @@ import com.ex3.androidchat.database.ContactDao;
 import com.ex3.androidchat.events.IEventListener;
 import com.ex3.androidchat.models.Chat;
 import com.ex3.androidchat.models.Contact;
-import com.ex3.androidchat.models.User;
 import com.ex3.androidchat.models.Utils;
 import com.ex3.androidchat.models.contacts.GetUserDetailsResponse;
 import com.ex3.androidchat.models.contacts.MessageResponse;
@@ -41,7 +39,6 @@ import com.ex3.androidchat.services.ChatService;
 import com.ex3.androidchat.services.GetByAsyncTask;
 import com.ex3.androidchat.services.UserService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,26 +50,16 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements IEventListener<String> {
-    ViewPager pager;
-    TabLayout tabMenu;
     Retrofit retrofit;
     WebServiceAPI webServiceAPI;
     ArrayList<Contact> contacts = new ArrayList<>();
-    User currentUser;
     FloatingActionButton addContact;
     UserService service;
     ContactDao contactDao;
     ImageView backButton, btnSendConv;
     ChatService chatService = new ChatService();
-    Chat conversition;
+    Chat conversation;
     ArrayList<MessageResponse> messages;
-
-    // for landscape.
-
-    private void addNewMessage(String friendId, String text) {
-        Chat conversation = chatService.GetChatByParticipants(Client.getUserId(), friendId);
-        conversation.addMessage(text, Client.getUserId());
-    }
 
     private void sendMessageToForeignServer(String friendId, String msg, String hisServer) {
         hisServer = Utils.getAndroidServer(hisServer);
@@ -155,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
 
         messages = allMessages;
         if(messages == null) {
-            Chat chat = chatService.GetChatByParticipants(Client.getUserId(), Client.getFriendId());
+            Chat chat = chatService.getChatByParticipants(Client.getUserId(), Client.getFriendId());
 
             if(chat.getMessages() == null) return;
             messages = ChatService.toMessagesResponses(new ArrayList<>(chat.getMessages()));
@@ -239,14 +226,11 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
             String nickname =  Client.getFriendNickname();
             String server =  Client.getFriendServer();
             String image =  Client.getFriendServer();
-
-            //beginConversationLandScape(friendId, nickname, image);
         }
 
         addContact = findViewById(R.id.addContact);
         RecyclerView recyclerView = findViewById(R.id.rvChatList);
         service = new UserService();
-        //bservice.loadContacts();
 
         Call<ArrayList<Chat>> call = webServiceAPI.getChats(Client.getToken());
         call.enqueue(new Callback<ArrayList<Chat>>() {
@@ -279,12 +263,9 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
                 adapter.addListener(MainActivity.this);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                addContact.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(MainActivity.this, AddUserActivity.class);
-                        startActivity(intent);
-                    }
+                addContact.setOnClickListener(v -> {
+                    Intent intent = new Intent(MainActivity.this, AddUserActivity.class);
+                    startActivity(intent);
                 });
 
             }
@@ -304,12 +285,11 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
 
         RecyclerView recyclerView = findViewById(R.id.messagesViewConv);
         try {
-            conversition = chatService.GetChatByParticipants(Client.getUserId(), friendId);
+            conversation = chatService.getChatByParticipants(Client.getUserId(), friendId);
         } catch(Exception ex) {
             Log.e("Conversation", ex.getMessage());
             Toast.makeText(this, "Contact could not be loaded.", Toast.LENGTH_SHORT).show();
         }
-        //messages = conversition.getMessages();
 
         Call<ArrayList<MessageResponse>> allMessages = webServiceAPI.getMessagesById(Client.getFriendId(), Client.getToken());
         allMessages.enqueue(new Callback<ArrayList<MessageResponse>>() {

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -48,7 +47,7 @@ public class AddUserActivity extends AppCompatActivity implements IEventListener
                 .build();
         webServiceAPI = retrofit.create(WebServiceAPI.class);
 
-        AppDB db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "ContactDB")
+        AppDB db = Room.databaseBuilder(getApplicationContext(), AppDB.class, getString(R.string.contact_db))
                 .allowMainThreadQueries()
                 .build();
 
@@ -67,29 +66,23 @@ public class AddUserActivity extends AppCompatActivity implements IEventListener
         }
 
         backButton = findViewById(R.id.btnBackAddUser);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AddUserActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
+        backButton.setOnClickListener(v -> {
+            Intent intent = new Intent(AddUserActivity.this, MainActivity.class);
+            startActivity(intent);
         });
-        cAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // send name to server and get contact, then add it to list
-                String hisId = cName.getText().toString();
-                String hisNickname = cNickname.getText().toString();
-                String hisServer = cServer.getText().toString();
-                String id = randomUUID().toString();
+        cAdd.setOnClickListener(v -> {
+            // send name to server and get contact, then add it to list
+            String hisId = cName.getText().toString();
+            String hisNickname = cNickname.getText().toString();
+            String hisServer = cServer.getText().toString();
+            String id = randomUUID().toString();
 
-                contactDao.insert(new Contact(id, hisId, hisNickname, hisServer));
-                sendInvitationToHisServer(hisId, hisNickname, hisServer);
-                addContactInServer(hisId, hisNickname, hisServer);
+            contactDao.insert(new Contact(id, hisId, hisNickname, hisServer));
+            sendInvitationToHisServer(hisId, hisNickname, hisServer);
+            addContactInServer(hisId, hisNickname, hisServer);
 
-                Intent intent = new Intent(AddUserActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
+            Intent intent = new Intent(AddUserActivity.this, MainActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -98,12 +91,12 @@ public class AddUserActivity extends AppCompatActivity implements IEventListener
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                Log.d("retrofit", "success in adding the contact.");
+                Log.d(getString(R.string.retrofit), getString(R.string.success_add_contact));
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.e("retrofit", t.getMessage());
+                Log.e(getString(R.string.retrofit), t.getMessage());
             }
         });
     }

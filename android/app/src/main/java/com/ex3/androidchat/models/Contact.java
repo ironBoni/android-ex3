@@ -7,8 +7,6 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import com.ex3.androidchat.Client;
-
 @Entity
 public class Contact {
     @PrimaryKey
@@ -49,7 +47,7 @@ public class Contact {
         this.server = server;
         this.last = null;
         this.lastdate = null;
-        this.profileImage = Client.defaultImage;
+        this.profileImage = "";
     }
 
     public String getId() {

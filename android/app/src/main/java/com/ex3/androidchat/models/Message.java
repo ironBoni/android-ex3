@@ -34,12 +34,6 @@ public class Message {
         this.sent = sent;
     }
 
-/*
-    public Message(int id, String text, String senderUsername) {
-        this(id, "text", text, senderUsername, "30.05.2022 16:26");
-    }*/
-
-    //@RequiresApi(api = Build.VERSION_CODES.O)
     public Message(int id, String text, String senderUsername) {
         this.text = text;
         this.id = id;
