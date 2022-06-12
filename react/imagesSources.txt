@@ -1,0 +1,33 @@
+
+Here are the sources of the images in the app:
+
+Profile Images sources:
+1. Idan's Profile Image - https://img.freepik.com/free-vector/man-profile-cartoon_18591-58482.jpg?w=740
+2. Yaniv Profile Image - https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/50183164/original/f80714a807d09df88dc708d83941384ac5d9e6dd/draw-nice-style-cartoon-caricature-as-a-profile-picture.png
+3. Oren's Profile Image - https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/attachments/delivery/asset/54164cf6ae1512d8c0a2b1d8306c5a68-1649285147/wouterbult/draw-nice-style-cartoon-caricature-as-a-profile-picture.jpg
+4. Ran's Profile Image - https://pixabay.com/illustrations/cartoon-profile-pic-profile-icon-1890438/
+5. Ron's Profile Image - https://cdn.dribbble.com/users/2364329/screenshots/10481283/media/f013d5235bfcf1753d56cad154f11a67.jpg
+6. Eyal's Profile Image - https://i.etsystatic.com/28761236/c/2000/1589/0/76/il/d929f2/3162035768/il_340x270.3162035768_ci09.jpg
+7. Yuval's Profile Image - https://dribbble.com/shots/6676961-Cartoon-Avatar-Profile-Picture/attachments/6676961-Cartoon-Avatar-Profile-Picture?mode=media
+8. Dan's Profile Image - https://cdn.dribbble.com/users/2364329/screenshots/6676921/03.jpg
+9. Hadar's Profile Image - https://harucon.org.il/2020/wp-content/uploads/sites/21/2020/01/01-%D7%91%D7%95%D7%A8%D7%99%D7%A1-%D7%A8%D7%95%D7%93%D7%9E%D7%9F.png
+
+
+Hatikva Video - 
+https://www.youtube.com/watch?v=CziEHDvpoAo
+
+Hatikva Audio - 
+https://www.youtube.com/watch?v=U8eXXUxdjKk
+
+Other Images :
+Attach File - https://www.iconbolt.com/iconsets/ionicons-regular/attach.svg
+Default user image - https://www.stignatius.co.uk/wp-content/uploads/2020/10/default-user-icon.jpg
+Record Image - https://www.pngbyte.com/en/freepng-wmqxpy
+              https://cdn-icons-png.flaticon.com/512/17/17303.png 
+Stop Image - http://clipart-library.com/new_gallery/354-3549769_audio-control-stop-comments-play-button-icon-png.png
+Record Video Image - https://icon-library.com/images/video-record-icon/video-record-icon-4.jpg
+Logout button - https://cdn-icons-png.flaticon.com/512/659/659989.png?w=740&t=st=1649753893~exp=1649754493~hmac=22add5ff2bc7de265c5b2d328fb8a0c7ff16d9f132bb665a9323ce1f30e10662
+File icon - https://www.seekpng.com/png/full/196-1962808_download-svg-download-png-pdf-file-icon-png.png
+Take Photo - https://icons.veryicon.com/png/o/miscellaneous/huihon_iconfont/camera-208.png
+Take a video - https://icon-library.com/images/video-record-icon/video-record-icon-16.jpg
+Send button - https://static.thenounproject.com/png/1054386-200.png

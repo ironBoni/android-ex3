@@ -1,0 +1,68 @@
+.contact {
+  padding: 10px 15px;
+  display: flex;
+  vertical-align: baseline;
+  background: #fff;
+  transition: 0.3s ease;
+}
+
+.text {
+  margin-left: 12px;
+  min-width: 66% !important;
+  max-width: 66% !important;
+}
+
+.text>h6 {
+  margin-top: 6px;
+  margin-bottom: 0;
+}
+
+.text>p {
+  margin: 0;
+}
+
+.contact:hover {
+  background: #dddddc;
+}
+
+.time {
+  display: flex;
+  float: right;
+  color: grey;
+  text-align: right;
+}
+
+.contact:hover {
+  background: #74b9ff;
+  cursor: pointer;
+  color: #fff;
+}
+
+.contact:hover p {
+  color: inherit;
+}
+
+.contact:hover h6 {
+  color: inherit !important;
+}
+
+.contact:hover .time {
+  color: inherit;
+}
+
+.contact-message {
+  width: 100%;
+  font-size: 15px;
+  margin-top: 2.5px;
+  color: rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.time-sent {
+  font-size: 12.5px;
+  margin-right: 9px;
+  color: rgba(0, 0, 0, 0.41);
+  white-space: nowrap;
+}

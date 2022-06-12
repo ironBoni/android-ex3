@@ -1,0 +1,28 @@
+.input-form {
+	top: 180px;
+	position: absolute;
+	width: 280px;
+	transition: .5;
+	left: 60px;
+}
+
+#LogIn {
+	left: 50px;
+}
+
+.input-field {
+	width: 100%;
+	padding: 10px 10px;
+	margin: 5px 0;
+	border-left: 0;
+	border-right: 0;
+	border-top: 0;
+	border-bottom: 1px solid rgb(59, 56, 56);
+	outline: none;
+	background: transparent;
+
+}
+
+.check-box {
+	margin: 30px 10px 30px 0;
+}

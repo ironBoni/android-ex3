@@ -1,0 +1,251 @@
+.conversation-container {
+    flex: 3 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    height: inherit !important;
+    background: #f3f3f6;
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+
+}
+
+
+.user-title {
+    display: flex;
+    flex-direction: row;
+    background: #ebebeb;
+    padding: 8px;
+    align-items: center;
+    border-top-right-radius: 7px;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    background: #ececeb;
+    align-items: center;
+}
+
+.user-image {
+    width: 39px;
+    height: 39px;
+    border-radius: 50%;
+}
+
+.contact-name {
+    font-size: 15px;
+    color: black;
+}
+
+.chat-box {
+    display: flex;
+    flex-direction: row;
+    background: #f1f2f3;
+    padding: 9px;
+    align-items: center;
+    bottom: 0;
+    border-bottom-right-radius: 7px;
+}
+
+.user-name {
+    padding-left: 1.5vh;
+}
+
+.message-container {
+    display: flex;
+    flex-direction: column;
+    max-height: inherit !important;
+    overflow-y: scroll;
+    min-height: inherit;
+    background: #e2dad6;
+    height: inherit;
+}
+
+.message-div {
+    display: flex;
+    justify-content: flex-start;
+    margin: 4px 13px;
+}
+
+
+.search-container {
+    background: white;
+    border-radius: 17px;
+    width: 100%;
+    padding: 4px 11px;
+    display: flex;
+    flex-direction: row;
+}
+
+.search-textbox {
+    width: 100%;
+    outline: none;
+    font-size: 14px;
+    border: none;
+    padding-left: 8px;
+}
+
+.button-image {
+    height: 37px;
+    height: 37px;
+    cursor: pointer;
+}
+
+.click-button {
+    border: none;
+}
+
+.hide-it {
+    display: none !important;
+}
+
+.stop-button {
+    border: none;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+#recordModal {
+    padding-top: 15%;
+}
+
+.dialog {
+    vertical-align: center;
+}
+
+.modal-div {
+    display: flex;
+    flex-direction: column;
+}
+
+.stop-button-image {
+    height: 112px;
+    width: 112px;
+    text-align: center;
+}
+
+.file-item {
+    width: 45vw;
+    max-width: 60vw;
+    height: 50vh;
+    padding-left: 25px;
+}
+
+
+.file-modal {
+    width: 50vw;
+    max-width: 60vw;
+    height: 50px;
+    max-height: 50px;
+
+}
+
+#modalAudioBody {
+    display: flex !important;
+    justify-content: center !important;
+    text-align: center !important;
+}
+
+.centered-div {
+    display: flex !important;
+    justify-content: center !important;
+    text-align: center !important;
+    margin-left: 0;
+    margin-top: 0;
+}
+
+.file-rec {
+    padding-top: 1vh;
+    padding-left: 2vh;
+    max-width: 40vh;
+    display: none;
+}
+
+#chooser {
+    border-radius: 0;
+}
+
+#chooserVideo {
+    border-radius: 0;
+}
+
+#chooserImage {
+    border-radius: 0;
+}
+
+
+.hidden {
+    display: none;
+}
+
+.photo {
+    width: 20vh;
+    height: 20vh;
+    cursor: pointer;
+}
+
+
+.big-image {
+    max-width: 460px;
+    max-height: 45vh;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+.picture-modal-class {
+    height: 85vh;
+}
+
+.take-picture {
+    position: relative;
+}
+
+.bottom-div {
+    display: flex !important;
+    justify-content:center !important;
+    text-align: center !important;
+    margin-left: 0;
+    margin-bottom: 0;
+    float: bottom;
+}
+
+.picture-modal-width {
+    min-width: 85vw !important;
+}
+
+.picture-button-image {
+    height: 10vh;
+    width: 10vh;
+    text-align: center;
+}
+
+.picture-button {
+    border: none;
+}
+
+.user-camera-open {
+   max-height: 60vh; 
+   min-height: 60vh; 
+}
+
+#image-canvas {
+    display: none;
+    width: 100%;
+    height: 100%;
+}
+
+#modalAudio {
+    display: flex !important;
+    justify-content: center !important;
+    text-align: center !important;
+}
+
+.conversation {
+    max-width: 75.2vw;
+    height: 100%;
+}
