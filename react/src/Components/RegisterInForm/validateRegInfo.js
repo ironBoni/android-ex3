@@ -26,7 +26,7 @@ export default function validateInfo(values, users) {
 
   users.forEach(id => {
     if (id === values.id){
-      errors.id = 'id already exsist';
+      errors.id = 'id already exists';
       flag=false;
     }
   });

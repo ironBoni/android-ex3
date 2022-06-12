@@ -1,24 +1,24 @@
 package com.ex3.androidchat.models.contacts;
 
-import java.text.SimpleDateFormat;
+    import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MessageResponse {
     public int id;
     public String content, type, senderUsername, fileName;
-    public String created;
+    public String createdDateStr;
     public boolean sent;
 
     public MessageResponse() {
     }
 
-    public MessageResponse(int id, String content, String type, String senderUsername, String fileName, String created, boolean sent) {
+    public MessageResponse(int id, String content, String type, String senderUsername, String fileName, String createDateStr, boolean sent) {
         this.id = id;
         this.content = content;
         this.type = type;
         this.senderUsername = senderUsername;
         this.fileName = fileName;
-        this.created = created;
+        this.createdDateStr = createDateStr;
         this.sent = sent;
     }
     public MessageResponse(int id, String text, String senderUsername) {
@@ -29,7 +29,7 @@ public class MessageResponse {
         type = "text";
         java.util.Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        created = formatter.format(date);
+        createdDateStr = formatter.format(date);
         fileName = "";
     }
 
@@ -53,8 +53,8 @@ public class MessageResponse {
         return fileName;
     }
 
-    public String getCreated() {
-        return created;
+    public String getCreatedDateStr() {
+        return createdDateStr;
     }
 
     public boolean isSent() {
@@ -81,8 +81,8 @@ public class MessageResponse {
         this.fileName = fileName;
     }
 
-    public void setCreated(String created) {
-        this.created = created;
+    public void setCreatedDateStr(String createdDateStr) {
+        this.createdDateStr = createdDateStr;
     }
 
     public void setSent(boolean sent) {

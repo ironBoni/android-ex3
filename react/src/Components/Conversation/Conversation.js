@@ -74,10 +74,10 @@ const Conversation = (props) => {
     }
 
     useEffect(() => {
-        fetch(dataServer + "api/contacts/" + props.chosenChat.id + "/messages", config).then(res => res.json())
+        fetch(dataServer + "api/contacts/" + props.chosenChat.contactId + "/messages", config).then(res => res.json())
             .then(data => {
                 setMsgList(data);
-                oldUser = props.chosenChat.id;
+                oldUser = props.chosenChat.contactId;
             });
 
         focusTextBox();
@@ -127,7 +127,7 @@ const Conversation = (props) => {
             // get last message
             chats.forEach(chatData => {
                 chatData.participicants.forEach(participicant => {
-                    if (participicant === props.chosenChat.id && chatData.participicants.includes(id)) {
+                    if (participicant === props.chosenChat.contactId && chatData.participicants.includes(id)) {
                         msgListInDb = chatData.messages;
                         return;
                     }
@@ -159,15 +159,14 @@ const Conversation = (props) => {
                 }
             }
 
-            var res = await fetch(dataServer + "api/contacts/server/" + props.chosenChat.id, config);
+            var res = await fetch(dataServer + "api/contacts/server/" + props.chosenChat.contactId, config);
             var response = await res.json();
 
             //POST - api/contacts/{id}/messages
-            var data = { "content": msg };
+            var data = { "from": props.username, "to": props.chosenChat.contactId, "content": msg };
             var config = {
                 method: 'POST',
                 headers: {
-                    'Authorization': 'Bearer ' + token,
                     'Accept': '*/*',
                     'Accept-Endcoding': 'gzip, deflate, br',
                     'Connection': 'keep-alive',
@@ -175,38 +174,30 @@ const Conversation = (props) => {
                 },
                 body: JSON.stringify(data)
             }
-            fetch(dataServer + "api/contacts/" + props.chosenChat.id + "/messages", config);
-
-            //POST - Transfer to the other server
-            var data = { "from": props.username, "to": props.chosenChat.id, "content": msg };
-            var config = {
-                method: 'POST',
-                headers: {
-                    'Authorization': 'Bearer ' + token,
-                    'Accept': '*/*',
-                    'Accept-Endcoding': 'gzip, deflate, br',
-                    'Connection': 'keep-alive',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            }
-            var hisServer = response.server;
-            var len = hisServer.length;
-            // if ther second user has different server, then send
-        
-            if (hisServer[len - 1] != '/')
-                hisServer = hisServer + '/';
-            if (dataServer.indexOf(hisServer) < 0 && (hisServer).indexOf(dataServer) < 0) {
-                fetch(hisServer + "api/transfer/", config);
-            }
+            fetch(dataServer + "api/transfer/", config);
 
             try {
-                await connection.invoke("SendMsg", props.username, msg, props.chosenChat.id);
+                await connection.invoke("SendMsg", props.username, msg, props.chosenChat.contactId);
             }
             catch (e) {
                 console.log(e);
             }
             updateLastMsgInGui();
+
+            //POST - Transfer to the other server
+            var hisServer = response.server;
+            var len = hisServer.length;
+            // if ther second user has different server, then send
+
+            if (hisServer[len - 1] != '/')
+                hisServer = hisServer + '/';
+            
+            // if it's the same server, then return.
+            if(hisServer === dataServer)
+                return;
+            if (dataServer.indexOf(hisServer) < 0 && (hisServer).indexOf(dataServer) < 0) {
+                fetch(hisServer + "api/transfer/", config);
+            }
         }
     };
 
@@ -378,7 +369,7 @@ const Conversation = (props) => {
             // get last message
             chats.forEach(chatData => {
                 chatData.participicants.forEach(participicant => {
-                    if (participicant === props.chosenChat.id && chatData.participicants.includes(id)) {
+                    if (participicant === props.chosenChat.contactId && chatData.participicants.includes(id)) {
                         lastMsgId = Math.max.apply(Math, chatData.messages.map((msg => {
                             msgListInDb = chatData.messages;
                             return msg.id;
@@ -411,7 +402,7 @@ const Conversation = (props) => {
         // get last message     
         chats.forEach(chatData => {
             chatData.participicants.forEach(participicant => {
-                if (participicant === props.chosenChat.id && chatData.participicants.includes(id)) {
+                if (participicant === props.chosenChat.contactId && chatData.participicants.includes(id)) {
                     lastMessageId = Math.max.apply(Math, chatData.messages.map((msg => {
                         msgListInDb = chatData.messages;
                         return msg.id;

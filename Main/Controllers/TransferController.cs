@@ -1,4 +1,5 @@
-﻿using AspWebApi.Models.Hubs;
+﻿using AspWebApi.Models.Contacts;
+using AspWebApi.Models.Hubs;
 using AspWebApi.Models.PushNotifications;
 using AspWebApi.Models.Transfer;
 using FirebaseAdmin;
@@ -6,6 +7,7 @@ using FirebaseAdmin.Messaging;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Models;
 using Models.DataServices;
 using Models.DataServices.Interfaces;
@@ -16,12 +18,14 @@ namespace AspWebApi.Controllers {
     [Route("api/[controller]")]
     [ApiController]
     public class TransferController : ControllerBase {
-        private IChatService service;
+        private IChatService chatService;
         private IUserService userService;
+        private IHubContext<ChatHub> hub;
 
-        public TransferController(IUserService userServ, IChatService serv)
+        public TransferController(IUserService userServ, IChatService serv, IHubContext<ChatHub> chatHub)
         {
-            service = serv;
+            this.hub = chatHub;
+            chatService = serv;
             this.userService = userServ;
 
         }
@@ -42,20 +46,22 @@ namespace AspWebApi.Controllers {
                     fromUser,
                     toUser
                 });
-                var success = service.Create(chat);
+                var success = chatService.Create(chat);
                 if (success)
                 {
+                    await SendSignalRToClient(request.From, request.To, request.Content);
                     responseFromFirebase = await SendNotification(request);
                     return Ok();
                 }
                 else return BadRequest();
             }
 
-            var messageId = service.GetNewMsgIdInChat(chat.Id);
+            var messageId = chatService.GetNewMsgIdInChat(chat.Id);
             // the sent is false because it was not sent from my server
 
-            var addSuccess = service.AddMessage(chat.Id, messageId, request.Content, request.From, false);
+            var addSuccess = chatService.AddMessage(chat.Id, messageId, request.Content, request.From, false);
             if (!addSuccess) return BadRequest();
+            await SendSignalRToClient(request.From, request.To, request.Content);
             responseFromFirebase = await SendNotification(request);
             return Ok();
         }
@@ -92,6 +98,19 @@ namespace AspWebApi.Controllers {
             // registration token.
             string response = await FirebaseMessaging.DefaultInstance.SendAsync(message);
             return response;
+        }
+
+        private async Task SendSignalRToClient(string from, string to, string content)
+        {
+            var chat = userService.GetChatByParticipants(from, to);
+            var id = chatService.GetNewMsgIdInChat(chat.Id);
+
+            if (ChatHub.userToConnection.ContainsKey(to))
+            {
+                var connectionIds = ChatHub.userToConnection[to];
+                foreach (var conId in connectionIds)
+                    await hub.Clients.Client(conId).SendAsync("ReceiveMessage", new MessageResponse(id, content, DateTime.Now, true, from));
+            }
         }
     }
 }

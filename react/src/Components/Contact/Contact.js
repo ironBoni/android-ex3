@@ -17,7 +17,7 @@ const Contact = (props) => {
                 'Authorization': 'Bearer ' + props.token
             }
         }
-        var res = await fetch(dataServer + "api/contacts/" + userInfo.id + "/messages/last", config);
+        var res = await fetch(dataServer + "api/contacts/" + userInfo.contactId + "/messages/last", config);
         var response = await res.json();
         setLastMsg(response.content);
 
@@ -41,7 +41,7 @@ const Contact = (props) => {
 
     function setChat() {
         setChosenChat(userInfo);
-        localStorage.setItem(id + "chosenChat", userInfo.id)
+        localStorage.setItem(id + "chosenChat", userInfo.contactId)
     }
     return (
         <div className='contact' onClick={() => setChat()}>

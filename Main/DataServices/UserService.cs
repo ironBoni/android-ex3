@@ -23,6 +23,8 @@ namespace Models.DataServices {
 
         public Chat GetChatByParticipants(User user1, User user2)
         {
+            if (user1 == null || user2 == null)
+                return null;
             using (var db = new ItemsContext())
             {
                 var chats = db.Chats.Include(x => x.Messages).Include(x => x.Users).ToList();
@@ -56,6 +58,7 @@ namespace Models.DataServices {
         {
             var user1 = GetById(username1);
             var user2 = GetById(username2);
+            if (user1 == null || user2 == null) return null;
             return GetChatByParticipants(user1, user2);
         }
         public List<ContactModel> GetContacts(string username)
@@ -78,9 +81,14 @@ namespace Models.DataServices {
 
         public static string getDateString(DateTime lastdate)
         {
-            if (lastdate == null)
-                return "";
-            return lastdate.ToString("dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+            try
+            {
+                return lastdate.ToString("dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+            } catch(Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+                return String.Empty;
+            }
         }
 
         public bool AddContact(string friendToAdd, string name, string server, out string response)
