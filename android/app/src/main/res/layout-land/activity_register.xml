@@ -20,11 +20,14 @@
         android:orientation="vertical">
 
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
         <EditText
             android:id="@+id/txtUserIdR"
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="13dp"
             android:layout_marginBottom="9dp"
             android:ems="8"
             android:hint="User Id"
@@ -36,12 +39,14 @@
             android:id="@+id/txtNickname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
             android:layout_marginBottom="9dp"
             android:ems="8"
             android:hint="Nickname"
             android:inputType="textPersonName"
             android:padding="8dp"
             android:textColorHint="@color/grayLight" />
+        </LinearLayout>
 
         <EditText
             android:id="@+id/txtPasswordR"

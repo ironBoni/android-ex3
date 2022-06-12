@@ -155,6 +155,9 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
             intent.putExtra("image", contact.getProfileImage());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
+
+            if(Client.mainActivity != null)
+                Client.mainActivity.finish();
         });
     }
 

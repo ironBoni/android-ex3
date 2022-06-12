@@ -110,6 +110,7 @@ public class RegisterActivity extends AppCompatActivity implements IEventListene
                         if (response.code() == 200) {
                             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                             startActivity(intent);
+                            finish();
                         } else {
                             dialog.hide();
                             Toast.makeText(RegisterActivity.this, "User already exists", Toast.LENGTH_SHORT).show();
