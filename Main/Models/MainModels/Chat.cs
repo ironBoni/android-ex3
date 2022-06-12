@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace Models {
     public class Chat {
-        private static int id = 16;
         [Key]
         //[ForeignKey("ChatsId")]
         public virtual int Id { get; set; }

@@ -39,8 +39,11 @@ function ChatList(props) {
             contactCon.start()
                 .then(result => {
                     contactCon.on("ReceiveContact", contact => {
+                        console.log(contact);
                         myContacts.current.push({
-                            name: contact.name, profileImage: '/images/default.jpg', id: contact.id,
+                            name: contact.name, profileImage: '/images/default.jpg',
+                            id: contact.id, 
+                            contactId: contact.contactId,
                             server: contact.server, last: ''
                         });
                         setContactsLst(myContacts)
@@ -99,7 +102,6 @@ function ChatList(props) {
         var server = textBoxServer.value;
         
         if (!idToAdd) {
-            console.log("dsssdddd");
             setErrorAddUser("id is required!");
             return;
         }
@@ -169,7 +171,8 @@ function ChatList(props) {
         if (!profileImage || profileImage == undefined)
             profileImage = '/images/default.jpg';
         newContacts.push({
-            name: nickname, profileImage: profileImage, id: idToAdd,
+            name: nickname, profileImage: profileImage, contactId: idToAdd,
+            id: Math.floor(1000 * Math.random() + 200),
             server: server, last: ''
         });
         myContacts.current = newContacts;
@@ -289,7 +292,7 @@ function ChatList(props) {
 
                 <div className='left-bar'>
                     {myContacts.current.map((user, key) => {
-                        if (user.id != props.username) {
+                        if (user.contactId != props.username) {
                             return (<Contact userInfo={user} setChosenChat={props.setChosenChat} key={key}
                                 updateLastM={props.updateLastProp} username={props.username} token={props.token}
                                 renderAgain={props.renderAgain} />)
