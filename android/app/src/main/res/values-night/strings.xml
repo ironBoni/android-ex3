@@ -17,4 +17,14 @@
     <string name="landscape">Landscape</string>
 
     <string name="loginHintTextStyle">bold</string>
+    <string name="contacts_adapter">ContactsAdapter</string>
+    <string name="contact_db">ContactDB</string>
+    <string name="success_add_contact">success in adding the contact.</string>
+    <string name="api_str">api/</string>
+    <string name="sign_in">Sign in</string>
+    <string name="please_wait">Please wait...\nLogin details checked</string>
+    <string name="enter_user_id">Please enter userId</string>
+    <string name="enter_password">Please enter password</string>
+    <string name="firebase">firebase</string>
+    <string name="regex_password">^.*(?=.*\\d)(?=.*[A-Z])(?=.*[1-9]).*$</string>
 </resources>

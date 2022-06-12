@@ -65,12 +65,7 @@ public class RegisterActivity extends AppCompatActivity implements IEventListene
         Button button = (Button) findViewById(R.id.btnRegister);
         Button uploadPic = (Button) findViewById(R.id.btnUploadProfile);
         imageView = (ImageView) findViewById(R.id.imageView);
-        uploadPic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageChooser();
-            }
-        });
+        uploadPic.setOnClickListener(v -> imageChooser());
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,7 +138,7 @@ public class RegisterActivity extends AppCompatActivity implements IEventListene
                             Toast.LENGTH_LONG).show();
                     return false;
                 }
-                Pattern pattern = Pattern.compile("^.*(?=.*\\d)(?=.*[A-Z])(?=.*[1-9]).*$");
+                Pattern pattern = Pattern.compile(getString(R.string.regex_password));
                 Matcher matcher = pattern.matcher(password);
                 boolean isOk = matcher.find();
                 if (!isOk) {
@@ -225,12 +220,6 @@ public class RegisterActivity extends AppCompatActivity implements IEventListene
                         e.printStackTrace();
                     }
                     imageView.setImageBitmap(bitmap);
-//                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-//                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-//                    byte[] byteArray = outputStream.toByteArray();
-//
-//                    String encodedString = android.util.Base64.encodeToString(byteArray , Base64.DEFAULT);
-//                    Log.d("image", encodedString);
                 }
             }
         }

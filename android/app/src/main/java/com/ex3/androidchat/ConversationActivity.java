@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -41,18 +40,19 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
     ImageView backButton, btnSendConv;
     ChatService service = new ChatService();
     ConversationAdapter adapter;
-    Chat conversition;
+    Chat conversation;
     int lastViewHeight;
     ArrayList<MessageResponse> messages;
     Retrofit retrofit;
     WebServiceAPI webServiceAPI;
     private final int DIFF = 100;
     private final int HEIGHT_RECYCLE_KEYBOARD_OPEN = 518;
+    private final int HEIGHT_KEYBOARD_CHANGE = 538;
 
     private void sendMessageToForeignServer(String friendId, String msg, String hisServer) {
         hisServer = Utils.getAndroidServer(hisServer);
         Retrofit hisRetrofit = new Retrofit.Builder()
-                .baseUrl(hisServer + "api/")
+                .baseUrl(hisServer + getApplicationContext().getString(R.string.api_str))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         WebServiceAPI hisServiceAPI = hisRetrofit.create(WebServiceAPI.class);
@@ -130,57 +130,31 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
         adapter.setMessages(messages);
         recyclerView.scrollToPosition(adapter.getItemCount() - 1);
         backButton = findViewById(R.id.btnBack);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ConversationActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
+        backButton.setOnClickListener(v -> {
+            Intent intent = new Intent(ConversationActivity.this, MainActivity.class);
+            startActivity(intent);
         });
 
         btnSendConv = findViewById(R.id.btnSendConv);
-        btnSendConv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendMessage(friendId, adapter);
-            }
-        });
+        btnSendConv.setOnClickListener(v -> sendMessage(friendId, adapter));
 
         EditText txtMsg = (EditText) findViewById(R.id.txtEnterMsg);
-        txtMsg.setOnKeyListener(new View.OnKeyListener() {
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    sendMessage(friendId, adapter);
-                    return true;
-                }
-                return false;
+        txtMsg.setOnKeyListener((v, keyCode, event) -> {
+            if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                    (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                sendMessage(friendId, adapter);
+                return true;
             }
+            return false;
         });
-
-        /*txtMsg.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                RelativeLayout.LayoutParams params;
-                if (hasFocus) {
-                    params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, toPixels(528));
-                    recyclerView.setLayoutParams(params);
-                    recyclerView.scrollToPosition(adapter.getItemCount() - 1);
-                }
-                *//*else {
-                    params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 528);
-                    recyclerView.setLayoutParams(params);
-                }*//*
-            }
-        });*/
     }
 
     private int toPixels(int dp) {
-
         final float scale = getApplicationContext().getResources().getDisplayMetrics().density;
         int pixels = (int) (dp * scale + 0.5f);
         return pixels;
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -190,26 +164,25 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
         final View activityRootView = findViewById(R.id.mainConvlayout);
         lastViewHeight = findViewById(Window.ID_ANDROID_CONTENT).getHeight();
 
-        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override public void onGlobalLayout() {
-                RelativeLayout.LayoutParams params;
-                int currentContentHeight = findViewById(Window.ID_ANDROID_CONTENT).getHeight();
-                RecyclerView recyclerView = findViewById(R.id.messagesView);
-                if (recyclerView == null) return;
+        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            RelativeLayout.LayoutParams params;
+            int currentContentHeight = findViewById(Window.ID_ANDROID_CONTENT).getHeight();
+            RecyclerView recyclerView = findViewById(R.id.messagesView);
+            if (recyclerView == null) return;
 
-                // keyboard open
-                if (lastViewHeight > currentContentHeight + DIFF) {
-                    params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, HEIGHT_RECYCLE_KEYBOARD_OPEN);
-                    recyclerView.setLayoutParams(params);
-                    recyclerView.scrollToPosition(adapter.getItemCount() - 1);
-                    lastViewHeight = currentContentHeight;
-                }
-                else if (currentContentHeight > lastViewHeight + DIFF) {
-                    // Keyboard is closed
-                    lastViewHeight = currentContentHeight;
-                    params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, toPixels(538));
-                    recyclerView.setLayoutParams(params);
-                }
+            // keyboard open
+            if (lastViewHeight > currentContentHeight + DIFF) {
+                params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, HEIGHT_RECYCLE_KEYBOARD_OPEN);
+                recyclerView.setLayoutParams(params);
+                recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+                lastViewHeight = currentContentHeight;
+            }
+            else if (currentContentHeight > lastViewHeight + DIFF) {
+                // Keyboard is closed
+                lastViewHeight = currentContentHeight;
+                params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                        toPixels(HEIGHT_KEYBOARD_CHANGE));
+                recyclerView.setLayoutParams(params);
             }
         });
 
@@ -220,18 +193,6 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
                 .build();
         webServiceAPI = retrofit.create(WebServiceAPI.class);
 
-
-/*        RelativeLayout layout = (RelativeLayout) findViewById(R.id.mainConvlayout);
-        layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RecyclerView recyclerView = findViewById(R.id.messagesView);
-                if (recyclerView == null) return;
-                RelativeLayout.LayoutParams params;
-                params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 528);
-                recyclerView.setLayoutParams(params);
-            }
-        });*/
         String friendId = getIntent().getStringExtra("id");
         Client.setFriendId(friendId);
         String nickname = getIntent().getStringExtra("nickname");
@@ -258,12 +219,11 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
         recyclerView.setLayoutManager(manager);
 
         try {
-            conversition = service.GetChatByParticipants(Client.getUserId(), friendId);
+            conversation = service.getChatByParticipants(Client.getUserId(), friendId);
         } catch (Exception ex) {
             Log.e("Conversation", ex.getMessage());
             Toast.makeText(this, "Contact could not be loaded.", Toast.LENGTH_SHORT).show();
         }
-        //messages = conversition.getMessages();
 
         Call<ArrayList<MessageResponse>> allMessages = webServiceAPI.getMessagesById(friendId, Client.getToken());
         allMessages.enqueue(new Callback<ArrayList<MessageResponse>>() {
@@ -277,11 +237,6 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
                 Log.e("retrofit", t.getMessage());
             }
         });
-    }
-
-    private void addNewMessage(String friendId, String text) {
-        Chat conversation = service.GetChatByParticipants(Client.getUserId(), friendId);
-        conversation.addMessage(text, Client.getUserId());
     }
 
     @Override

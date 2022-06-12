@@ -37,12 +37,7 @@ public class NotificationsService extends FirebaseMessagingService {
                 }
             }
             if(oldContacts != null) {
-                Client.mainActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        contactsAdapter.setContacts(oldContacts);
-                    }
-                });
+                Client.mainActivity.runOnUiThread(() -> contactsAdapter.setContacts(oldContacts));
             }
         }
 
@@ -57,12 +52,7 @@ public class NotificationsService extends FirebaseMessagingService {
             }
             messages.add(new MessageResponse(maxId + 1, content, fromUserId));
             if(messages != null && Client.getFriendId().equals(fromUserId)) {
-                Client.conversationActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        conversationAdapter.setMessages(messages);
-                    }
-                });
+                Client.conversationActivity.runOnUiThread(() -> conversationAdapter.setMessages(messages));
             }
         }
     }

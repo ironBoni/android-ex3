@@ -7,7 +7,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -45,7 +44,6 @@ public class LoginActivity extends AppCompatActivity implements IEventListener<S
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        //initNotificationsService();
         AndroidChat.context = getApplicationContext();
         this.userService = new UserService();
         retrofit = new Retrofit.Builder()
@@ -63,38 +61,28 @@ public class LoginActivity extends AppCompatActivity implements IEventListener<S
             txtUserId.setTypeface(null, Typeface.BOLD);
             txtPassword.setTypeface(null, Typeface.BOLD);
         }
-        txtPassword.setOnKeyListener(new View.OnKeyListener() {
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    doLogin();
-                    return true;
-                }
-                return false;
+        txtPassword.setOnKeyListener((v, keyCode, event) -> {
+            if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                    (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                doLogin();
+                return true;
             }
+            return false;
         });
         getSupportActionBar().hide();
 
         dialog = new ProgressDialog(LoginActivity.this);
-        dialog.setTitle("Sign in");
-        dialog.setMessage("Please wait...\nLogin details checked");
+        dialog.setTitle(getString(R.string.sign_in));
+        dialog.setMessage(getString(R.string.please_wait));
 
         buttonRegister = findViewById(R.id.btnSignup);
         buttonLogin = findViewById(R.id.btnLogin);
-        buttonRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(intent);
-            }
+        buttonRegister.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+            startActivity(intent);
         });
 
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                doLogin();
-            }
-        });
+        buttonLogin.setOnClickListener(v -> doLogin());
 
         if(Client.getToken() != "") {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -106,9 +94,9 @@ public class LoginActivity extends AppCompatActivity implements IEventListener<S
         txtUserId = findViewById(R.id.txtUserId);
         txtPassword = findViewById(R.id.txtPassword);
         if (txtUserId.getText().toString().isEmpty()) {
-            Toast.makeText(LoginActivity.this, "Please enter userId", Toast.LENGTH_LONG);
+            Toast.makeText(LoginActivity.this, getApplicationContext().getString(R.string.enter_user_id), Toast.LENGTH_LONG);
         } else if (txtPassword.getText().toString().isEmpty()) {
-            Toast.makeText(LoginActivity.this, "Please enter password", Toast.LENGTH_LONG);
+            Toast.makeText(LoginActivity.this, getApplicationContext().getString(R.string.enter_password), Toast.LENGTH_LONG);
         } else {
             handleLogin();
         }
@@ -118,23 +106,20 @@ public class LoginActivity extends AppCompatActivity implements IEventListener<S
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(LoginActivity.this, instanceIdResult -> {
             Client.firebaseToken =  instanceIdResult.getToken();
             if(Client.firebaseToken == "") return;
-            Thread t = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    Call <Void> call = webServiceAPI.setTokenForPush(new TokenResponse(Client.firebaseToken),
-                            Client.getToken());
-                    call.enqueue(new Callback<Void>() {
-                        @Override
-                        public void onResponse(Call<Void> call, Response<Void> response) {
-                            Log.d("firebase", "set token in server");
-                        }
+            Thread t = new Thread(() -> {
+                Call <Void> call = webServiceAPI.setTokenForPush(new TokenResponse(Client.firebaseToken),
+                        Client.getToken());
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        Log.d(getApplicationContext().getString(R.string.firebase), "set token in server");
+                    }
 
-                        @Override
-                        public void onFailure(Call<Void> call, Throwable t) {
-                            Log.e("firebase", t.getMessage());
-                        }
-                    });
-                }
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t1) {
+                        Log.e(getApplicationContext().getString(R.string.firebase), t1.getMessage());
+                    }
+                });
             });
             t.run();
         });
@@ -152,7 +137,7 @@ public class LoginActivity extends AppCompatActivity implements IEventListener<S
 
             @Override
             public void onFailure(Call<ArrayList<UserModel>> call, Throwable t) {
-                Log.e("retrofit", t.getMessage());
+                Log.e(getApplicationContext().getString(R.string.retrofit), t.getMessage());
             }
         });
     }
@@ -188,7 +173,6 @@ public class LoginActivity extends AppCompatActivity implements IEventListener<S
                 Log.e("retrofit", t.getMessage());
             }
         });
-        //boolean isLoginOk = userService.isLoginOk(txtUserId.getText().toString(), txtPassword.getText().toString());
     }
 
     @Override
