@@ -340,6 +340,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.settings) {
+            finish();
             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(intent);
         } else {
