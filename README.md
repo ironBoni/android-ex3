@@ -1,16 +1,17 @@
 To open the Server's code - 
-Clone and **Go to the Main folder, and run Main.sln**.
+Clone and **Go to the Main folder, and open Main.sln**.
 
 **Database - Migrations, Load Data**
 1. Delete the Migrations folder in the AspWebApi project.
 2. run in the Packange Manager Console the commands: 
    * add-migration init <br/>
    * update-database <br/>
-3. Open HeidiSQL (in Windows):
+   
+3. Load data - Open HeidiSQL (in Windows):
    * username: root
    * password: Np1239
+   * port: 3306
    * Click Open
-   * Make sure DB named pomelodb doesn't exists. Otherwise, drop it.
    * Go to the Database folder (in the repo)
    * In the HeidiSQL - Click on File -> Run SQL File 
    * Choose the file in Database\Final_DeleteAndInsert.sql
@@ -18,7 +19,7 @@ Clone and **Go to the Main folder, and run Main.sln**.
    Now all the data is loaded to the DB.
 <br/>
 
-**Run the server**
+**Run the server** <br/>
 In Main/Main.sln,
 Set as startup project (the "AspWebApi"), and Start without Debugging.
 
@@ -26,13 +27,15 @@ Set as startup project (the "AspWebApi"), and Start without Debugging.
 Run the application.<br/>
 
 **Register:**<br/>
-Enter the details and upload image from the device
-For simplicity, choose the password Np1234
-(if the didn't choose the image willn be the default)
-Press **register**.
+  * In the Login screen, Click on Register.
+  * Enter the details and upload image from the device
+  * For simplicity, choose the password Np1234 <br/>
+    (if the didn't choose the image, it will be the default).
+ * Press **register**.
 
 **Login:**<br/>
-  * Enter user Id (The one you registered with or "ron").
+  * Enter user Id (The one you registered with,
+   but we prefer "ron" - since it has contacts and friends he can chat with).
   * Enter password. (Np1234).
   * Press Login.
 
@@ -51,18 +54,18 @@ You can chat in this activity with the user.
   * You can enter server (e.g. localhost:5186) and *Save Settings*.
 
 **Add Contact Activity**
-  * In the main activity (contacts list), click on the floating-button 
-    in the bottom-right corner (man-with-plus icon)
-  *  Enter the contacts details:
-     For example:
-     User Id - ran
-     Nickname - Ran Levy
-     Server - localhost:5186
+  * In the main activity (contacts list), click on the floating-button <br/>
+    in the bottom-right corner (man-with-plus icon).
+  *  Enter the contacts details: <br/>
+     For example: <br/>
+     User Id - ran </br>
+     Nickname - Ran Levy <br/>
+     Server - localhost:5186 <br/>
   * Click on ADD CONTACT.
     (If you will scroll down to the bottom you will see the new contact).
   
 **Firebase**
-   * To simulate it, open Postman (or react client from execrise 2 - link is down below)
+   * To simulate it, open Postman (or react client from execrise 2 - link is down below).
    * Assuming that you loaded the DB Data as mentioned, and Noam appears in ron's contacts
      (Otherwise, add it to the contacts).
      
@@ -75,8 +78,8 @@ You can chat in this activity with the user.
       "content": "Good morning!!!"
       }
       
-  * You can notice you got notification in 3 ways:
-      * A notification if you scroll down the bar 
+  * You can notice you got notification in 3 ways: <br/>
+      * A notification if you scroll down the bar.
         ("New message: from noam", "Good Morning!!").
       * An update in the last message in the contacts list. 
       * An update in the conversation activity (if you click on Noam, you will see the 
@@ -87,7 +90,7 @@ You can chat in this activity with the user.
   * Enable rotating the phone in the bar above (2 buttons right to the Wi-Fi button)
   * In the emulator click on Rotate Right.
   * Give it a few seconds.
-  * Now the screen shows both the contacts, and the relevant chat.
+  * Now the screen shows both the contacts, and the relevant chat in the same activity.
   * Click on a contact and you will see the chat with him.
 
 The client can send and receive message from other clients that are 
