@@ -1,0 +1,136 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+
+}
+
+body {
+  background: url(../../../public/Design-Background.jpg) fixed;
+  background-size: cover;
+  overflow: auto;
+
+}
+
+.hero {
+  height: 100%;
+  width: 100%;
+  background-position: center;
+  background-size: cover;
+  position: relative;
+}
+
+
+.form-box {
+  flex-direction: column;
+  justify-content: center;
+  display: flex;
+  width: 380px;
+  height: 380px;
+  position: relative;
+  margin: 6% auto;
+  background: rgba(86, 85, 95, 0.384);
+  border-radius: 30px;
+  overflow: hidden;
+}
+
+.brand_logo_container {
+  position: absolute;
+  top: 15px;
+  overflow: inherit;
+}
+
+.logo {
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.button-box {
+  width: 220px;
+  top: 85px;
+  margin: 35px 75px;
+  position: absolute;
+  box-shadow: 0 0 20px 9px rgba(105, 105, 109, 0.8);
+  border-radius: 30px;
+
+
+}
+
+.toggle-btn {
+  padding: 10px 28px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  outline: none;
+  position: relative;
+  color: rgb(255, 255, 255);
+}
+
+#btn {
+  top: 0;
+  left: 0;
+  position: absolute;
+  width: 110px;
+  height: 100%;
+  background: linear-gradient(to right, #241a5a, rgb(59, 60, 110));
+  border-radius: 30px;
+  transition: .5s;
+  color: rgb(255, 255, 255);
+}
+
+.submit-btn {
+  width: 85%;
+  padding: 10px 30px;
+  cursor: pointer;
+  display: block;
+  margin: auto;
+  border: 0;
+  outline: none;
+  border-radius: 20px;
+  background: linear-gradient(to right, #241a5a, rgb(59, 60, 110));
+  margin: 5px auto;
+  bottom: -65px;
+  content: center;
+  color: rgb(255, 255, 255);
+}

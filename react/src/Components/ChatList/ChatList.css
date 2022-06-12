@@ -1,0 +1,154 @@
+.profile-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 40px;
+}
+.chatList-container {
+  flex: 3 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  height: inherit !important;
+  background: #f3f3f6;
+  border-top-left-radius: 7px;
+  border-bottom-left-radius: 7px;
+
+}
+.settings-tray {
+  /* height: 9.77vh; */
+  background: #eee;
+  padding: 10px 15px;
+  border-top-left-radius: 7px;
+}
+
+.padd {
+  padding: 4px;
+}
+
+.no-gutters {
+  padding: 0;
+}
+
+.settings-tray--right {
+  float: right;
+}
+
+.settings-tray--right>i {
+  margin-top: 10px;
+  font-size: 25px;
+  color: grey;
+  margin-left: 14px;
+  transition: 0.3s;
+}
+
+.settings-tray--right>i:hover {
+  color: #74b9ff;
+  cursor: pointer;
+}
+
+.search-container {
+  background: #fff;
+  border-radius: 40px;
+}
+
+.search-container>i {
+  color: grey;
+  margin-left: 7px;
+  margin-right: 7px;
+  vertical-align: middle;
+}
+
+input {
+  border: none;
+  border-radius: 30px;
+  width: 90%;
+}
+
+input::placeholder {
+  color: #e3e3e3;
+  font-weight: 300;
+  margin-left: 30px;
+}
+
+input:focus {
+  outline: none;
+}
+
+.user-image {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+}
+
+.search-box {
+  background: #f2f2f2;
+  padding: 8px;
+  display: none;
+}
+
+.search-container {
+  background: white;
+  border-radius: 17px;
+  width: 100%;
+  padding: 4px 11px;
+  display: flex;
+  flex-direction: row;
+}
+
+.search-textbox {
+  width: 100%;
+  outline: none;
+  font-size: 14px;
+  border: none;
+}
+
+.name {
+  padding-left: 10px;
+  font-size: 17px;
+}
+
+.click-button {
+  border: none;
+}
+
+.left-bar {
+  /* overflow-x: hidden; */  
+  overflow-y: auto;
+  max-height: 90vh !important;
+  /* min-height: 90vh; */
+  min-width: 15vh;
+  height: 95vh;
+}
+
+.main-window {
+  height: 88vh !important;
+}
+
+.header {
+  font-weight: 19vh;
+}
+
+.error-add-user {
+  color: red;
+  font-weight: 19vh;  
+}
+.col-3{
+  height: inherit;
+}
+::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+
+::-webkit-scrollbar-track {
+  width: 12px;
+  background: transparent;
+  border-radius: 1rem;
+}
+
+::-webkit-scrollbar-thumb {
+  width: 5em;
+  background-color: #9D9A91;
+  outline: 2px solid transparent;
+  border-radius: 1rem;
+}

@@ -1,0 +1,34 @@
+.container-fluid {
+  background: #fff;
+  padding: 0;
+  border-radius: 7px;
+  width: auto;
+  height: 88vh;
+  max-height: 88vh !important;
+}
+
+.row {
+  --bs-gutter-x: 0;
+  height: 95vh;
+}
+
+.main {
+  max-height: 88vh !important;
+  max-width: 100vw;
+  height: 88vh;
+}
+
+.container {
+  margin-left: 0px;
+}
+
+.nav {
+  cursor: pointer;
+}
+
+.logo-nav {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  border: 2px solid white;
+}
