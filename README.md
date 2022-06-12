@@ -94,7 +94,6 @@ You can chat in this activity with the user.
   * Click on a contact and you will see the chat with him.
 
 The client can send and receive message from other clients that are 
-registered in the server. Furthermore, the android client can send and receive message from 
-react client (react - exercise 2 - https://github.com/ironBoni/asp-chat)
+registered in the server. Furthermore, the android client can send and receive message from other clients.
 
 The application saves local DB (Room) - for chats, contacts, etc.
