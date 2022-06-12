@@ -20,19 +20,6 @@ namespace Models.DataServices {
         {
             this.chatsService = new ChatService();
         }
-        /*private static List<User> users = new List<User>() {
-            new User("noam", "Noam Cohen", "Np1234", "/profile/noam.jpg"),
-            new User("hadar", "Hadar Pinto", "Np1234", "/profile/hadar.jpg"),
-            new User("dvir", "Dvir Pollak", "Np1234", "/profile/dvir.jpg"),
-            new User("ron", "Ron Solomon", "Np1234", "/profile/ron.jpg"),
-            new User("dan", "Dan Cohen", "Np1234", "/profile/dan.jpg"),
-            new User("idan", "Idan Ben Ari", "Np1234", "/profile/idan.jpg"),
-            new User("shlomo", "Shlomo Levin", "Np1234", "/profile/shlomo.png"),
-            new User("yaniv", "Yaniv Hoffman", "Np1234", "/profile/yaniv.png"),
-            new User("oren", "Oren Orbach", "Np1234", "/profile/oren.webp"),
-            new User("yuval", "Yuval Baruchi", "Np1234", "/profile/yuval.png"),
-            new User("ran", "Ran Levi", "Np1234", "/profile/ran.webp"),
-        };*/
 
         public Chat GetChatByParticipants(User user1, User user2)
         {
