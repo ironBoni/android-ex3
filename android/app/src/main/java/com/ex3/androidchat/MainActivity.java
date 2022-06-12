@@ -153,7 +153,9 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
         NotificationsService.conversationAdapter = adapter;
         recyclerViewConv.scrollToPosition(adapter.getItemCount() - 1);
         recyclerViewConv.setAdapter(adapter);
-        recyclerViewConv.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        LinearLayoutManager manager = new LinearLayoutManager(MainActivity.this);
+        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerViewConv.setLayoutManager(manager);
 
         backButton = findViewById(R.id.btnBackConv);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -183,6 +185,11 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
                 return false;
             }
         });
+
+        if(recyclerViewConv != null) {
+            recyclerViewConv.scrollToPosition(adapter.getItemCount() - 1);
+
+        }
     }
 
     @Override

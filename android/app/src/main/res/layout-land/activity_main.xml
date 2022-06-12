@@ -97,151 +97,151 @@
         android:layout_width="313dp"
         android:layout_height="313dp"
         android:layout_gravity="center"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/web_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/rvChatList"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp"
-        android:src="@drawable/web_icon" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <RelativeLayout
-            android:id="@+id/convRelativeLayout"
-            android:layout_width="377dp"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/rvChatList"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="4dp"
-            android:background="@color/chatBackground">
+    <RelativeLayout
+        android:id="@+id/convRelativeLayout"
+        android:layout_width="377dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="4dp"
+        android:background="@color/chatBackground"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/rvChatList"
+        app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/messagesViewConv"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/toolBarConv"
-                android:layout_marginBottom="3dp" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/messagesViewConv"
+            android:layout_width="match_parent"
+            android:layout_height="216dp"
+            android:layout_below="@id/toolBarConv"
+            android:layout_marginBottom="3dp" />
 
-            <LinearLayout
-                android:id="@+id/convLayoutConv"
-                android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/convLayoutConv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/txtEnterMsgConv"
+                android:layout_width="329dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:orientation="horizontal">
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="2"
+                android:background="@drawable/background_msg"
+                android:ems="8"
+                android:hint="   Please enter a message"
+                android:imeOptions="actionGo"
+                android:inputType="textPersonName"
+                android:padding="9dp"
+                android:paddingBottom="8dp" />
 
-                <EditText
-                    android:id="@+id/txtEnterMsgConv"
-                    android:layout_width="329dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="2"
-                    android:background="@drawable/background_msg"
-                    android:ems="8"
-                    android:hint="   Please enter a message"
-                    android:imeOptions="actionGo"
-                    android:inputType="textPersonName"
-                    android:padding="9dp"
-                    android:paddingBottom="8dp" />
+            <ImageView
+                android:id="@+id/btnSendConvConv"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginEnd="3dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="0"
+                android:src="@drawable/send_button_white"></ImageView>
+        </LinearLayout>
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolBarConv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/mainColor"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
                 <ImageView
-                    android:id="@+id/btnSendConvConv"
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:layout_marginStart="3dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginEnd="3dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_weight="0"
-                    android:src="@drawable/send_button_white"></ImageView>
-            </LinearLayout>
+                    android:id="@+id/btnBackConv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/back"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.431" />
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolBarConv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/mainColor"
-                android:minHeight="?attr/actionBarSize"
-                android:theme="?attr/actionBarTheme">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_viewConv"
+                    android:layout_width="61dp"
+                    android:layout_height="61dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/grayLight"
+                    android:padding="6dp"
+                    app:cardCornerRadius="40dp"
+                    app:cardPreventCornerOverlap="false"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/btnBackConv"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
-                        android:id="@+id/btnBackConv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/back"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.431" />
-
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/card_viewConv"
-                        android:layout_width="61dp"
-                        android:layout_height="61dp"
-                        android:layout_marginStart="6dp"
-                        android:layout_marginTop="5dp"
+                        android:id="@+id/user_imageConv"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:background="@color/grayLight"
-                        android:padding="6dp"
-                        app:cardCornerRadius="40dp"
-                        app:cardPreventCornerOverlap="false"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/btnBackConv"
-                        app:layout_constraintTop_toTopOf="parent">
+                        android:src="@drawable/default_avatar" />
+                </androidx.cardview.widget.CardView>
+                <!--<ImageView
+                    android:layout_width="47dp"
+                    android:layout_height="47dp"
+                    android:id="@+id/user_image"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginLeft="6dp"
+                    android:padding="6dp"
+                    android:src="@drawable/default_avatar"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/btnBack"
+                    app:layout_constraintTop_toTopOf="parent"/>-->
+                <TextView
+                    android:id="@+id/contactNicknameConv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:text="Contact Name"
+                    android:textSize="21sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/card_viewConv"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                        <ImageView
-                            android:id="@+id/user_imageConv"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@color/grayLight"
-                            android:src="@drawable/default_avatar" />
-                    </androidx.cardview.widget.CardView>
-                    <!--<ImageView
-                        android:layout_width="47dp"
-                        android:layout_height="47dp"
-                        android:id="@+id/user_image"
-                        android:layout_marginStart="6dp"
-                        android:layout_marginLeft="6dp"
-                        android:padding="6dp"
-                        android:src="@drawable/default_avatar"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/btnBack"
-                        app:layout_constraintTop_toTopOf="parent"/>-->
-                    <TextView
-                        android:id="@+id/contactNicknameConv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="6dp"
-                        android:text="Contact Name"
-                        android:textSize="21sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/card_viewConv"
-                        app:layout_constraintTop_toTopOf="parent" />
+                <ImageView
+                    android:id="@+id/someConv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="13dp"
+                    android:layout_marginRight="13dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="parent" />
 
-                    <ImageView
-                        android:id="@+id/someConv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="13dp"
-                        android:layout_marginRight="13dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="parent" />
-
-                    <!--<ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/imageView"
-                        android:layout_marginEnd="13dp"
-                        android:layout_marginRight="13dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:src="@drawable/menu"
-                        />
-        -->
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.appcompat.widget.Toolbar>
-        </RelativeLayout>
+                <!--<ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageView"
+                    android:layout_marginEnd="13dp"
+                    android:layout_marginRight="13dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:src="@drawable/menu"
+                    />
+    -->
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.Toolbar>
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
