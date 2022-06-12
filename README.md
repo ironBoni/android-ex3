@@ -1,52 +1,50 @@
 To open the Server's code - 
 Clone and **Go to the Main folder, and run Main.sln**.
-**Set as startup project (the "AspWebApi"), and Start without Debugging.**
-then, **Set the MVC as startup project (the "AspNetMvc"), and Start without Debugging.**
+
+**Database - Migrations, Load Data**
+1. Delete the Migrations folder in the AspWebApi project.
+2. run in the Packange Manager Console the commands: 
+   * add-migration init <br/>
+   * update-database <br/>
+3. Open HeidiSQL (in Windows):
+   * username: root
+   * password: Np1239
+   * Click Open
+   * Make sure DB named pomelodb doesn't exists. Otherwise, drop it.
+   * Go to the Database folder (in the repo)
+   * In the HeidiSQL - Click on File -> Run SQL File 
+   * Choose the file in Database\Final_DeleteAndInsert.sql
+   
+   Now all the data is loaded to the DB.
 <br/>
 
-**React - npm install in "react" directory**<br/>
-go to the "react" directory.<br/>
-run the following commands:
-1. npm install @microsoft/signalr
-2. npm install react-bootstrap
-in the **"react" directory** - run **npm start**.
+**Run the server**
+In Main/Main.sln,
+Set as startup project (the "AspWebApi"), and Start without Debugging.
 
-**ASP.NET MVC (Parts 0-2)**: <br/>
-(Assuming you already started (in that order) the : 1. WebAPI project. 2. MVC. 3. React as mentioned in the beggining).
-**To see the rating page go to http://localhost:5266/Ratings**
-(or go to http://localhost:3000 and you can choose it from the nav bar)
+**Android - Install (Pixel - 2 API 28)**<br/>
+Run the application.<br/>
 
-**ASP.NET WebAPI (Part 3) - localhost:5186** <br/>
-**First, you should sign in in order to get a token from the server.**
-Meaning, send a **POST request to http://localhost:5186/api/Login**
-**in the body:
-{
-    "username": "noam",
-    "password": "Np1234"
-}**
-**You will get a JWT token in the response. 
-This token will by sent by the client in the header
-"Authorization": "Bearer blablah...token..."**
+**Register:**<br/>
+Enter the details and upload image from the device
+For simplicity, choose the password Np1234
+(if the didn't choose the image willn be the default)
+Press **register**.
 
-Methods you can perform:<br/>
-Login:<br/>
-GET /api/login/{username} - returns its token.
-POST /api/Login - example is above.
+**Login:**<br/>
+1. Enter user Id (The one you registered with or ron).
+2. Enter password. (Np1234).
+3. Press Login.
 
-Register:<br/>
-POST /api/Register - in the body:<br/>
-{
-    "id": "shlomo",
-    "name": "Shlomo Levin",
-    "password": "Np1234",
-    "profileImage": "/profile/hadar.jpg",
-    "server": "localhost:5186"
-}
+**Chats - Main Activity**
+The first item in the view is the logged-in user
+So, from the second item and on it's all his contacts.
+Click on a contact in order to chat with him.
 
-Invitations, Transfer, Contacts:
-and every API request as mentioned in the exercise.
+**Conversation Activity**
+You can chat in this activity with the user.
 
-**SignalR - Part4**
+**Firebase**
 **in the client (npm start in "react" folder)
 open two tabs,
 in the first login with: "noam", "Np1234"
