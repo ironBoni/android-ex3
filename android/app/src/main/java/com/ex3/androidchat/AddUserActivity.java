@@ -69,6 +69,7 @@ public class AddUserActivity extends AppCompatActivity implements IEventListener
         backButton.setOnClickListener(v -> {
             Intent intent = new Intent(AddUserActivity.this, MainActivity.class);
             startActivity(intent);
+            finish();
         });
         cAdd.setOnClickListener(v -> {
             // send name to server and get contact, then add it to list
@@ -83,6 +84,7 @@ public class AddUserActivity extends AppCompatActivity implements IEventListener
 
             Intent intent = new Intent(AddUserActivity.this, MainActivity.class);
             startActivity(intent);
+            finish();
         });
     }
 

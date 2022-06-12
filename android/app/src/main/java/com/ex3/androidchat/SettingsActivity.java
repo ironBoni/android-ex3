@@ -89,6 +89,7 @@ public class SettingsActivity extends AppCompatActivity {
             if(txtServerContent.equals("")) {
                 Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
                 startActivity(intent);
+                finish();
                 return;
             }
 
@@ -104,6 +105,7 @@ public class SettingsActivity extends AppCompatActivity {
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
                     startActivity(intent);
+                    finish();
                 }
 
                 @Override

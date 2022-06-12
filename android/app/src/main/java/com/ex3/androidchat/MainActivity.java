@@ -163,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -327,16 +328,15 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.settings) {
-            finish();
             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(intent);
         } else {
             // logout
-            finish();
             Client.setToken("");
             Client.setUserId("");
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
+            finish();
         }
 
         return super.onOptionsItemSelected(item);
