@@ -2,6 +2,7 @@ package com.ex3.androidchat.models;
 
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -60,12 +61,12 @@ public class Message {
         this.writtenIn = writtenIn;
         this.fileName = fileName;
     }
-
+    @Ignore
     public Message(int id, String type, String text, String senderUsername, String writtenIn) {
         this(id, type, text, senderUsername, writtenIn, "");
     }
 
-
+    @Ignore
     public Message(int id, String type, String text, String senderUsername, String writtenIn, boolean sent)
     {
         this(id, type, text, senderUsername, writtenIn, "");

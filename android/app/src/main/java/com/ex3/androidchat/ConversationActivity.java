@@ -19,8 +19,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ex3.androidchat.adapters.ConversationAdapter;
 import com.ex3.androidchat.api.interfaces.WebServiceAPI;
+import com.ex3.androidchat.database.AppDB;
+import com.ex3.androidchat.database.ContactDao;
 import com.ex3.androidchat.events.IEventListener;
 import com.ex3.androidchat.models.Chat;
+import com.ex3.androidchat.models.Contact;
 import com.ex3.androidchat.models.Utils;
 import com.ex3.androidchat.models.contacts.GetUserDetailsResponse;
 import com.ex3.androidchat.models.contacts.MessageResponse;
@@ -46,6 +49,7 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
     ArrayList<MessageResponse> messages;
     Retrofit retrofit;
     WebServiceAPI webServiceAPI;
+
     private final int DIFF = 100;
     private final int HEIGHT_RECYCLE_KEYBOARD_OPEN = 518;
 

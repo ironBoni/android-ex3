@@ -8,6 +8,7 @@ import androidx.room.Update;
 
 import com.ex3.androidchat.models.Contact;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Dao
@@ -23,6 +24,7 @@ public interface ContactDao {
 
     @Insert
     void insertList(List<Contact> contacts);
+
     @Update
     void update(Contact contacts);
 

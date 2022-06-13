@@ -1,6 +1,7 @@
 package com.ex3.androidchat.models;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.util.ArrayList;
@@ -16,17 +17,17 @@ public class Chat {
     public void setMessages(ArrayList<Message> messages) {
         this.messages = messages;
     }
-
+    @Ignore
     public Chat() {
     }
-
+    @Ignore
     public Chat(int id, ArrayList<String> participants, ArrayList<Message> messages)
     {
         this.id = id;
         this.participants = participants;
         this.messages = messages;
     }
-
+    @Ignore
     public Chat(ArrayList<String> participants, ArrayList<Message> messages)
     {
         this.id = staticId;
@@ -34,7 +35,7 @@ public class Chat {
         this.participants = participants;
         this.messages = messages;
     }
-
+    @Ignore
     public Chat(ArrayList<String> participants)
     {
         this(participants, new ArrayList<Message>());

@@ -210,11 +210,8 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
         TextView txtNickname = findViewById(R.id.txtViewNickname);
         txtNickname.setText(Client.getUserId());
 
-        AppDB db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "ContactDB")
-                .allowMainThreadQueries()
-                .build();
+        contactDao = AppDB.getContactDBInstance(this).contactDao();
 
-        contactDao = db.contactDao();
         retrofit = new Retrofit.Builder()
                 .baseUrl(Client.getMyServer())
                 .addConverterFactory(GsonConverterFactory.create())
@@ -264,34 +261,42 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
                 Log.e("retrofit", t.getMessage());
             }
         });
+        //in the start, or when adding user
+        if (contactDao.index().size() == 0){
+            Toast.makeText(MainActivity.this,"its a null", Toast.LENGTH_LONG).show();
+            Call<List<Contact>> callContacts = webServiceAPI.getContacts(Client.getToken());
+            callContacts.enqueue(new Callback<List<Contact>>() {
+                @Override
+                public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
+                    contactDao.insertList(new ArrayList<>(response.body()));
+                    contacts = (ArrayList<Contact>) contactDao.index();
+                    startContactList(recyclerView);
 
-        Call<List<Contact>> callContacts = webServiceAPI.getContacts(Client.getToken());
-        callContacts.enqueue(new Callback<List<Contact>>() {
+                }
+                @Override
+                public void onFailure(Call<List<Contact>> call, Throwable t) {
+                    Log.e("retrofit", t.getMessage());
+                }
+            });
+        }
+        else {
+                    contacts = (ArrayList<Contact>) contactDao.index();
+                    startContactList(recyclerView);
+        }
+    }
+
+    private void startContactList(RecyclerView recyclerView) {
+        ContactsAdapter adapter = new ContactsAdapter(contacts, getApplicationContext());
+
+        NotificationsService.contactsAdapter = adapter;
+        adapter.addListener(MainActivity.this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        addContact.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
-                contacts = new ArrayList<>(response.body());
-                ContactsAPI contactsAPI = new ContactsAPI();
-                contactsAPI.get();
-
-                ContactsAdapter adapter = new ContactsAdapter(contacts, getApplicationContext());
-
-                NotificationsService.contactsAdapter = adapter;
-                adapter.addListener(MainActivity.this);
-                recyclerView.setAdapter(adapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                addContact.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(MainActivity.this, AddUserActivity.class);
-                        startActivity(intent);
-                    }
-                });
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Contact>> call, Throwable t) {
-                Log.e("retrofit", t.getMessage());
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AddUserActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -375,4 +380,6 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
                 .build();
         webServiceAPI = retrofit.create(WebServiceAPI.class);
     }
+
+
 }

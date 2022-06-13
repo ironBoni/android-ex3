@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
+import com.ex3.androidchat.api.ContactsAPI;
 import com.ex3.androidchat.api.interfaces.WebServiceAPI;
 import com.ex3.androidchat.database.AppDB;
 import com.ex3.androidchat.database.ContactDao;
@@ -22,6 +23,9 @@ import com.ex3.androidchat.models.Contact;
 import com.ex3.androidchat.models.Utils;
 import com.ex3.androidchat.models.contacts.ContactRequest;
 import com.ex3.androidchat.models.invitations.InvitationRequest;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -52,7 +56,8 @@ public class AddUserActivity extends AppCompatActivity implements IEventListener
                 .allowMainThreadQueries()
                 .build();
 
-        contactDao = db.contactDao();
+        //contactDao = db.contactDao();
+        contactDao = AppDB.getContactDBInstance(this).contactDao();
 
         cAdd = findViewById(R.id.cAdd);
         cName = findViewById(R.id.cName);
@@ -94,10 +99,13 @@ public class AddUserActivity extends AppCompatActivity implements IEventListener
     }
 
     private void addContactInServer(String hisId, String hisNickname, String hisServer) {
+
         Call<Void> call = webServiceAPI.createContact(new ContactRequest(hisId, hisNickname, hisServer), Client.getToken());
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
+                List<Contact> contacts = contactDao.index();
+                contactDao.deleteList(contacts);
                 Log.d("retrofit", "success in adding the contact.");
             }
 

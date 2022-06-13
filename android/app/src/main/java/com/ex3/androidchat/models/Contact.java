@@ -19,6 +19,7 @@ public class Contact {
     public String profileImage;
     public String lastdate;
 
+    @Ignore
     public Contact() { }
     @Ignore
     public Contact(String id, String contactId, String name, String server, String last, String profileImage, String lastdate) {

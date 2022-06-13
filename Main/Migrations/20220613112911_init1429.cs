@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace AspWebApi.Migrations
 {
-    public partial class init1220 : Migration
+    public partial class init1429 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
