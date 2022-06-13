@@ -261,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
                 Log.e("retrofit", t.getMessage());
             }
         });
-        //in the start, or when adding user
+        //in the start, or when adding new user
         if (contactDao.index().size() == 0){
             Toast.makeText(MainActivity.this,"its a null", Toast.LENGTH_LONG).show();
             Call<List<Contact>> callContacts = webServiceAPI.getContacts(Client.getToken());
