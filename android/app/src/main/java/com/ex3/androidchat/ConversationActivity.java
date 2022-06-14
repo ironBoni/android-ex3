@@ -224,12 +224,13 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
             Log.e("Conversation", ex.getMessage());
             Toast.makeText(this, "Contact could not be loaded.", Toast.LENGTH_SHORT).show();
         }
-
+        //if (size==0)
         Call<ArrayList<MessageResponse>> allMessages = webServiceAPI.getMessagesById(friendId, Client.getToken());
         allMessages.enqueue(new Callback<ArrayList<MessageResponse>>() {
             @Override
             public void onResponse(Call<ArrayList<MessageResponse>> call, Response<ArrayList<MessageResponse>> response) {
                 continueOnCreateOnResponse(response.body(), recyclerView, friendId);
+                ///push DB
             }
 
             @Override
@@ -237,6 +238,8 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
                 Log.e("retrofit", t.getMessage());
             }
         });
+        ///esle{
+
     }
 
     @Override

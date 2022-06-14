@@ -6,9 +6,11 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.ex3.androidchat.Client;
 import com.ex3.androidchat.api.interfaces.WebServiceAPI;
+import com.ex3.androidchat.database.AppDB;
 import com.ex3.androidchat.database.ContactDao;
 import com.ex3.androidchat.models.Contact;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -19,9 +21,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ContactsAPI {
     private MutableLiveData<List<Contact>> contactListData;
-    private ContactDao dao;
+    private ContactDao contactDao;
     Retrofit retrofit;
     WebServiceAPI webServiceAPI;
+    ArrayList<Contact> contacts = new ArrayList<>();
 
     //MutableLiveData<List<Contact>> postListData, ContactDao dao
     public ContactsAPI() {
@@ -33,22 +36,19 @@ public class ContactsAPI {
                 .build();
         webServiceAPI = retrofit.create(WebServiceAPI.class);
     }
-
-    public void get() {
+    // using get for updated contacts list.
+    public List<Contact> get() {
         Call<List<Contact>> call = webServiceAPI.getContacts(Client.getToken());
         call.enqueue(new Callback<List<Contact>>() {
             @Override
             public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
-                List<Contact> contacts = response.body();
-            /*new Thread(() -> {
-            dao.clear();
-            dao.insertList(response.body());
-            contactListData.postValue(dao.get());
-            }).start();*/
+                contacts = new ArrayList<>(response.body());
             }
             @Override public void onFailure(Call<List<Contact>> call, Throwable t) {
                 Log.e("Retrofit", t.getMessage());
             }
-    });
+        });
+
+        return contacts;
     }
 }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
+import com.ex3.androidchat.api.ContactsAPI;
 import com.ex3.androidchat.api.interfaces.WebServiceAPI;
 import com.ex3.androidchat.database.AppDB;
 import com.ex3.androidchat.database.ContactDao;
@@ -21,6 +23,9 @@ import com.ex3.androidchat.models.Contact;
 import com.ex3.androidchat.models.Utils;
 import com.ex3.androidchat.models.contacts.ContactRequest;
 import com.ex3.androidchat.models.invitations.InvitationRequest;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -47,11 +52,7 @@ public class AddUserActivity extends AppCompatActivity implements IEventListener
                 .build();
         webServiceAPI = retrofit.create(WebServiceAPI.class);
 
-        AppDB db = Room.databaseBuilder(getApplicationContext(), AppDB.class, getString(R.string.contact_db))
-                .allowMainThreadQueries()
-                .build();
-
-        contactDao = db.contactDao();
+        contactDao = AppDB.getContactDBInstance(this).contactDao();
 
         cAdd = findViewById(R.id.cAdd);
         cName = findViewById(R.id.cName);
@@ -66,39 +67,47 @@ public class AddUserActivity extends AppCompatActivity implements IEventListener
         }
 
         backButton = findViewById(R.id.btnBackAddUser);
-        backButton.setOnClickListener(v -> {
-            Intent intent = new Intent(AddUserActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddUserActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
         });
-        cAdd.setOnClickListener(v -> {
-            // send name to server and get contact, then add it to list
-            String hisId = cName.getText().toString();
-            String hisNickname = cNickname.getText().toString();
-            String hisServer = cServer.getText().toString();
-            String id = randomUUID().toString();
+        cAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // send name to server and get contact, then add it to list
+                String hisId = cName.getText().toString();
+                String hisNickname = cNickname.getText().toString();
+                String hisServer = cServer.getText().toString();
+                String id = randomUUID().toString();
 
-            contactDao.insert(new Contact(id, hisId, hisNickname, hisServer));
-            sendInvitationToHisServer(hisId, hisNickname, hisServer);
-            addContactInServer(hisId, hisNickname, hisServer);
+                //contactDao.insert(new Contact(id, hisId, hisNickname, hisServer));
+                sendInvitationToHisServer(hisId, hisNickname, hisServer);
+                addContactInServer(hisId, hisNickname, hisServer);
 
-            Intent intent = new Intent(AddUserActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
+                Intent intent = new Intent(AddUserActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
         });
     }
 
     private void addContactInServer(String hisId, String hisNickname, String hisServer) {
+
         Call<Void> call = webServiceAPI.createContact(new ContactRequest(hisId, hisNickname, hisServer), Client.getToken());
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                Log.d(getString(R.string.retrofit), getString(R.string.success_add_contact));
+                //adding contact deletes room, and it will update again
+                List<Contact> contacts = contactDao.index();
+                contactDao.deleteList(contacts);
+                Log.d("retrofit", "success in adding the contact.");
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.e(getString(R.string.retrofit), t.getMessage());
+                Log.e("retrofit", t.getMessage());
             }
         });
     }
