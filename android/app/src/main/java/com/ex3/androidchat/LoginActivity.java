@@ -1,17 +1,27 @@
 package com.ex3.androidchat;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.ex3.androidchat.api.interfaces.WebServiceAPI;
 import com.ex3.androidchat.events.IEventListener;
@@ -23,6 +33,8 @@ import com.ex3.androidchat.services.IUserService;
 import com.ex3.androidchat.services.UserService;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -39,11 +51,38 @@ public class LoginActivity extends AppCompatActivity implements IEventListener<S
     Retrofit retrofit;
     WebServiceAPI webServiceAPI;
 
+    void convertToBase64AndLog() {
+        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        ImageView view;
+        if (dir.exists()) {
+            File[] files = dir.listFiles();
+            if (files != null) {
+
+                for (int i = 0; i < files.length; ++i) {
+                    File file = files[i];
+                    if (file.isDirectory()) {
+                    } else {
+                        view = findViewById(R.id.imgView);
+                        view.setImageDrawable(Drawable.createFromPath(file.toString()));
+                        BitmapDrawable drawable = (BitmapDrawable) view.getDrawable();
+                        Bitmap bitmap = drawable.getBitmap();
+                        ByteArrayOutputStream byteArrayOutputStream = new  ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG,100, byteArrayOutputStream);
+                        byte[] b=byteArrayOutputStream.toByteArray();
+                        String imageBytesStr = Base64.encodeToString(b, Base64.DEFAULT);
+                        Log.d("ImagesBase64", file.getName() + ":" + imageBytesStr);
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        /*String[] requiredPermissions = { Manifest.permission.READ_EXTERNAL_STORAGE };
+        ActivityCompat.requestPermissions(this, requiredPermissions, 0);*/
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         AndroidChat.context = getApplicationContext();
         this.userService = new UserService();
         retrofit = new Retrofit.Builder()
@@ -94,9 +133,9 @@ public class LoginActivity extends AppCompatActivity implements IEventListener<S
         txtUserId = findViewById(R.id.txtUserId);
         txtPassword = findViewById(R.id.txtPassword);
         if (txtUserId.getText().toString().isEmpty()) {
-            Toast.makeText(LoginActivity.this, getApplicationContext().getString(R.string.enter_user_id), Toast.LENGTH_LONG);
+            Toast.makeText(LoginActivity.this, getApplicationContext().getString(R.string.enter_user_id), Toast.LENGTH_LONG).show();
         } else if (txtPassword.getText().toString().isEmpty()) {
-            Toast.makeText(LoginActivity.this, getApplicationContext().getString(R.string.enter_password), Toast.LENGTH_LONG);
+            Toast.makeText(LoginActivity.this, getApplicationContext().getString(R.string.enter_password), Toast.LENGTH_LONG).show();
         } else {
             handleLogin();
         }
@@ -159,6 +198,7 @@ public class LoginActivity extends AppCompatActivity implements IEventListener<S
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                     setUsers();
+                    finish();
                 } else {
                     Toast.makeText(LoginActivity.this, "Username or password are incorrect",
                             Toast.LENGTH_LONG).show();

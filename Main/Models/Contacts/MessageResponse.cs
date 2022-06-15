@@ -5,7 +5,7 @@ namespace AspWebApi.Models.Contacts {
     public class MessageResponse {
         public int Id { get; set; }
         public string Content { get; set; }
-        public DateTime? Created { get; set; }
+        public string Created { get; set; }
         public string CreatedDateStr { get; set; }
         public bool Sent { get; set; }
 
@@ -17,11 +17,10 @@ namespace AspWebApi.Models.Contacts {
         {
             Id = id;
             Content = content;
-            Created = createdDate;
             if (createdDate != null)
             {
                 CreatedDateStr = UserService.getDateString(createdDate.Value);
-                Created = createdDate.Value;
+                Created = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffff");
             } else
             {
                 CreatedDateStr = string.Empty;

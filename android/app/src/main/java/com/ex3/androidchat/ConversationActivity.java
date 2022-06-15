@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ex3.androidchat.adapters.ConversationAdapter;
 import com.ex3.androidchat.api.interfaces.WebServiceAPI;
+import com.ex3.androidchat.database.MessageDB;
+import com.ex3.androidchat.database.MessageDao;
 import com.ex3.androidchat.events.IEventListener;
 import com.ex3.androidchat.models.Chat;
 import com.ex3.androidchat.models.Utils;
@@ -45,6 +47,8 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
     ArrayList<MessageResponse> messages;
     Retrofit retrofit;
     WebServiceAPI webServiceAPI;
+    MessageDao messageDao;
+
     private final int DIFF = 100;
     private final int HEIGHT_RECYCLE_KEYBOARD_OPEN = 518;
     private final int HEIGHT_KEYBOARD_CHANGE = 538;
@@ -119,6 +123,7 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
 
         adapter.addNewMessage(msg);
         txtMsg.setText("");
+        messageDao.insert(new MessageResponse(friendId, msg,Client.getUserId()));
         sendMessageToServer(friendId, msg);
 
         RecyclerView recyclerView = findViewById(R.id.messagesView);
@@ -126,6 +131,7 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
     }
 
     private void continueOnCreateOnResponse(ArrayList<MessageResponse> allMessages, RecyclerView recyclerView, String friendId) {
+
         messages = allMessages;
         adapter.setMessages(messages);
         recyclerView.scrollToPosition(adapter.getItemCount() - 1);
@@ -154,12 +160,12 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
         int pixels = (int) (dp * scale + 0.5f);
         return pixels;
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);
         Client.conversationActivity = ConversationActivity.this;
+        messageDao = MessageDB.insert(this).messageDao();
 
         final View activityRootView = findViewById(R.id.mainConvlayout);
         lastViewHeight = findViewById(Window.ID_ANDROID_CONTENT).getHeight();
@@ -225,18 +231,24 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
             Toast.makeText(this, "Contact could not be loaded.", Toast.LENGTH_SHORT).show();
         }
 
-        Call<ArrayList<MessageResponse>> allMessages = webServiceAPI.getMessagesById(friendId, Client.getToken());
-        allMessages.enqueue(new Callback<ArrayList<MessageResponse>>() {
-            @Override
-            public void onResponse(Call<ArrayList<MessageResponse>> call, Response<ArrayList<MessageResponse>> response) {
-                continueOnCreateOnResponse(response.body(), recyclerView, friendId);
-            }
+            Call<ArrayList<MessageResponse>> allMessages = webServiceAPI.getMessagesById(friendId, Client.getToken());
+            allMessages.enqueue(new Callback<ArrayList<MessageResponse>>() {
+                @Override
+                public void onResponse(Call<ArrayList<MessageResponse>> call, Response<ArrayList<MessageResponse>> response) {
+                   if(response.body()==null){
+                       return;
+                   }
+//                    messageDao.insertList(new ArrayList<>(response.body()));
+                    continueOnCreateOnResponse(response.body(), recyclerView, friendId);
+//                    continueOnCreateOnResponse((ArrayList<MessageResponse>) messageDao.index(), recyclerView, friendId);
 
-            @Override
-            public void onFailure(Call<ArrayList<MessageResponse>> call, Throwable t) {
-                Log.e("retrofit", t.getMessage());
-            }
-        });
+                }
+
+                @Override
+                public void onFailure(Call<ArrayList<MessageResponse>> call, Throwable t) {
+                    Log.e("retrofit", t.getMessage());
+                }
+            });
     }
 
     @Override

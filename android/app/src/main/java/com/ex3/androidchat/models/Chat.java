@@ -1,14 +1,19 @@
 package com.ex3.androidchat.models;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverter;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
-@Entity
+
 public class Chat {
     private static int staticId = 16;
-    @PrimaryKey
+
     public int id;
     public ArrayList<String> participants;
     public ArrayList<Message> messages;
@@ -60,4 +65,5 @@ public class Chat {
         }
         messages.add(new Message(maxId + 1, message, senderId));
     }
+
 }

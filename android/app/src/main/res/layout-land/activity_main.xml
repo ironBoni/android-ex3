@@ -82,6 +82,9 @@
         d="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:elevation="0dp"
+        app:pressedTranslationZ="0dp"
+        android:layout_marginLeft="7dp"
         app:useCompatPadding="true"
         android:clickable="true"
         android:focusable="true"
@@ -89,7 +92,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.994"
+        app:layout_constraintVertical_bias="0.954"
         app:srcCompat="@drawable/add_contact" />
 
     <ImageView

@@ -65,10 +65,10 @@ public class UserService implements  IUserService {
     }
 
     @Override
-    public boolean addContact(String addTo, String contactId, String name, String server, String last, String lastDate, String profileImage) {
+    public boolean addContact(String addTo, String contactId, String name, String server, String last, String lastDate, String profileImage, String lastdateStr) {
         User addToUser = getById(addTo);
         if(addToUser == null) return false;
-        return addToUser.getContacts().add(new Contact(contactId, name, server, last, profileImage, lastDate));
+        return addToUser.getContacts().add(new Contact(contactId, name, server, last, profileImage, lastDate,lastdateStr, Client.getUserId()));
     }
 
     @Override
@@ -76,13 +76,13 @@ public class UserService implements  IUserService {
         ArrayList<Contact> contacts = getContacts(username);
         if(contacts == null) return false;
         Contact contactToRemove = null;
-        
+
         for(Contact contact : contacts) {
             if(contact.getContactId().equals(username)) {
-                contactToRemove = contact;        
+                contactToRemove = contact;
             }
         }
-        
+
         if(contactToRemove == null)
             return false;
         return contacts.remove(contactToRemove);

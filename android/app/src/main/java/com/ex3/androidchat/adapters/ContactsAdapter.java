@@ -76,11 +76,9 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     private void notifyListeners(Contact contact) {
         listener.update(contact);
     }
-
     public ContactsAdapter(ArrayList<Contact> contacts, Context context) {
         this.contacts = contacts;
         this.liveContacts = new MutableLiveData<>();
-
         try {
             liveContacts.postValue(contacts);
         } catch(Exception ex) {
@@ -111,10 +109,10 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         String date;
         String hour;
 
-        if (contact.getLastdate() != null && contact.getLastdate().split(" ").length == DATE_HOUR_LEN
-                && contact.getLastdate().split(SPACE)[0].length() >= DATE_MINIMUM_LEN) {
-            date = contact.getLastdate().split(SPACE)[0].substring(0, END_OF_HOUR);
-            hour = contact.getLastdate().split(SPACE)[HOUR_INDEX];
+        if (contact.getLastdateStr() != null && contact.getLastdateStr().split(" ").length == DATE_HOUR_LEN
+                && contact.getLastdateStr().split(SPACE)[0].length() >= DATE_MINIMUM_LEN) {
+            date = contact.getLastdateStr().split(SPACE)[0].substring(0, END_OF_HOUR);
+            hour = contact.getLastdateStr().split(SPACE)[HOUR_INDEX];
         } else {
             date = "";
             hour = "";
@@ -133,7 +131,6 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
             holder.lastMsg.setText(msg);
         }
         holder.nickName.setText(contact.getName());
-
         new GetByAsyncTask((ImageView) holder.picture).execute(contact.getProfileImage());
 
         if (AndroidChat.context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -155,9 +152,6 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
             intent.putExtra("image", contact.getProfileImage());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
-
-            if(Client.mainActivity != null)
-                Client.mainActivity.finish();
         });
     }
 

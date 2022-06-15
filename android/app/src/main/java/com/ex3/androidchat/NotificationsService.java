@@ -31,8 +31,10 @@ public class NotificationsService extends FirebaseMessagingService {
                 if(c.getContactId().equals(fromUserId)) {
                     c.last = content;
                     java.util.Date date = new Date();
-                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                    SimpleDateFormat formatterStr = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                     c.lastdate = formatter.format(date);
+                    c.lastdateStr = formatterStr.format(date);
                     break;
                 }
             }
@@ -56,10 +58,7 @@ public class NotificationsService extends FirebaseMessagingService {
             if(fromUserId.equals(Client.getUserId()))
                 return;
             if(messages != null && Client.getFriendId().equals(fromUserId)) {
-                if(Client.conversationActivity != null)
-                    Client.conversationActivity.runOnUiThread(() -> conversationAdapter.setMessages(messages));
-                else if(Client.mainActivity != null)
-                    Client.mainActivity.runOnUiThread(() -> conversationAdapter.setMessages(messages));
+                Client.conversationActivity.runOnUiThread(() -> conversationAdapter.setMessages(messages));
             }
         }
     }

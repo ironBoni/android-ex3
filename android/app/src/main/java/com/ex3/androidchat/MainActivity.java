@@ -2,7 +2,10 @@ package com.ex3.androidchat;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -19,11 +22,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
 import com.ex3.androidchat.adapters.ContactsAdapter;
 import com.ex3.androidchat.adapters.ConversationAdapter;
-import com.ex3.androidchat.api.ContactsAPI;
 import com.ex3.androidchat.api.interfaces.WebServiceAPI;
 import com.ex3.androidchat.database.AppDB;
 import com.ex3.androidchat.database.ContactDao;
@@ -40,6 +41,9 @@ import com.ex3.androidchat.services.GetByAsyncTask;
 import com.ex3.androidchat.services.UserService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
                 .build();
         WebServiceAPI hisServiceAPI = hisRetrofit.create(WebServiceAPI.class);
 
-        if(Utils.getAndroidServer(hisServer).equals(Utils.getAndroidServer(Client.getMyServer())))
+        if (Utils.getAndroidServer(hisServer).equals(Utils.getAndroidServer(Client.getMyServer())))
             return;
         Call<Void> call = hisServiceAPI.transfer(new TransferRequest(Client.getUserId(), Client.getFriendId(), msg));
         call.enqueue(new Callback<Void>() {
@@ -103,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
         getServerCall.enqueue(new Callback<GetUserDetailsResponse>() {
             @Override
             public void onResponse(Call<GetUserDetailsResponse> call, Response<GetUserDetailsResponse> response) {
-                if(response.body() == null) {
+                if (response.body() == null) {
                     Log.d("retrofit", "got empty body");
                     return;
                 }
@@ -111,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
                 UserService userService = new UserService();
                 hisServer = userService.getFullServerUrl(hisServer);
                 String myServer = Client.getMyServer();
-                if(myServer.indexOf(hisServer) < 0 && hisServer.indexOf(myServer) < 0) {
+                if (myServer.indexOf(hisServer) < 0 && hisServer.indexOf(myServer) < 0) {
                     sendMessageToForeignServer(Client.getFriendId(), msg, hisServer);
                 }
             }
@@ -133,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
         sendMessageToServer(Client.getFriendId(), msg);
 
         RecyclerView recyclerViewConv = findViewById(R.id.messagesViewConv);
-        if(recyclerViewConv != null)
+        if (recyclerViewConv != null)
             recyclerViewConv.scrollToPosition(adapter.getItemCount() - 1);
     }
 
@@ -141,15 +145,15 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
         RecyclerView recyclerViewConv = findViewById(R.id.messagesViewConv);
 
         messages = allMessages;
-        if(messages == null) {
+        if (messages == null) {
             Chat chat = chatService.getChatByParticipants(Client.getUserId(), Client.getFriendId());
 
-            if(chat.getMessages() == null) return;
+            if (chat.getMessages() == null) return;
             messages = ChatService.toMessagesResponses(new ArrayList<>(chat.getMessages()));
         }
 
-        if(messages == null) return;
-        ConversationAdapter adapter = new ConversationAdapter(messages,MainActivity.this, recyclerViewConv);
+        if (messages == null) return;
+        ConversationAdapter adapter = new ConversationAdapter(messages, MainActivity.this, recyclerViewConv);
         NotificationsService.conversationAdapter = adapter;
         recyclerViewConv.scrollToPosition(adapter.getItemCount() - 1);
         recyclerViewConv.setAdapter(adapter);
@@ -166,7 +170,6 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
                 finish();
             }
         });
-
         btnSendConv = findViewById(R.id.btnSendConvConv);
         btnSendConv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,7 +177,6 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
                 sendMessage(Client.getFriendId(), adapter);
             }
         });
-
         EditText txtMsg = (EditText) findViewById(R.id.txtEnterMsgConv);
         txtMsg.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -186,8 +188,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
                 return false;
             }
         });
-
-        if(recyclerViewConv != null) {
+        if (recyclerViewConv != null) {
             recyclerViewConv.scrollToPosition(adapter.getItemCount() - 1);
 
         }
@@ -205,11 +206,8 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
         TextView txtNickname = findViewById(R.id.txtViewNickname);
         txtNickname.setText(Client.getUserId());
 
-        AppDB db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "ContactDB")
-                .allowMainThreadQueries()
-                .build();
+        contactDao = AppDB.getContactDBInstance(this).contactDao();
 
-        contactDao = db.contactDao();
         retrofit = new Retrofit.Builder()
                 .baseUrl(Client.getMyServer())
                 .addConverterFactory(GsonConverterFactory.create())
@@ -230,10 +228,10 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
         });
 
         if (AndroidChat.context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            String friendId =  Client.getFriendId();
-            String nickname =  Client.getFriendNickname();
-            String server =  Client.getFriendServer();
-            String image =  Client.getFriendServer();
+            String friendId = Client.getFriendId();
+            String nickname = Client.getFriendNickname();
+            String server = Client.getFriendServer();
+            String image = Client.getFriendServer();
         }
 
         addContact = findViewById(R.id.addContact);
@@ -246,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
             public void onResponse(Call<ArrayList<Chat>> call, Response<ArrayList<Chat>> response) {
                 try {
                     ChatService.setChats(response.body());
-                } catch(Exception exception) {
+                } catch (Exception exception) {
                     Log.e("main activity", exception.getMessage());
                 }
             }
@@ -256,31 +254,72 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
                 Log.e("retrofit", t.getMessage());
             }
         });
+        //in the start, or when adding user
+        contacts = new ArrayList<>();
+        if (contactDao.index().size() == 0 || hasContactNotOfCurrent(contacts)) {
+            Call<List<Contact>> callContacts = webServiceAPI.getContacts(Client.getToken());
+            callContacts.enqueue(new Callback<List<Contact>>() {
+                @Override
+                public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
+                    contactDao.insertList(new ArrayList<>(response.body()));
+                    try {
+                        updateImagesInDB(contactDao);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
-        Call<List<Contact>> callContacts = webServiceAPI.getContacts(Client.getToken());
-        callContacts.enqueue(new Callback<List<Contact>>() {
-            @Override
-            public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
-                contacts = new ArrayList<>(response.body());
-                ContactsAPI contactsAPI = new ContactsAPI();
-                contactsAPI.get();
+                    contacts = (ArrayList<Contact>) contactDao.index();
+                    startContactList(recyclerView);
 
-                ContactsAdapter adapter = new ContactsAdapter(contacts, getApplicationContext());
+                    ContactsAdapter adapter = new ContactsAdapter(contacts, getApplicationContext());
 
-                NotificationsService.contactsAdapter = adapter;
-                adapter.addListener(MainActivity.this);
-                recyclerView.setAdapter(adapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                addContact.setOnClickListener(v -> {
-                    Intent intent = new Intent(MainActivity.this, AddUserActivity.class);
-                    startActivity(intent);
-                });
+                    NotificationsService.contactsAdapter = adapter;
+                    adapter.addListener(MainActivity.this);
+                    recyclerView.setAdapter(adapter);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                    addContact.setOnClickListener(v -> {
+                        Intent intent = new Intent(MainActivity.this, AddUserActivity.class);
+                        startActivity(intent);
+                        finish();
+                    });
+                }
 
+                @Override
+                public void onFailure(Call<List<Contact>> call, Throwable t) {
+                    Log.e("retrofit", t.getMessage());
+                }
+            });
+        } else {
+            contacts = (ArrayList<Contact>) contactDao.index();
+            startContactList(recyclerView);
+        }
+    }
+
+    private boolean hasContactNotOfCurrent(ArrayList<Contact> contactsFinal) {
+        ArrayList<Contact> listOfContacts = (ArrayList<Contact>) contactDao.index();
+        for(Contact c : listOfContacts) {
+            if(c.ofUser == null) return true;
+            if(!c.ofUser.equals(Client.getUserId())) {
+                return true;
+            } else {
+                contactsFinal.add(c);
             }
+        }
+        return false;
+    }
 
+    private void startContactList(RecyclerView recyclerView) {
+        ContactsAdapter adapter = new ContactsAdapter(contacts, getApplicationContext());
+
+        NotificationsService.contactsAdapter = adapter;
+        adapter.addListener(MainActivity.this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        addContact.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFailure(Call<List<Contact>> call, Throwable t) {
-                Log.e("retrofit", t.getMessage());
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AddUserActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -294,7 +333,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
         RecyclerView recyclerView = findViewById(R.id.messagesViewConv);
         try {
             conversation = chatService.getChatByParticipants(Client.getUserId(), friendId);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             Log.e("Conversation", ex.getMessage());
             Toast.makeText(this, "Contact could not be loaded.", Toast.LENGTH_SHORT).show();
         }
@@ -317,6 +356,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
         ImageView view = findViewById(R.id.imageUser);
         new GetByAsyncTask((ImageView) view).execute(user.getProfileImage());
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inf = getMenuInflater();
@@ -344,12 +384,12 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
 
     public void update(Contact c) {
         ImageView imageWelcome = findViewById(R.id.imgViewConv);
-        if(imageWelcome == null)
+        if (imageWelcome == null)
             return;
         imageWelcome.setVisibility(View.GONE);
 
-        RelativeLayout layout  = findViewById(R.id.convRelativeLayout);
-        if(layout == null) return;
+        RelativeLayout layout = findViewById(R.id.convRelativeLayout);
+        if (layout == null) return;
         layout.setVisibility(View.VISIBLE);
         beginConversationLandScape(c.getContactId(), c.getName(), c.getProfileImage());
     }
@@ -362,4 +402,32 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
                 .build();
         webServiceAPI = retrofit.create(WebServiceAPI.class);
     }
+
+    private void updateImagesInDB(ContactDao contactDao) throws IOException {
+        List<String> AllIds = contactDao.getAllIds();
+        for (String id :
+                AllIds) {
+            String url = contactDao.getURL(id);
+            Bitmap image = null;
+            try {
+                InputStream input = new java.net.URL(url).openStream();
+                image = BitmapFactory.decodeStream(input);
+
+            } catch (Exception ex) {
+                Log.e("error in getting image", ex.getMessage());
+
+            }
+            if (image == null) {
+                return;
+            }
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            image.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] b = byteArrayOutputStream.toByteArray();
+            String imageBytesStr = Base64.encodeToString(b, Base64.DEFAULT);
+
+            contactDao.update(imageBytesStr, id);
+        }
+    }
+
+
 }

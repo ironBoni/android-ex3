@@ -81,6 +81,7 @@ public class ConversationAdapter extends RecyclerView.Adapter {
         int newId = maxId + 1;
         messages.add(new MessageResponse(newId, text, Client.getUserId()));
         setMessages(messages);
+        //this.notifyDataSetChanged();
     }
 
     @NonNull
