@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase;
 import com.ex3.androidchat.models.Chat;
 import com.ex3.androidchat.models.Contact;
 import com.ex3.androidchat.models.Message;
-@Database(entities = {Contact.class}, version = 1, exportSchema = false)
+@Database(entities = {Contact.class}, version = 3, exportSchema = false)
 //@Database(entities = {Contact.class, Message.class, Chat.class}, version = 1, exportSchema = false)
 public abstract class AppDB extends RoomDatabase {
     private static  AppDB contactDB = null;
@@ -22,6 +22,7 @@ public abstract class AppDB extends RoomDatabase {
                     context.getApplicationContext(),
                     AppDB.class, "ContactDB")
                     .allowMainThreadQueries()
+                    .fallbackToDestructiveMigration()
                     .build();
         }
         return contactDB;

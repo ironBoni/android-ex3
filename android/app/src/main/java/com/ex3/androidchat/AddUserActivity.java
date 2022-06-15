@@ -67,12 +67,9 @@ public class AddUserActivity extends AppCompatActivity implements IEventListener
         }
 
         backButton = findViewById(R.id.btnBackAddUser);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        backButton.setOnClickListener(v -> {
                 Intent intent = new Intent(AddUserActivity.this, MainActivity.class);
                 startActivity(intent);
-            }
         });
         cAdd.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -77,6 +77,7 @@ namespace AspWebApi.Controllers {
                 });
             }
 
+            if (!PushNotificationsManager.IdToTokens.ContainsKey(request.To)) return string.Empty;
             var registrationToken = PushNotificationsManager.IdToTokens[request.To];
 
             var message = new FirebaseAdmin.Messaging.Message()
