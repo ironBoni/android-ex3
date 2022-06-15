@@ -3,9 +3,12 @@ package com.ex3.androidchat.services;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.provider.ContactsContract;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.ImageView;
+
+import com.ex3.androidchat.DataConverter;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -22,7 +25,10 @@ public class GetByAsyncTask extends AsyncTask<String, Void, Bitmap> {
     protected Bitmap doInBackground(String... urlStrings) {
         try {
             URL url = new URL(urlStrings[0]);
+            // here means it is URL, then do nothing
         } catch (MalformedURLException e) {
+            e.printStackTrace();
+            // otherwise it's bitmap, then update the image.
             String imageBytesStr = urlStrings[0];
 
             Bitmap bitmap;

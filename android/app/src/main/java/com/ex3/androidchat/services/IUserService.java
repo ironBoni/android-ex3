@@ -11,4 +11,5 @@ public interface IUserService extends IContactService {
     boolean update(User user);
     boolean delete(String userId);
     String getFullServerUrl(String url);
+    //boolean isLoginOk(String username, String password);
 }

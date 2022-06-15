@@ -3,7 +3,6 @@ package com.ex3.androidchat.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,12 +47,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
     public void setContacts(ArrayList<Contact> newContacts) {
         this.contacts = newContacts;
-        try {
-            this.liveContacts.postValue(newContacts);
-        } catch (Exception ex) {
-            if(context != null)
-                Log.e(context.getString(R.string.contacts_adapter), ex.getMessage());
-        }
+        this.liveContacts.postValue(newContacts);
         notifyDataSetChanged();
     }
 
@@ -63,11 +57,6 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     private MainActivity listener;
     private final int MAX_LENGTH_OF_MESSAGE = 18;
     private final int MAX_LENGTH_OF_PREVIEW = 14;
-    private final int DATE_HOUR_LEN = 2;
-    private final int HOUR_INDEX = 1;
-    private final int DATE_MINIMUM_LEN = 6;
-    private final String SPACE = " ";
-    private final int END_OF_HOUR = 5;
 
     public void addListener(MainActivity activity) {
         listener = activity;
@@ -76,17 +65,10 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     private void notifyListeners(Contact contact) {
         listener.update(contact);
     }
-
     public ContactsAdapter(ArrayList<Contact> contacts, Context context) {
         this.contacts = contacts;
         this.liveContacts = new MutableLiveData<>();
-
-        try {
-            liveContacts.postValue(contacts);
-        } catch(Exception ex) {
-            if(context != null)
-                Log.e(context.getString(R.string.contacts_adapter), ex.getMessage());
-        }
+        liveContacts.postValue(contacts);
         this.context = context;
         retrofit = new Retrofit.Builder()
                 .baseUrl(Client.getMyServer())
@@ -111,15 +93,16 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         String date;
         String hour;
 
-        if (contact.getLastdate() != null && contact.getLastdate().split(" ").length == DATE_HOUR_LEN
-                && contact.getLastdate().split(SPACE)[0].length() >= DATE_MINIMUM_LEN) {
-            date = contact.getLastdate().split(SPACE)[0].substring(0, END_OF_HOUR);
-            hour = contact.getLastdate().split(SPACE)[HOUR_INDEX];
+        if (contact.getLastdate() != null && contact.getLastdate().split(" ").length == 2
+                && contact.getLastdate().split(" ")[0].length() >= 6) {
+            date = contact.getLastdate().split(" ")[0].substring(0, 5);
+            hour = contact.getLastdate().split(" ")[1];
         } else {
             date = "";
             hour = "";
         }
 
+        //holder.lastMsgTime.setText(hour + "\n" + date);
         holder.lastMsgTime.setText(date);
         holder.lastMsgHour.setText(hour);
 
@@ -133,31 +116,35 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
             holder.lastMsg.setText(msg);
         }
         holder.nickName.setText(contact.getName());
-
+       // new GetByAsyncTask((ImageView) holder.picture).
         new GetByAsyncTask((ImageView) holder.picture).execute(contact.getProfileImage());
+        //holder.picture.setImageResource(R.drawable.default_avatar);
 
         if (AndroidChat.context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            holder.itemView.setOnClickListener(v -> {
-                Client.setFriendId(contact.getContactId());
-                Client.setFriendNickname(contact.getName());
-                Client.setFriendServer(contact.getServer());
-                Client.setFriendImage(contact.getProfileImage());
-                notifyListeners(contact);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Client.setFriendId(contact.getContactId());
+                    Client.setFriendNickname(contact.getName());
+                    Client.setFriendServer(contact.getServer());
+                    Client.setFriendImage(contact.getProfileImage());
+                    notifyListeners(contact);
+                }
             });
             return;
         }
-        holder.itemView.setOnClickListener(v -> {
-            Client.setFriendId(contact.getContactId());
-            Intent intent = new Intent(context, ConversationActivity.class);
-            intent.putExtra("id", contact.getContactId());
-            intent.putExtra("nickname", contact.getName());
-            intent.putExtra("server", contact.getServer());
-            intent.putExtra("image", contact.getProfileImage());
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-
-            if(Client.mainActivity != null)
-                Client.mainActivity.finish();
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Client.setFriendId(contact.getContactId());
+                Intent intent = new Intent(context, ConversationActivity.class);
+                intent.putExtra("id", contact.getContactId());
+                intent.putExtra("nickname", contact.getName());
+                intent.putExtra("server", contact.getServer());
+                intent.putExtra("image", contact.getProfileImage());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            }
         });
     }
 
@@ -186,6 +173,11 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
             lastMsg = itemView.findViewById(R.id.lastMsg);
             lastMsgTime = itemView.findViewById(R.id.lastMsgTime);
             lastMsgHour = itemView.findViewById(R.id.lastMsgHour);
+
+            if (AndroidChat.context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                /*picture.setMaxWidth(40);
+                picture.setMaxWidth(40);*/
+            }
         }
     }
 }

@@ -2,7 +2,10 @@ package com.ex3.androidchat;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -22,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 import androidx.viewpager.widget.ViewPager;
 
+import com.ex3.androidchat.DataConverter;
 import com.ex3.androidchat.adapters.ContactsAdapter;
 import com.ex3.androidchat.adapters.ConversationAdapter;
 import com.ex3.androidchat.api.ContactsAPI;
@@ -43,6 +47,10 @@ import com.ex3.androidchat.services.UserService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
     // for landscape.
 
     private void addNewMessage(String friendId, String text) {
-        Chat conversation = chatService.getChatByParticipants(Client.getUserId(), friendId);
+        Chat conversation = chatService.GetChatByParticipants(Client.getUserId(), friendId);
         conversation.addMessage(text, Client.getUserId());
     }
 
@@ -155,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
 
         messages = allMessages;
         if(messages == null) {
-            Chat chat = chatService.getChatByParticipants(Client.getUserId(), Client.getFriendId());
+            Chat chat = chatService.GetChatByParticipants(Client.getUserId(), Client.getFriendId());
 
             if(chat.getMessages() == null) return;
             messages = ChatService.toMessagesResponses(new ArrayList<>(chat.getMessages()));
@@ -266,7 +274,12 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
                 @Override
                 public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
                     contactDao.insertList(new ArrayList<>(response.body()));
-                    //update coloum image to base64/bitmap
+                    try {
+                        updateImagesInDB(contactDao);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                     contacts = (ArrayList<Contact>) contactDao.index();
                     startContactList(recyclerView);
 
@@ -307,10 +320,9 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
 
         RecyclerView recyclerView = findViewById(R.id.messagesViewConv);
         try {
-            conversition = chatService.getChatByParticipants(Client.getUserId(), friendId);
+            conversition = chatService.GetChatByParticipants(Client.getUserId(), friendId);
         } catch(Exception ex) {
             Log.e("Conversation", ex.getMessage());
-            Toast.makeText(this, "Contact could not be loaded.", Toast.LENGTH_SHORT).show();
         }
         //messages = conversition.getMessages();
 
@@ -377,6 +389,32 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         webServiceAPI = retrofit.create(WebServiceAPI.class);
+    }
+
+    private void updateImagesInDB(ContactDao contactDao) throws IOException {
+        List<String> AllIds = contactDao.getAllIds();
+        for (String id:
+             AllIds) {
+            String url = contactDao.getURL(id);
+            Bitmap image = null;
+            try {
+            InputStream input = new java.net.URL(url).openStream();
+            image = BitmapFactory.decodeStream(input);
+
+        } catch (Exception ex) {
+            Log.e("error in getting image", ex.getMessage());
+
+        }
+            if(image == null) {
+                return;
+            }
+            ByteArrayOutputStream byteArrayOutputStream = new  ByteArrayOutputStream();
+            image.compress(Bitmap.CompressFormat.PNG,100, byteArrayOutputStream);
+            byte[] b=byteArrayOutputStream.toByteArray();
+            String imageBytesStr = Base64.encodeToString(b, Base64.DEFAULT);
+
+            contactDao.update(imageBytesStr, id);
+        }
     }
 
 

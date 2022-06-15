@@ -8,6 +8,7 @@ import androidx.room.Update;
 
 import com.ex3.androidchat.models.Contact;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,12 @@ public interface ContactDao {
 
     @Query("SELECT * FROM contact WHERE id = :id")
     Contact get(int id);
-    //    @Query("SELECT id,profileImage FROM contact ")
+    @Query("UPDATE contact SET profileImage=:img WHERE id =:id ")
+    void update(String img, String id);
+    @Query("SELECT profileImage FROM contact WHERE id=:id")
+    String getURL(String id);
+    @Query("SELECT id FROM contact ")
+    List<String> getAllIds();
     @Insert
     void insert(Contact contacts);
 

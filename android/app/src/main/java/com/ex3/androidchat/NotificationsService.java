@@ -37,7 +37,12 @@ public class NotificationsService extends FirebaseMessagingService {
                 }
             }
             if(oldContacts != null) {
-                Client.mainActivity.runOnUiThread(() -> contactsAdapter.setContacts(oldContacts));
+                Client.mainActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        contactsAdapter.setContacts(oldContacts);
+                    }
+                });
             }
         }
 
@@ -51,15 +56,13 @@ public class NotificationsService extends FirebaseMessagingService {
                 }
             }
             messages.add(new MessageResponse(maxId + 1, content, fromUserId));
-
-            // don't update if the notification is about my message
-            if(fromUserId.equals(Client.getUserId()))
-                return;
             if(messages != null && Client.getFriendId().equals(fromUserId)) {
-                if(Client.conversationActivity != null)
-                    Client.conversationActivity.runOnUiThread(() -> conversationAdapter.setMessages(messages));
-                else if(Client.mainActivity != null)
-                    Client.mainActivity.runOnUiThread(() -> conversationAdapter.setMessages(messages));
+                Client.conversationActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        conversationAdapter.setMessages(messages);
+                    }
+                });
             }
         }
     }

@@ -15,12 +15,12 @@ public abstract class AppDB extends RoomDatabase {
     private static  AppDB contactDB = null;
 
     public abstract ContactDao contactDao();
-    //    public abstract ChatDao chatDao();
+//    public abstract ChatDao chatDao();
     public static synchronized AppDB getContactDBInstance(Context context){
         if (contactDB == null){
             contactDB = Room.databaseBuilder(
-                            context.getApplicationContext(),
-                            AppDB.class, "ContactDB")
+                    context.getApplicationContext(),
+                    AppDB.class, "ContactDB")
                     .allowMainThreadQueries()
                     .build();
         }

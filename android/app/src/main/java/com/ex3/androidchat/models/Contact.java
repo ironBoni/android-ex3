@@ -3,9 +3,12 @@ package com.ex3.androidchat.models;
 import static java.util.UUID.randomUUID;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+
+import com.ex3.androidchat.Client;
 
 @Entity
 public class Contact {
@@ -14,9 +17,11 @@ public class Contact {
     public String id;
     public String contactId;
     public String name, server, last;
+    @ColumnInfo(name = "profileImage")
     public String profileImage;
     public String lastdate;
 
+    @Ignore
     public Contact() { }
     @Ignore
     public Contact(String id, String contactId, String name, String server, String last, String profileImage, String lastdate) {
@@ -47,7 +52,7 @@ public class Contact {
         this.server = server;
         this.last = null;
         this.lastdate = null;
-        this.profileImage = "";
+        this.profileImage = Client.defaultImage;
     }
 
     public String getId() {

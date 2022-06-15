@@ -71,7 +71,7 @@ public class ConversationAdapter extends RecyclerView.Adapter {
     }
 
     public void addNewMessage(String text) {
-        Chat chat = service.getChatByParticipants(Client.getUserId(), Client.getFriendId());
+        Chat chat = service.GetChatByParticipants(Client.getUserId(), Client.getFriendId());
         int maxId = 0;
         for (Message m : chat.getMessages()) {
             if (m.getId() > maxId) {
@@ -81,6 +81,7 @@ public class ConversationAdapter extends RecyclerView.Adapter {
         int newId = maxId + 1;
         messages.add(new MessageResponse(newId, text, Client.getUserId()));
         setMessages(messages);
+        //this.notifyDataSetChanged();
     }
 
     @NonNull
@@ -101,11 +102,11 @@ public class ConversationAdapter extends RecyclerView.Adapter {
         if (holder.getClass() == ViewHolderSend.class) {
             ViewHolderSend sendHolder = ((ViewHolderSend) holder);
             sendHolder.messageSent.setText(msg.getContent());
-            sendHolder.sentTime.setText(Utils.getHour(msg.getCreatedDateStr()));
+            sendHolder.sentTime.setText(Utils.getHour(msg.getCreated()));
         } else {
             ViewHolderReceive receiveHolder = ((ViewHolderReceive) holder);
             receiveHolder.messageReceived.setText(msg.getContent());
-            receiveHolder.timeReceived.setText(Utils.getHour(msg.getCreatedDateStr()));
+            receiveHolder.timeReceived.setText(Utils.getHour(msg.getCreated()));
         }
     }
 

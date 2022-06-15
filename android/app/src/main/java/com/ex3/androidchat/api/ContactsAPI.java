@@ -47,7 +47,7 @@ public class ContactsAPI {
             @Override public void onFailure(Call<List<Contact>> call, Throwable t) {
                 Log.e("Retrofit", t.getMessage());
             }
-        });
+    });
 
         return contacts;
     }

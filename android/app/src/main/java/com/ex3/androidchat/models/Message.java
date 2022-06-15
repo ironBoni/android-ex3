@@ -1,14 +1,14 @@
 package com.ex3.androidchat.models;
 
 
-import androidx.room.Entity;
+
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@Entity
 public class Message {
-    @PrimaryKey(autoGenerate = true)
+
     public int id;
     public String type, text, senderUsername, fileName;
     public String writtenIn;
@@ -34,6 +34,12 @@ public class Message {
         this.sent = sent;
     }
 
+/*
+    public Message(int id, String text, String senderUsername) {
+        this(id, "text", text, senderUsername, "30.05.2022 16:26");
+    }*/
+
+    //@RequiresApi(api = Build.VERSION_CODES.O)
     public Message(int id, String text, String senderUsername) {
         this.text = text;
         this.id = id;
