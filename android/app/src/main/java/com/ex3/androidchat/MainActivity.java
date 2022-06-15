@@ -255,8 +255,12 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
             }
         });
         //in the start, or when adding user
-        contacts = new ArrayList<>();
-        if (contactDao.index().size() == 0 || hasContactNotOfCurrent(contacts)) {
+//        contacts = new ArrayList<>();
+        if ( userContact(contacts)) {
+            if(contactDao.index().size() !=0){
+                contactDao.deleteAll();
+            }
+
             Call<List<Contact>> callContacts = webServiceAPI.getContacts(Client.getToken());
             callContacts.enqueue(new Callback<List<Contact>>() {
                 @Override
@@ -295,7 +299,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
         }
     }
 
-    private boolean hasContactNotOfCurrent(ArrayList<Contact> contactsFinal) {
+    private boolean userContact(ArrayList<Contact> contactsFinal) {
         ArrayList<Contact> listOfContacts = (ArrayList<Contact>) contactDao.index();
         for(Contact c : listOfContacts) {
             if(c.ofUser == null) return true;
