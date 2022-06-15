@@ -102,11 +102,11 @@ public class ConversationAdapter extends RecyclerView.Adapter {
         if (holder.getClass() == ViewHolderSend.class) {
             ViewHolderSend sendHolder = ((ViewHolderSend) holder);
             sendHolder.messageSent.setText(msg.getContent());
-            sendHolder.sentTime.setText(Utils.getHour(msg.getCreated()));
+            sendHolder.sentTime.setText(Utils.getHour(msg.getCreatedDateStr()));
         } else {
             ViewHolderReceive receiveHolder = ((ViewHolderReceive) holder);
             receiveHolder.messageReceived.setText(msg.getContent());
-            receiveHolder.timeReceived.setText(Utils.getHour(msg.getCreated()));
+            receiveHolder.timeReceived.setText(Utils.getHour(msg.getCreatedDateStr()));
         }
     }
 

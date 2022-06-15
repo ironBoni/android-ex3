@@ -1,15 +1,11 @@
 package com.ex3.androidchat.models.contacts;
 
-import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import com.ex3.androidchat.Client;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 public class MessageResponse {
@@ -20,29 +16,38 @@ public class MessageResponse {
     public String created;
     public boolean sent;
     public String user;
+    public String createdDateStr;
+
+    public String getCreatedDateStr() {
+        return createdDateStr;
+    }
+
+    public void setCreatedDateStr(String createDateStr) {
+        this.createdDateStr = createDateStr;
+    }
 
     @Ignore
     public MessageResponse() {
     }
-    public MessageResponse(String senderUsername,String content,String user ) {
+    public MessageResponse(String senderUsername,String content,String user) {
         this.senderUsername = senderUsername;
         this.user=user;
         this.content = content;
-        java.util.Date date = new Date();
+        this.created = (new Date()).toString();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        created = formatter.format(date);
+        this.createdDateStr = formatter.format(created);
         fileName = "";
         sent = true;
         type = "text";
     }
     @Ignore
-    public MessageResponse(int id, String content, String type, String senderUsername, String fileName, String created, boolean sent) {
+    public MessageResponse(int id, String content, String type, String senderUsername, String fileName, String createdDateStr, boolean sent) {
         this.id = id;
         this.content = content;
         this.type = type;
         this.senderUsername = senderUsername;
         this.fileName = fileName;
-        this.created = created;
+        this.createdDateStr = createdDateStr;
         this.sent = sent;
     }
     @Ignore
@@ -52,9 +57,9 @@ public class MessageResponse {
         this.senderUsername = senderUsername;
         sent = true;
         type = "text";
-        java.util.Date date = new Date();
+        this.created = (new Date()).toString();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        created = formatter.format(date);
+        this.createdDateStr = formatter.format(this.created);
         fileName = "";
     }
 
