@@ -18,10 +18,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ex3.androidchat.adapters.ConversationAdapter;
 import com.ex3.androidchat.api.interfaces.WebServiceAPI;
+import com.ex3.androidchat.database.AppDB;
+import com.ex3.androidchat.database.ContactDao;
 import com.ex3.androidchat.database.MessageDB;
 import com.ex3.androidchat.database.MessageDao;
 import com.ex3.androidchat.events.IEventListener;
 import com.ex3.androidchat.models.Chat;
+import com.ex3.androidchat.models.Contact;
 import com.ex3.androidchat.models.Utils;
 import com.ex3.androidchat.models.contacts.GetUserDetailsResponse;
 import com.ex3.androidchat.models.contacts.MessageResponse;
@@ -31,6 +34,7 @@ import com.ex3.androidchat.services.GetByAsyncTask;
 import com.ex3.androidchat.services.UserService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,6 +52,7 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
     Retrofit retrofit;
     WebServiceAPI webServiceAPI;
     MessageDao messageDao;
+    ContactDao contactDao;
 
     private final int DIFF = 100;
     private final int HEIGHT_RECYCLE_KEYBOARD_OPEN = 518;
@@ -117,13 +122,16 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
 
 
     private void sendMessage(String friendId, ConversationAdapter adapter) {
+        contactDao = AppDB.getContactDBInstance(this).contactDao();
         EditText txtMsg = (EditText) findViewById(R.id.txtEnterMsg);
         String msg = txtMsg.getText().toString();
         if (msg.isEmpty()) return;
 
+        contactDao.updateLast(msg,friendId);
         adapter.addNewMessage(msg);
         txtMsg.setText("");
-//        messageDao.insert(new MessageResponse(friendId, msg,Client.getUserId()));
+        int chatId = messageDao.isUserExits(friendId).get(0).chatId;
+        messageDao.insert(new MessageResponse(Client.getUserId(), msg,friendId, chatId));
         sendMessageToServer(friendId, msg);
 
         RecyclerView recyclerView = findViewById(R.id.messagesView);
@@ -230,17 +238,23 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
             Log.e("Conversation", ex.getMessage());
             Toast.makeText(this, "Contact could not be loaded.", Toast.LENGTH_SHORT).show();
         }
-//if(hasUserMessage())
 
+        //ROOM for messages
+        if (messageDao.isUserExits(friendId).size() == 0) {
             Call<ArrayList<MessageResponse>> allMessages = webServiceAPI.getMessagesById(friendId, Client.getToken());
             allMessages.enqueue(new Callback<ArrayList<MessageResponse>>() {
                 @Override
                 public void onResponse(Call<ArrayList<MessageResponse>> call, Response<ArrayList<MessageResponse>> response) {
-                   if(response.body()==null){
-                       return;
-                   }
+                    if(response.body()==null){
+                        return;
+                    }
+
                     messageDao.insertList(new ArrayList<>(response.body()));
-                    continueOnCreateOnResponse(response.body(), recyclerView, friendId);
+                    // get chatId
+                    int chatId = messageDao.isUserExits(friendId).get(0).chatId;
+                    // casting hadar code
+                    continueOnCreateOnResponse((ArrayList<MessageResponse>) messageDao.getMessagesByChatId(chatId), recyclerView, friendId);
+                    //continueOnCreateOnResponse(response.body(), recyclerView, friendId);
 //                    continueOnCreateOnResponse((ArrayList<MessageResponse>) messageDao.index(), recyclerView, friendId);
 
                 }
@@ -250,6 +264,12 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
                     Log.e("retrofit", t.getMessage());
                 }
             });
+        } else { //user exits, just pull from data base.
+            int chatId = messageDao.isUserExits(friendId).get(0).chatId;
+            continueOnCreateOnResponse((ArrayList<MessageResponse>) messageDao.getMessagesByChatId(chatId), recyclerView, friendId);
+        }
+
+
     }
 
     @Override

@@ -64,7 +64,6 @@ public class MessageResponse {
         this.createdDateStr = formatter.format(new Date());
         fileName = "";
     }
-
     public int getId() {
         return id;
     }

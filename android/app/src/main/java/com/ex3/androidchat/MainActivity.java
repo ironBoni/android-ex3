@@ -28,6 +28,8 @@ import com.ex3.androidchat.adapters.ConversationAdapter;
 import com.ex3.androidchat.api.interfaces.WebServiceAPI;
 import com.ex3.androidchat.database.AppDB;
 import com.ex3.androidchat.database.ContactDao;
+import com.ex3.androidchat.database.MessageDB;
+import com.ex3.androidchat.database.MessageDao;
 import com.ex3.androidchat.events.IEventListener;
 import com.ex3.androidchat.models.Chat;
 import com.ex3.androidchat.models.Contact;
@@ -202,11 +204,13 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
         Client.mainActivity = MainActivity.this;
         getSupportActionBar().setTitle(R.string.happy_chat);
 
+
         service = new UserService();
         TextView txtNickname = findViewById(R.id.txtViewNickname);
         txtNickname.setText(Client.getUserId());
 
         contactDao = AppDB.getContactDBInstance(this).contactDao();
+
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(Client.getMyServer())
@@ -255,17 +259,14 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
             }
         });
         //in the start, or when adding user
-//        contacts = new ArrayList<>();
         if ( userContact(contacts)) {
-                contactDao.deleteAll();
-            Toast.makeText(MainActivity.this, "from server", Toast.LENGTH_SHORT).show();
+            contactDao.deleteAll();
 
             Call<List<Contact>> callContacts = webServiceAPI.getContacts(Client.getToken());
             callContacts.enqueue(new Callback<List<Contact>>() {
                 @Override
                 public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
                     contactDao.insertList(new ArrayList<>(response.body()));
-
 
                     contacts = new ArrayList<>(response.body());
                     startContactList(recyclerView);
@@ -294,7 +295,6 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
                 e.printStackTrace();
             }
         } else {
-            Toast.makeText(MainActivity.this, "from Room", Toast.LENGTH_SHORT).show();
             contacts = (ArrayList<Contact>) contactDao.index();
             startContactList(recyclerView);
         }

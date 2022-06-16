@@ -19,6 +19,10 @@ public interface MessageDao {
     List<MessageResponse > index();
     @Query("SELECT * FROM messageresponse WHERE id = :id")
     MessageResponse get(int id);
+    @Query("SELECT * FROM messageresponse WHERE senderUsername=:username")
+    List<MessageResponse> isUserExits(String username);
+    @Query("SELECT * FROM messageresponse WHERE chatId=:chatId")
+    List<MessageResponse> getMessagesByChatId(int chatId);
     @Insert
     void insert(MessageResponse message);
     @Insert
