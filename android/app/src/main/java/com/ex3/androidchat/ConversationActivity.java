@@ -123,7 +123,7 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
 
         adapter.addNewMessage(msg);
         txtMsg.setText("");
-        messageDao.insert(new MessageResponse(friendId, msg,Client.getUserId()));
+//        messageDao.insert(new MessageResponse(friendId, msg,Client.getUserId()));
         sendMessageToServer(friendId, msg);
 
         RecyclerView recyclerView = findViewById(R.id.messagesView);
@@ -230,6 +230,7 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
             Log.e("Conversation", ex.getMessage());
             Toast.makeText(this, "Contact could not be loaded.", Toast.LENGTH_SHORT).show();
         }
+//if(hasUserMessage())
 
             Call<ArrayList<MessageResponse>> allMessages = webServiceAPI.getMessagesById(friendId, Client.getToken());
             allMessages.enqueue(new Callback<ArrayList<MessageResponse>>() {
@@ -238,7 +239,7 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
                    if(response.body()==null){
                        return;
                    }
-//                    messageDao.insertList(new ArrayList<>(response.body()));
+                    messageDao.insertList(new ArrayList<>(response.body()));
                     continueOnCreateOnResponse(response.body(), recyclerView, friendId);
 //                    continueOnCreateOnResponse((ArrayList<MessageResponse>) messageDao.index(), recyclerView, friendId);
 

@@ -257,22 +257,17 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
         //in the start, or when adding user
 //        contacts = new ArrayList<>();
         if ( userContact(contacts)) {
-            if(contactDao.index().size() !=0){
                 contactDao.deleteAll();
-            }
+            Toast.makeText(MainActivity.this, "from server", Toast.LENGTH_SHORT).show();
 
             Call<List<Contact>> callContacts = webServiceAPI.getContacts(Client.getToken());
             callContacts.enqueue(new Callback<List<Contact>>() {
                 @Override
                 public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
                     contactDao.insertList(new ArrayList<>(response.body()));
-                    try {
-                        updateImagesInDB(contactDao);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
 
-                    contacts = (ArrayList<Contact>) contactDao.index();
+
+                    contacts = new ArrayList<>(response.body());
                     startContactList(recyclerView);
 
                     ContactsAdapter adapter = new ContactsAdapter(contacts, getApplicationContext());
@@ -293,7 +288,13 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
                     Log.e("retrofit", t.getMessage());
                 }
             });
+            try {
+                updateImagesInDB(contactDao);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else {
+            Toast.makeText(MainActivity.this, "from Room", Toast.LENGTH_SHORT).show();
             contacts = (ArrayList<Contact>) contactDao.index();
             startContactList(recyclerView);
         }
@@ -301,6 +302,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
 
     private boolean userContact(ArrayList<Contact> contactsFinal) {
         ArrayList<Contact> listOfContacts = (ArrayList<Contact>) contactDao.index();
+        if(listOfContacts.size() == 0 ) return true;
         for(Contact c : listOfContacts) {
             if(c.ofUser == null) return true;
             if(!c.ofUser.equals(Client.getUserId())) {
@@ -414,11 +416,13 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
             String url = contactDao.getURL(id);
             Bitmap image = null;
             try {
+
                 InputStream input = new java.net.URL(url).openStream();
                 image = BitmapFactory.decodeStream(input);
 
             } catch (Exception ex) {
-                Log.e("error in getting image", ex.getMessage());
+                String err = (ex.getMessage()==null)?"openStream failed":ex.getMessage();
+                Log.e("error in getting image", err);
 
             }
             if (image == null) {

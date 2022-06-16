@@ -11,6 +11,8 @@ import com.ex3.androidchat.models.contacts.MessageResponse;
 
 import java.util.List;
 
+
+
 @Dao
 public interface MessageDao {
     @Query("Select * from messageresponse")
