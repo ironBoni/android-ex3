@@ -111,7 +111,7 @@ it's equivalent to these commands: <br/>
 2. npm install react-bootstrap <br/>
 After "npm install" in the **"react" directory** - run **npm start**.
 
-Example to register user IDs: noam, ron, dan <br/>
+(Assuming you loaded the DB as mentioned above:) <br/>Example to registered user IDs: noam, ron, dan <br/>
 The password is Np1234 <br/>
 **React - use instructions**
 1. Enter "react" folder and run "npm start".
