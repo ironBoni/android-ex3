@@ -21,9 +21,11 @@ import java.util.Observer;
 
 public class AsyncTaskDao extends AsyncTask<String, Void, String> {
     ContactDao contactDao;
+    String id;
+    public AsyncTaskDao(ContactDao contactDao, String idOfContact) {
 
-    public AsyncTaskDao(ContactDao contactDao) {
         this.contactDao=contactDao;
+        this.id = idOfContact;
     }
 
     @Override
@@ -61,6 +63,6 @@ public class AsyncTaskDao extends AsyncTask<String, Void, String> {
     }
 
     protected void onPostExecute(String imageBytesStr) {
-//        contactDao.update(imageBytesStr);
+        contactDao.update(imageBytesStr, id);
     }
 }

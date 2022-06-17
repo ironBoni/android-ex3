@@ -38,6 +38,7 @@ import com.ex3.androidchat.models.contacts.GetUserDetailsResponse;
 import com.ex3.androidchat.models.contacts.MessageResponse;
 import com.ex3.androidchat.models.contacts.UserModel;
 import com.ex3.androidchat.models.transfer.TransferRequest;
+import com.ex3.androidchat.services.AsyncTaskDao;
 import com.ex3.androidchat.services.ChatService;
 import com.ex3.androidchat.services.GetByAsyncTask;
 import com.ex3.androidchat.services.UserService;
@@ -413,27 +414,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
         List<String> AllIds = contactDao.getAllIds();
         for (String id :
                 AllIds) {
-            String url = contactDao.getURL(id);
-            Bitmap image = null;
-            try {
-
-                InputStream input = new java.net.URL(url).openStream();
-                image = BitmapFactory.decodeStream(input);
-
-            } catch (Exception ex) {
-                String err = (ex.getMessage()==null)?"openStream failed":ex.getMessage();
-                Log.e("error in getting image", err);
-
-            }
-            if (image == null) {
-                return;
-            }
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            image.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-            byte[] b = byteArrayOutputStream.toByteArray();
-            String imageBytesStr = Base64.encodeToString(b, Base64.DEFAULT);
-
-            contactDao.update(imageBytesStr, id);
+            new AsyncTaskDao(contactDao, id).execute(contactDao.getURL(id));
         }
     }
 
