@@ -201,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AndroidChat.context = getApplicationContext();
+
         setContentView(R.layout.activity_main);
         Client.mainActivity = MainActivity.this;
         getSupportActionBar().setTitle(R.string.happy_chat);
@@ -211,7 +212,6 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
         txtNickname.setText(Client.getUserId());
 
         contactDao = AppDB.getContactDBInstance(this).contactDao();
-
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(Client.getMyServer())
