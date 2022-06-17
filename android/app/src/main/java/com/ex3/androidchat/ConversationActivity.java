@@ -162,7 +162,7 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
             return false;
         });
     }
-
+    private static ArrayList<MessageResponse> userMessages;
     private int toPixels(int dp) {
         final float scale = getApplicationContext().getResources().getDisplayMetrics().density;
         int pixels = (int) (dp * scale + 0.5f);
@@ -241,35 +241,63 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
 
         //ROOM for messages
         if (messageDao.isUserExits(friendId).size() == 0) {
+            getMessagesForFirstTime(friendId, recyclerView);
+        } else { //user exits, just pull from data base.
+            PullMessagesFromDao(friendId, recyclerView);
+        }
+
+
+    }
+
+    private void PullMessagesFromDao(String friendId, RecyclerView recyclerView) {
+        try {
+            int chatId = messageDao.isUserExits(friendId).get(0).chatId;
+            continueOnCreateOnResponse((ArrayList<MessageResponse>) messageDao.getMessagesByChatId(chatId), recyclerView, friendId);
+        } catch(Exception ex) {
+            Log.d("Dao", "user doesn't have messages");
             Call<ArrayList<MessageResponse>> allMessages = webServiceAPI.getMessagesById(friendId, Client.getToken());
             allMessages.enqueue(new Callback<ArrayList<MessageResponse>>() {
                 @Override
                 public void onResponse(Call<ArrayList<MessageResponse>> call, Response<ArrayList<MessageResponse>> response) {
-                    if(response.body()==null){
+                    if (response.body() == null) {
                         return;
                     }
-
-                    messageDao.insertList(new ArrayList<>(response.body()));
-                    // get chatId
-                    int chatId = messageDao.isUserExits(friendId).get(0).chatId;
-                    // casting hadar code
-                    continueOnCreateOnResponse((ArrayList<MessageResponse>) messageDao.getMessagesByChatId(chatId), recyclerView, friendId);
-                    //continueOnCreateOnResponse(response.body(), recyclerView, friendId);
-//                    continueOnCreateOnResponse((ArrayList<MessageResponse>) messageDao.index(), recyclerView, friendId);
-
+                    continueOnCreateOnResponse(response.body(), recyclerView, friendId);
                 }
 
                 @Override
                 public void onFailure(Call<ArrayList<MessageResponse>> call, Throwable t) {
-                    Log.e("retrofit", t.getMessage());
+                    Log.d("Conversation", t.getMessage());
                 }
             });
-        } else { //user exits, just pull from data base.
-            int chatId = messageDao.isUserExits(friendId).get(0).chatId;
-            continueOnCreateOnResponse((ArrayList<MessageResponse>) messageDao.getMessagesByChatId(chatId), recyclerView, friendId);
         }
+    }
 
+    private void getMessagesForFirstTime(String friendId, RecyclerView recyclerView) {
+        Call<ArrayList<MessageResponse>> allMessages = webServiceAPI.getMessagesById(friendId, Client.getToken());
+        allMessages.enqueue(new Callback<ArrayList<MessageResponse>>() {
+            @Override
+            public void onResponse(Call<ArrayList<MessageResponse>> call, Response<ArrayList<MessageResponse>> response) {
+                if(response.body()==null){
+                    return;
+                }
 
+                messageDao.insertList(new ArrayList<>(response.body()));
+                // get chatId
+                try {
+                    int chatId = messageDao.isUserExits(friendId).get(0).chatId;
+                    continueOnCreateOnResponse((ArrayList<MessageResponse>) messageDao.getMessagesByChatId(chatId), recyclerView, friendId);
+                } catch(Exception exception) {
+                    Log.d("Dao", "user doesn't have messages");
+                    continueOnCreateOnResponse(response.body(), recyclerView, friendId);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<MessageResponse>> call, Throwable t) {
+                Log.e("retrofit", t.getMessage());
+            }
+        });
     }
 
     @Override
