@@ -61,14 +61,33 @@ namespace Models.DataServices {
             if (user1 == null || user2 == null) return null;
             return GetChatByParticipants(user1, user2);
         }
+
+        private string GetLastMessage(string currentUserId, string otherUserId)
+        {
+            using (var db = new ItemsContext())
+            {
+                var chat = GetChatByParticipants(currentUserId, otherUserId);
+                string last = string.Empty;
+                
+                if (chat == null)
+                    return last;
+                
+                if (chat.Messages != null && chat.Messages.Count > 0)
+                    last = chat.Messages.Last()?.Text;
+                return last;
+            }
+        }
         public List<ContactModel> GetContacts(string username)
         {
             using(var db = new ItemsContext())
             {
                 var user = db.Users.Include(x => x.Contacts).ToList().Find(u => u.Username == username);
+                
                 var contacts = user.Contacts;
-              
-                return contacts.Select(c => new ContactModel(c.Id, c.ContactId, c.Name, c.Server, c.Last, getDate(c.Lastdate), c.ProfileImage, c.OfUser)).ToList();
+                
+                return contacts.Select(c => new ContactModel(c.Id, c.ContactId, c.Name, c.Server, 
+                    GetLastMessage(Current.Username, c.ContactId),
+                    getDate(c.Lastdate), c.ProfileImage, c.OfUser)).ToList();
             }
          }
 
