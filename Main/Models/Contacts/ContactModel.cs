@@ -39,7 +39,7 @@
             else
             {
                 dateTime = Convert.ToDateTime(lastdate);
-                LastdateStr = dateTime.Value.ToString("yyyy-MM-ddTHH:mm:ss.fffffff");
+                LastdateStr = dateTime.Value.ToString("dd/MM/yyyy HH:mm");
             }
         }
     }
