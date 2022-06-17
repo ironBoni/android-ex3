@@ -2,6 +2,8 @@ To open the Server's code -
 Clone and **Go to the Main folder, and open Main.sln**.
 
 **Database - Migrations, Load Data**<br/>
+(Install MariaDB with the password Np1239, the password is defined in ItemsContext.cs). <br/>
+
 Please make sure that "pomelodb" doesn't exist as database in the MariaDB (Otherwise, drop it). <br/>
 It can be done via HeidiSQL (as mentioned below).
 
