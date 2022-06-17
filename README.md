@@ -69,7 +69,7 @@ You can chat in this activity with the user.
   (If you will scroll down to the bottom you will see the new contact).
 
 **Firebase**
-* To simulate it, open Postman (or react client from execrise 2 - link is down below).
+* To simulate it, open Postman (or react client from execrise 2 - the react is in the react repository folder).
 * Assuming that you loaded the DB Data as mentioned, and Noam appears in ron's contacts
   (Otherwise, add it to the contacts).
   
