@@ -1,8 +1,8 @@
 To open the Server's code - 
 Clone and **Go to the Main folder, and open Main.sln**.
 
-**Database - Migrations, Load Data**
-Make sure that "pomelodb" doesn't exist as database in the MariaDB. (Otherwise, drop it).
+**Database - Migrations, Load Data**<br/>
+Please make sure that "pomelodb" doesn't exist as database in the MariaDB. (Otherwise, drop it).
 It can be done via HeidiSQL (as mentioned below).
 
 1. run in the Packange Manager Console the commands: 
