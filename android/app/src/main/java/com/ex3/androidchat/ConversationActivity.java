@@ -66,7 +66,7 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
                 .build();
         WebServiceAPI hisServiceAPI = hisRetrofit.create(WebServiceAPI.class);
 
-        if(Utils.getAndroidServer(hisServer).equals(Utils.getAndroidServer(Client.getMyServer())))
+        if (Utils.getAndroidServer(hisServer).equals(Utils.getAndroidServer(Client.getMyServer())))
             return;
         Call<Void> call = hisServiceAPI.transfer(new TransferRequest(Client.getUserId(), friendId, msg));
         call.enqueue(new Callback<Void>() {
@@ -127,11 +127,23 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
         String msg = txtMsg.getText().toString();
         if (msg.isEmpty()) return;
 
-        contactDao.updateLast(msg,friendId);
+        contactDao.updateLast(msg, friendId);
         adapter.addNewMessage(msg);
         txtMsg.setText("");
-        int chatId = messageDao.isUserExits(friendId).get(0).chatId;
-        messageDao.insert(new MessageResponse(Client.getUserId(), msg,friendId, chatId));
+
+        int chatId;
+        try {
+            chatId = messageDao.isUserExits(friendId).get(0).chatId;
+        } catch (Exception ex) {
+            Chat chat = service.getChatByParticipants(friendId, Client.getUserId());
+            if (chat != null) {
+                chatId = chat.getId();
+            }
+            else {
+                chatId = service.getAll().get(0).id;
+            }
+        }
+        messageDao.insert(new MessageResponse(Client.getUserId(), msg, friendId, chatId));
         sendMessageToServer(friendId, msg);
 
         RecyclerView recyclerView = findViewById(R.id.messagesView);
@@ -162,12 +174,15 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
             return false;
         });
     }
+
     private static ArrayList<MessageResponse> userMessages;
+
     private int toPixels(int dp) {
         final float scale = getApplicationContext().getResources().getDisplayMetrics().density;
         int pixels = (int) (dp * scale + 0.5f);
         return pixels;
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -190,8 +205,7 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
                 recyclerView.setLayoutParams(params);
                 recyclerView.scrollToPosition(adapter.getItemCount() - 1);
                 lastViewHeight = currentContentHeight;
-            }
-            else if (currentContentHeight > lastViewHeight + DIFF) {
+            } else if (currentContentHeight > lastViewHeight + DIFF) {
                 // Keyboard is closed
                 lastViewHeight = currentContentHeight;
                 params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -253,7 +267,7 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
         try {
             int chatId = messageDao.isUserExits(friendId).get(0).chatId;
             continueOnCreateOnResponse((ArrayList<MessageResponse>) messageDao.getMessagesByChatId(chatId), recyclerView, friendId);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             Log.d("Dao", "user doesn't have messages");
             Call<ArrayList<MessageResponse>> allMessages = webServiceAPI.getMessagesById(friendId, Client.getToken());
             allMessages.enqueue(new Callback<ArrayList<MessageResponse>>() {
@@ -278,7 +292,7 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
         allMessages.enqueue(new Callback<ArrayList<MessageResponse>>() {
             @Override
             public void onResponse(Call<ArrayList<MessageResponse>> call, Response<ArrayList<MessageResponse>> response) {
-                if(response.body()==null){
+                if (response.body() == null) {
                     return;
                 }
 
@@ -287,7 +301,7 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
                 try {
                     int chatId = messageDao.isUserExits(friendId).get(0).chatId;
                     continueOnCreateOnResponse((ArrayList<MessageResponse>) messageDao.getMessagesByChatId(chatId), recyclerView, friendId);
-                } catch(Exception exception) {
+                } catch (Exception exception) {
                     Log.d("Dao", "user doesn't have messages");
                     continueOnCreateOnResponse(response.body(), recyclerView, friendId);
                 }
