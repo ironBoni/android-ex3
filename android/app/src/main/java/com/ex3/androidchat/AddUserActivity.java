@@ -84,6 +84,8 @@ public class AddUserActivity extends AppCompatActivity implements IEventListener
                 sendInvitationToHisServer(hisId, hisNickname, hisServer);
                 addContactInServer(hisId, hisNickname, hisServer);
 
+                contactDao.insert(new Contact(hisId, hisNickname, hisServer, null, Client.getDefaultImage(),
+                        null, null, Client.getUserId()));
                 Intent intent = new Intent(AddUserActivity.this, MainActivity.class);
                 startActivity(intent);
             }

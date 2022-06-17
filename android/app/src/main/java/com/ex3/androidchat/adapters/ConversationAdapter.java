@@ -72,7 +72,7 @@ public class ConversationAdapter extends RecyclerView.Adapter {
 
     public void addNewMessage(String text) {
         Chat chat = service.getChatByParticipants(Client.getUserId(), Client.getFriendId());
-        int chatId = messages.get(0).chatId;
+        int chatId = chat.id;
         int maxId = 0;
         for (Message m : chat.getMessages()) {
             if (m.getId() > maxId) {

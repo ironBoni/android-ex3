@@ -9,12 +9,17 @@ public class Client {
     private static String dataServer = "http://10.0.2.2:5186/api/";
     private static String token = "";
     private static String userId = "";
+    private static String defaultImage = "https://www.stignatius.co.uk/wp-content/uploads/2020/10/default-user-icon.jpg";
     private static String friendNickname = "";
     private static String friendServer = "";
     private static String friendImage = "";
     public static MainActivity mainActivity;
     public static ConversationActivity conversationActivity;
     public static ArrayList<Contact> contacts;
+
+    public static String getDefaultImage() {
+        return defaultImage;
+    }
 
     public static String getFriendId() {
         return friendId;
