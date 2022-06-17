@@ -70,7 +70,7 @@ You can chat in this activity with the user.
 
 **Firebase**
 * To simulate it, open Postman (or react client from execrise 2 - the react is in the react repository folder).
-* Assuming that you loaded the DB Data as mentioned, and Noam appears in ron's contacts
+* Assuming that you loaded the DB Data as mentioned, and "noam" appears in ron's contacts
   (Otherwise, add it to the contacts).
   
 * In the Postman, send Transfer:
