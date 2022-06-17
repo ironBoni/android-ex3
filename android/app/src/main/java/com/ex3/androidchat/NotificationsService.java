@@ -31,18 +31,15 @@ public class NotificationsService extends FirebaseMessagingService {
                 if(c.getContactId().equals(fromUserId)) {
                     c.last = content;
                     java.util.Date date = new Date();
-                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                    SimpleDateFormat formatterStr = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                     c.lastdate = formatter.format(date);
+                    c.lastdateStr = formatterStr.format(date);
                     break;
                 }
             }
             if(oldContacts != null) {
-                Client.mainActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        contactsAdapter.setContacts(oldContacts);
-                    }
-                });
+                Client.mainActivity.runOnUiThread(() -> contactsAdapter.setContacts(oldContacts));
             }
         }
 
@@ -56,13 +53,12 @@ public class NotificationsService extends FirebaseMessagingService {
                 }
             }
             messages.add(new MessageResponse(maxId + 1, content, fromUserId));
+
+            // don't update if the notification is about my message
+            if(fromUserId.equals(Client.getUserId()))
+                return;
             if(messages != null && Client.getFriendId().equals(fromUserId)) {
-                Client.conversationActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        conversationAdapter.setMessages(messages);
-                    }
-                });
+                Client.conversationActivity.runOnUiThread(() -> conversationAdapter.setMessages(messages));
             }
         }
     }

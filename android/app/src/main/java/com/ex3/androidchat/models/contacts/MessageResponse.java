@@ -17,6 +17,7 @@ public class MessageResponse {
     public boolean sent;
     public String user;
     public String createdDateStr;
+    public int chatId;
 
     public String getCreatedDateStr() {
         return createdDateStr;
@@ -29,16 +30,17 @@ public class MessageResponse {
     @Ignore
     public MessageResponse() {
     }
-    public MessageResponse(String senderUsername,String content,String user) {
+    public MessageResponse(String senderUsername,String content,String user,int chatId) {
         this.senderUsername = senderUsername;
         this.user=user;
         this.content = content;
         this.created = (new Date()).toString();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        this.createdDateStr = formatter.format(created);
+        this.createdDateStr = formatter.format(new Date());
         fileName = "";
         sent = true;
         type = "text";
+        this.chatId = chatId;
     }
     @Ignore
     public MessageResponse(int id, String content, String type, String senderUsername, String fileName, String createdDateStr, boolean sent) {
@@ -59,10 +61,9 @@ public class MessageResponse {
         type = "text";
         this.created = (new Date()).toString();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        this.createdDateStr = formatter.format(this.created);
+        this.createdDateStr = formatter.format(new Date());
         fileName = "";
     }
-
     public int getId() {
         return id;
     }

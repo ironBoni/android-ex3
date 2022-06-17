@@ -77,6 +77,7 @@ namespace AspWebApi.Controllers {
                 });
             }
 
+            if (!PushNotificationsManager.IdToTokens.ContainsKey(request.To)) return string.Empty;
             var registrationToken = PushNotificationsManager.IdToTokens[request.To];
 
             var message = new FirebaseAdmin.Messaging.Message()
@@ -109,7 +110,7 @@ namespace AspWebApi.Controllers {
             {
                 var connectionIds = ChatHub.userToConnection[to];
                 foreach (var conId in connectionIds)
-                    await hub.Clients.Client(conId).SendAsync("ReceiveMessage", new MessageResponse(id, content, DateTime.Now, true, from));
+                    await hub.Clients.Client(conId).SendAsync("ReceiveMessage", new MessageResponse(id, content, DateTime.Now, true, from, chat.Id));
             }
         }
     }

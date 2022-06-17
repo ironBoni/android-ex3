@@ -68,7 +68,7 @@ namespace Models.DataServices {
                 var user = db.Users.Include(x => x.Contacts).ToList().Find(u => u.Username == username);
                 var contacts = user.Contacts;
               
-                return contacts.Select(c => new ContactModel(c.Id, c.ContactId, c.Name, c.Server, c.Last, getDate(c.Lastdate), c.ProfileImage)).ToList();
+                return contacts.Select(c => new ContactModel(c.Id, c.ContactId, c.Name, c.Server, c.Last, getDate(c.Lastdate), c.ProfileImage, c.OfUser)).ToList();
             }
          }
 
@@ -76,7 +76,7 @@ namespace Models.DataServices {
         {
             if (lastdate == null)
                 return "";
-            return lastdate.Value.ToString("dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+            return lastdate.Value.ToString("yyyy-MM-ddTHH:mm:ss.fffffff");
         }
 
         public static string getDateString(DateTime lastdate)
@@ -131,7 +131,7 @@ namespace Models.DataServices {
                 currentUserObj, friend});
 
                 var newContact = new Contact(name, server, null, null, friend.ProfileImage, friendToAdd, currentUserObj.Username);
-                var newContactModel = new ContactModel(newContact.Id, friendToAdd, name, server, null, null, friend.ProfileImage);
+                var newContactModel = new ContactModel(newContact.Id, friendToAdd, name, server, null, null, friend.ProfileImage, currentUserObj.Username);
                 if (!currentContacts.Contains(newContactModel))
                 {
                     db.Contacts.Add(newContact);
@@ -376,7 +376,7 @@ namespace Models.DataServices {
                     name = requestor.Nickname;
                 requestor.Server = server;
 
-                var newContact = new ContactModel(Guid.NewGuid().ToString(), from, name, server, null, null, requestor.ProfileImage);
+                var newContact = new ContactModel(Guid.NewGuid().ToString(), from, name, server, null, null, requestor.ProfileImage, to);
                 if (!currentContacts.Contains(newContact))
                 {
                     var contact = new Contact(name, server, null, null, requestor.ProfileImage, from, currentUser.Username);

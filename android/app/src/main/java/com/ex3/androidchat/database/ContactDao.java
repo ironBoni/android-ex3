@@ -25,6 +25,8 @@ public interface ContactDao {
     String getURL(String id);
     @Query("SELECT id FROM contact ")
     List<String> getAllIds();
+    @Query("UPDATE contact SET last=:last WHERE contactId =:contactId ")
+    void updateLast(String last, String contactId);
     @Insert
     void insert(Contact contacts);
 
@@ -39,4 +41,7 @@ public interface ContactDao {
 
     @Delete
     void deleteList(List<Contact> contacts);
+
+    @Query("DELETE FROM contact")
+    void deleteAll();
 }

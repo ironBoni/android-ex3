@@ -71,7 +71,8 @@ public class ConversationAdapter extends RecyclerView.Adapter {
     }
 
     public void addNewMessage(String text) {
-        Chat chat = service.GetChatByParticipants(Client.getUserId(), Client.getFriendId());
+        Chat chat = service.getChatByParticipants(Client.getUserId(), Client.getFriendId());
+        int chatId = messages.get(0).chatId;
         int maxId = 0;
         for (Message m : chat.getMessages()) {
             if (m.getId() > maxId) {
@@ -79,7 +80,9 @@ public class ConversationAdapter extends RecyclerView.Adapter {
             }
         }
         int newId = maxId + 1;
-        messages.add(new MessageResponse(newId, text, Client.getUserId()));
+        MessageResponse newMessage = new MessageResponse(Client.getUserId(),text,Client.getFriendId(), chatId );
+        newMessage.setId(newId);
+        messages.add(newMessage);
         setMessages(messages);
         //this.notifyDataSetChanged();
     }

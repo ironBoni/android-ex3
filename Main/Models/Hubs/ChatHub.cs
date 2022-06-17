@@ -47,11 +47,11 @@ namespace AspWebApi.Models.Hubs {
             {
                 var connectionIds = userToConnection[to];
                 foreach (var conId in connectionIds)
-                    await Clients.Client(conId).SendAsync(ReceiveMessage, new MessageResponse(id, content, DateTime.Now, true, from));
+                    await Clients.Client(conId).SendAsync(ReceiveMessage, new MessageResponse(id, content, DateTime.Now, true, from, chat.Id));
             }
             else
                 await Clients.AllExcept(Context.ConnectionId)
-                .SendAsync(ReceiveMessage, new MessageResponse(id, content, DateTime.Now, true, from));
+                .SendAsync(ReceiveMessage, new MessageResponse(id, content, DateTime.Now, true, from, chat.Id));
         }
 
         public async Task SetIdInServer(string username)
