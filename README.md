@@ -18,7 +18,7 @@ It can be done via HeidiSQL (as mentioned below).
   * Click Open
   * Go to the Database folder (in the repo)
   * In the HeidiSQL - Click on File -> Run SQL File 
-  * Choose the file in Database\Final_DeleteAndInsert.sql
+  * Choose the file in Database\Final_DeleteAndInsert.sql (In the popup, click Yes).
   
   Now all the data is loaded to the DB.
 <br/>
