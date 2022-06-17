@@ -2,12 +2,11 @@ To open the Server's code -
 Clone and **Go to the Main folder, and open Main.sln**.
 
 **Database - Migrations, Load Data**
-1. Delete the Migrations folder in the AspWebApi project.
-2. run in the Packange Manager Console the commands: 
+1. run in the Packange Manager Console the commands: 
   * add-migration init <br/>
   * update-database <br/>
   
-3. Load data - Open HeidiSQL (in Windows):
+2. Load data - Open HeidiSQL (in Windows):
   * username: root
   * password: Np1239
   * port: 3306
