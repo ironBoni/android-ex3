@@ -11,12 +11,18 @@ import com.ex3.androidchat.models.contacts.MessageResponse;
 
 import java.util.List;
 
+
+
 @Dao
 public interface MessageDao {
     @Query("Select * from messageresponse")
     List<MessageResponse > index();
     @Query("SELECT * FROM messageresponse WHERE id = :id")
     MessageResponse get(int id);
+    @Query("SELECT * FROM messageresponse WHERE senderUsername=:username")
+    List<MessageResponse> isUserExits(String username);
+    @Query("SELECT * FROM messageresponse WHERE chatId=:chatId")
+    List<MessageResponse> getMessagesByChatId(int chatId);
     @Insert
     void insert(MessageResponse message);
     @Insert

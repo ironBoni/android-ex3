@@ -30,6 +30,7 @@ namespace Models {
         public int ChatId { get; set; }
         public User User { get; set; }
         public Chat MappedChat { get; set; }
+
         public Message(int id, string type, string text, string senderUsername, DateTime writtenIn, string fileName)
         {
             Id = id;

@@ -12,7 +12,8 @@ import com.ex3.androidchat.models.contacts.MessageResponse;
 import java.util.HashMap;
 import java.util.List;
 
-@Database(entities = {MessageResponse.class}, version = 1 , exportSchema = false)
+
+@Database(entities = {MessageResponse.class}, version = 5 , exportSchema = false)
 public abstract class MessageDB extends RoomDatabase {
 //    private static HashMap<String, MessageDB> messageDB = new HashMap<>();
     private static MessageDB messageDB = null;

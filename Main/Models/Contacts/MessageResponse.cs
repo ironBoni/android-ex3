@@ -7,13 +7,16 @@ namespace AspWebApi.Models.Contacts {
         public string Content { get; set; }
         public string Created { get; set; }
         public string CreatedDateStr { get; set; }
+       
         public bool Sent { get; set; }
 
         public string Type { get; set; }
         public string SenderUsername { get; set; }
-        
+
+        public int ChatId { get; set; }
+
         public string FileName { get; set; }
-        public MessageResponse(int id, string content, DateTime? createdDate, bool sent, string senderUsername)
+        public MessageResponse(int id, string content, DateTime? createdDate, bool sent, string senderUsername, int chatId)
         {
             Id = id;
             Content = content;
@@ -21,15 +24,19 @@ namespace AspWebApi.Models.Contacts {
             {
                 CreatedDateStr = UserService.getDateString(createdDate.Value);
                 Created = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffff");
-            } else
+            }
+            else
             {
                 CreatedDateStr = string.Empty;
                 Created = null;
             }
+
             Sent = sent;
             Type = "text";
             SenderUsername = senderUsername;
             FileName = "";
+            ChatId = chatId;
+ 
         }
 
         public MessageResponse()
