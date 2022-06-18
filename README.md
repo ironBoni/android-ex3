@@ -38,8 +38,8 @@ Run the application.<br/>
 * Press **register**.
 
 **Login:**<br/>
-* Enter user Id (The one you registered with,
-  but we prefer "ron" - since it has contacts and friends he can chat with).
+* Enter user Id (we prefer "ron" - since it has contacts and friends he can chat with,
+* but you can enter the userId you registered with).
 * Enter password. (Np1234).
 * Press Login.
 
