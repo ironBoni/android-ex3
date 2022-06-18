@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `chats` (
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table pomelodb.chats: ~0 rows (approximately)
+-- Dumping data for table pomelodb.chats: ~23 rows (approximately)
 INSERT INTO `chats` (`Id`) VALUES
 	(1),
 	(2),
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `chatuser` (
   CONSTRAINT `FK_ChatUser_Users_UsersUsername` FOREIGN KEY (`UsersUsername`) REFERENCES `users` (`Username`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table pomelodb.chatuser: ~25 rows (approximately)
+-- Dumping data for table pomelodb.chatuser: ~43 rows (approximately)
 INSERT INTO `chatuser` (`ChatsId`, `UsersUsername`) VALUES
 	(1, 'noam'),
 	(1, 'ron'),
@@ -110,49 +110,51 @@ INSERT INTO `chatuser` (`ChatsId`, `UsersUsername`) VALUES
 -- Dumping structure for table pomelodb.contacts
 CREATE TABLE IF NOT EXISTS `contacts` (
   `Id` varchar(255) NOT NULL,
+  `ContactId` longtext NOT NULL,
   `Name` longtext NOT NULL,
   `Server` longtext NOT NULL,
   `Last` longtext DEFAULT NULL,
   `Lastdate` datetime(6) DEFAULT NULL,
+  `Username` varchar(255) DEFAULT NULL,
   `ProfileImage` longtext DEFAULT NULL,
-  `Username` longtext DEFAULT NULL,
-  `ContactId` longtext NOT NULL,
   `OfUser` longtext DEFAULT NULL,
-  PRIMARY KEY (`Id`)
+  PRIMARY KEY (`Id`),
+  KEY `IX_Contacts_Username` (`Username`),
+  CONSTRAINT `FK_Contacts_Users_Username` FOREIGN KEY (`Username`) REFERENCES `users` (`Username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Dumping data for table pomelodb.contacts: ~30 rows (approximately)
-INSERT INTO `contacts` (`Id`, `Name`, `Server`, `Last`, `Lastdate`, `ProfileImage`, `Username`, `ContactId`, `OfUser`) VALUES
-	('1', 'Ron Solomon', 'http://localhost:5186', 'Nice to meet you!', '2022-05-30 17:15:36.000000', 'https://cdn.dribbble.com/users/2364329/screenshots/10481283/media/f013d5235bfcf1753d56cad154f11a67.jpg', 'noam', 'ron', 'noam'),
-	('10', 'Idan Ben Ari', 'http://localhost:5186', 'I\'m glad you\'re coming :)', '2022-05-30 17:23:01.000000', 'https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/attachments/delivery/asset/54164cf6ae1512d8c0a2b1d8306c5a68-1649285147/wouterbult/draw-nice-style-cartoon-caricature-as-a-profile-picture.jpg', 'dvir', 'idan', 'dan'),
-	('11', 'Noam Cohen', 'http://localhost:5186', 'Nice to meet you! :)', '2022-05-30 18:06:40.000000', 'https://scontent.fsdv3-1.fna.fbcdn.net/v/t1.6435-9/46498020_2215436798469037_9121585456583016448_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=pgAp58x8fUcAX_q7Geu&_nc_ht=scontent.fsdv3-1.fna&oh=00_AT-sSFofwqgtb84VAAwlKpm5m_LtaBWKsq04MI4ZqVYu_A&oe=62C19375', 'ron', 'noam', 'ron'),
-	('12', 'Dvir Pollak', 'http://localhost:5186', 'I\'m glad to hear that :)', '2022-05-30 18:07:25.000000', 'https://media-exp1.licdn.com/dms/image/C4E03AQF6ZOFmppSpxg/profile-displayphoto-shrink_200_200/0/1646299616015?e=1660176000&v=beta&t=wnbQBn76v397qnw3fWuHpQD2ocgcI6pAAL06XXbsw_I', 'ron', 'dvir', 'ron'),
-	('13', 'Dan Cohen', 'http://localhost:5186', 'I appreciate that :)', '2022-05-30 18:08:04.000000', 'https://avatoon.net/wp-content/uploads/2020/04/Gary-Avatar.png', 'ron', 'dan', 'ron'),
-	('14', 'Idan Ben Ari', 'http://localhost:5186', 'I\'m glad to hear that :)', '2022-05-30 18:08:55.000000', 'https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/attachments/delivery/asset/54164cf6ae1512d8c0a2b1d8306c5a68-1649285147/wouterbult/draw-nice-style-cartoon-caricature-as-a-profile-picture.jpg', 'ron', 'idan', 'ron'),
-	('15', 'Hadar Pinto', 'http://localhost:5186', 'I appreciate that :)', '2022-05-30 18:09:44.000000', 'https://media-exp1.licdn.com/dms/image/C4D03AQG7Oph-nHMJdQ/profile-displayphoto-shrink_200_200/0/1646846030443?e=1660176000&v=beta&t=TO5w-Fpy7_ve4_ixX4EWvqZDC1W_A0aqiszvCKT86jo', 'ron', 'hadar', 'ron'),
-	('16', 'Ron Solomon', 'http://localhost:5186', 'I\'m glad to hear that :)', '2022-05-30 18:11:03.000000', 'https://cdn.dribbble.com/users/2364329/screenshots/10481283/media/f013d5235bfcf1753d56cad154f11a67.jpg', 'idan', 'ron', 'idan'),
-	('17', 'Noam Cohen', 'http://localhost:5186', 'I\'m happy to hear that! :)', '2022-05-30 18:11:33.000000', 'https://scontent.fsdv3-1.fna.fbcdn.net/v/t1.6435-9/46498020_2215436798469037_9121585456583016448_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=pgAp58x8fUcAX_q7Geu&_nc_ht=scontent.fsdv3-1.fna&oh=00_AT-sSFofwqgtb84VAAwlKpm5m_LtaBWKsq04MI4ZqVYu_A&oe=62C19375', 'idan', 'noam', 'idan'),
-	('18', 'Dan Cohen', 'http://localhost:5186', 'I\'m glad you\'re coming! :)', '2022-05-30 18:12:27.000000', 'https://avatoon.net/wp-content/uploads/2020/04/Gary-Avatar.png', 'idan', 'dan', 'idan'),
-	('19', 'Hadar Pinto', 'http://localhost:5186', 'Have a nice day bro!', '2022-05-30 18:13:34.000000', 'https://media-exp1.licdn.com/dms/image/C4D03AQG7Oph-nHMJdQ/profile-displayphoto-shrink_200_200/0/1646846030443?e=1660176000&v=beta&t=TO5w-Fpy7_ve4_ixX4EWvqZDC1W_A0aqiszvCKT86jo', 'idan', 'hadar', 'idan'),
-	('2', 'Hadar Pinto', 'http://localhost:5186', 'I\'m glad you agreed!', '2022-05-30 17:23:24.000000', 'https://media-exp1.licdn.com/dms/image/C4D03AQG7Oph-nHMJdQ/profile-displayphoto-shrink_200_200/0/1646846030443?e=1660176000&v=beta&t=TO5w-Fpy7_ve4_ixX4EWvqZDC1W_A0aqiszvCKT86jo', 'noam', 'hadar', 'noam'),
-	('20', 'Ron Solomon', 'http://localhost:5186', 'I\'m glad to hear that :)', '2022-05-30 18:15:18.000000', 'https://cdn.dribbble.com/users/2364329/screenshots/10481283/media/f013d5235bfcf1753d56cad154f11a67.jpg', 'dvir', 'ron', 'dvir'),
-	('21', 'Noam Cohen', 'http://localhost:5186', 'I Love it Noam! It\'s a very nice song! :)', '2022-05-30 18:16:01.000000', 'https://scontent.fsdv3-1.fna.fbcdn.net/v/t1.6435-9/46498020_2215436798469037_9121585456583016448_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=pgAp58x8fUcAX_q7Geu&_nc_ht=scontent.fsdv3-1.fna&oh=00_AT-sSFofwqgtb84VAAwlKpm5m_LtaBWKsq04MI4ZqVYu_A&oe=62C19375', 'dvir', 'noam', 'dvir'),
-	('22', 'Dan Cohen', 'http://localhost:5186', 'Always smile! :)', '2022-05-30 18:16:39.000000', 'https://avatoon.net/wp-content/uploads/2020/04/Gary-Avatar.png', 'dvir', 'dan', 'dvir'),
-	('23', 'Hadar Pinto', 'http://localhost:5186', 'Always smile! :)', '2022-05-30 18:17:20.000000', 'https://media-exp1.licdn.com/dms/image/C4D03AQG7Oph-nHMJdQ/profile-displayphoto-shrink_200_200/0/1646846030443?e=1660176000&v=beta&t=TO5w-Fpy7_ve4_ixX4EWvqZDC1W_A0aqiszvCKT86jo', 'dvir', 'hadar', 'dvir'),
-	('24', 'Ron Solomon', 'http://localhost:5186', 'Fine Ron, nice idea', '2022-05-30 18:18:20.000000', 'https://cdn.dribbble.com/users/2364329/screenshots/10481283/media/f013d5235bfcf1753d56cad154f11a67.jpg', 'hadar', 'ron', 'hadar'),
-	('25', 'Noam Cohen', 'http://localhost:5186', 'I think so too :)', '2022-05-30 18:18:53.000000', 'https://scontent.fsdv3-1.fna.fbcdn.net/v/t1.6435-9/46498020_2215436798469037_9121585456583016448_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=pgAp58x8fUcAX_q7Geu&_nc_ht=scontent.fsdv3-1.fna&oh=00_AT-sSFofwqgtb84VAAwlKpm5m_LtaBWKsq04MI4ZqVYu_A&oe=62C19375', 'hadar', 'noam', 'hadar'),
-	('26', 'Dan Cohen', 'http://localhost:5186', 'I\'m glad you agreed!', '2022-05-30 18:19:52.000000', 'https://avatoon.net/wp-content/uploads/2020/04/Gary-Avatar.png', 'hadar', 'dan', 'hadar'),
-	('27', 'Idan Ben Ari', 'http://localhost:5186', 'Have a nice day bro!', '2022-05-30 18:20:34.000000', 'https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/attachments/delivery/asset/54164cf6ae1512d8c0a2b1d8306c5a68-1649285147/wouterbult/draw-nice-style-cartoon-caricature-as-a-profile-picture.jpg', 'hadar', 'idan', 'hadar'),
-	('28', 'Dvir Pollak', 'http://localhost:5186', 'Always smile! :)', '2022-05-30 18:21:07.000000', 'https://media-exp1.licdn.com/dms/image/C4E03AQF6ZOFmppSpxg/profile-displayphoto-shrink_200_200/0/1646299616015?e=1660176000&v=beta&t=wnbQBn76v397qnw3fWuHpQD2ocgcI6pAAL06XXbsw_I', 'hadar', 'dvir', 'hadar'),
-	('3', 'Divr Pollak', 'http://localhost:5186', 'I Love it Noam! It\'s a very nice song! :)', '2022-05-30 17:16:35.000000', 'https://media-exp1.licdn.com/dms/image/C4E03AQF6ZOFmppSpxg/profile-displayphoto-shrink_200_200/0/1646299616015?e=1660176000&v=beta&t=wnbQBn76v397qnw3fWuHpQD2ocgcI6pAAL06XXbsw_I', 'noam', 'dvir', 'noam'),
-	('4', 'Dan Cohen', 'http://localhost:5186', 'I\'m glad to hear so! :)', '2022-05-30 17:16:35.000000', 'https://avatoon.net/wp-content/uploads/2020/04/Gary-Avatar.png', 'noam', 'dan', 'noam'),
-	('5', 'Idan Ben Ari', 'http://localhost:5186', 'I\'m happy to hear that! :)', '2022-05-30 17:16:35.000000', 'https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/attachments/delivery/asset/54164cf6ae1512d8c0a2b1d8306c5a68-1649285147/wouterbult/draw-nice-style-cartoon-caricature-as-a-profile-picture.jpg', 'noam', 'idan', 'noam'),
-	('5acc8415-f9a9-4fea-afd6-d39d11a2d9c4', 'Ran Levi', 'localhost:5186', NULL, NULL, 'https://i.etsystatic.com/28761236/c/2000/1589/0/76/il/d929f2/3162035768/il_340x270.3162035768_ci09.jpg', 'noam', 'ran', 'noam'),
-	('6', 'Hadar Pinto', 'http://localhost:5186', 'I think so too :)', '2022-05-30 17:18:59.000000', 'https://media-exp1.licdn.com/dms/image/C4D03AQG7Oph-nHMJdQ/profile-displayphoto-shrink_200_200/0/1646846030443?e=1660176000&v=beta&t=TO5w-Fpy7_ve4_ixX4EWvqZDC1W_A0aqiszvCKT86jo', 'dan', 'hadar', 'dan'),
-	('7', 'Ron Solomon', 'http://localhost:5186', 'I appreciate that :)', '2022-05-30 17:18:59.000000', 'https://cdn.dribbble.com/users/2364329/screenshots/10481283/media/f013d5235bfcf1753d56cad154f11a67.jpg', 'dan', 'ron', 'dan'),
-	('8', 'Noam Cohen', 'http://localhost:5186', 'I\'m glad to hear so! :)', '2022-05-30 17:18:59.000000', 'https://scontent.fsdv3-1.fna.fbcdn.net/v/t1.6435-9/46498020_2215436798469037_9121585456583016448_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=pgAp58x8fUcAX_q7Geu&_nc_ht=scontent.fsdv3-1.fna&oh=00_AT-sSFofwqgtb84VAAwlKpm5m_LtaBWKsq04MI4ZqVYu_A&oe=62C19375', 'dan', 'noam', 'dan'),
-	('9', 'Dvir Pollak', 'http://localhost:5186', 'Always smile! :)', '2022-05-30 17:22:07.000000', 'https://media-exp1.licdn.com/dms/image/C4E03AQF6ZOFmppSpxg/profile-displayphoto-shrink_200_200/0/1646299616015?e=1660176000&v=beta&t=wnbQBn76v397qnw3fWuHpQD2ocgcI6pAAL06XXbsw_I', 'dan', 'dvir', 'dan'),
-	('c27b0253-38bd-43dc-8e0a-42cacaaee167', 'Noam Cohen', 'http://localhost:5186/', NULL, NULL, 'https://scontent.fsdv3-1.fna.fbcdn.net/v/t1.6435-9/46498020_2215436798469037_9121585456583016448_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=pgAp58x8fUcAX_q7Geu&_nc_ht=scontent.fsdv3-1.fna&oh=00_AT-sSFofwqgtb84VAAwlKpm5m_LtaBWKsq04MI4ZqVYu_A&oe=62C19375', 'ran', 'noam', 'ran');
+INSERT INTO `contacts` (`Id`, `ContactId`, `Name`, `Server`, `Last`, `Lastdate`, `Username`, `ProfileImage`, `OfUser`) VALUES
+	('1', 'ron', 'Ron Solomon', 'http://localhost:5186', 'Nice to meet you!', '2022-05-30 17:15:36.000000', 'noam', 'https://cdn.dribbble.com/users/2364329/screenshots/10481283/media/f013d5235bfcf1753d56cad154f11a67.jpg', 'noam'),
+	('10', 'idan', 'Idan Ben Ari', 'http://localhost:5186', 'I\'m glad you\'re coming :)', '2022-05-30 17:23:01.000000', 'dvir', 'https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/attachments/delivery/asset/54164cf6ae1512d8c0a2b1d8306c5a68-1649285147/wouterbult/draw-nice-style-cartoon-caricature-as-a-profile-picture.jpg', 'dan'),
+	('11', 'noam', 'Noam Cohen', 'http://localhost:5186', 'Nice to meet you! :)', '2022-05-30 18:06:40.000000', 'ron', 'https://scontent.fsdv3-1.fna.fbcdn.net/v/t1.6435-9/46498020_2215436798469037_9121585456583016448_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=pgAp58x8fUcAX_q7Geu&_nc_ht=scontent.fsdv3-1.fna&oh=00_AT-sSFofwqgtb84VAAwlKpm5m_LtaBWKsq04MI4ZqVYu_A&oe=62C19375', 'ron'),
+	('12', 'dvir', 'Dvir Pollak', 'http://localhost:5186', 'I\'m glad to hear that :)', '2022-05-30 18:07:25.000000', 'ron', 'https://media-exp1.licdn.com/dms/image/C4E03AQF6ZOFmppSpxg/profile-displayphoto-shrink_200_200/0/1646299616015?e=1660176000&v=beta&t=wnbQBn76v397qnw3fWuHpQD2ocgcI6pAAL06XXbsw_I', 'ron'),
+	('13', 'dan', 'Dan Cohen', 'http://localhost:5186', 'I appreciate that :)', '2022-05-30 18:08:04.000000', 'ron', 'https://avatoon.net/wp-content/uploads/2020/04/Gary-Avatar.png', 'ron'),
+	('14', 'idan', 'Idan Ben Ari', 'http://localhost:5186', 'I\'m glad to hear that :)', '2022-05-30 18:08:55.000000', 'ron', 'https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/attachments/delivery/asset/54164cf6ae1512d8c0a2b1d8306c5a68-1649285147/wouterbult/draw-nice-style-cartoon-caricature-as-a-profile-picture.jpg', 'ron'),
+	('15', 'hadar', 'Hadar Pinto', 'http://localhost:5186', 'I appreciate that :)', '2022-05-30 18:09:44.000000', 'ron', 'https://media-exp1.licdn.com/dms/image/C4D03AQG7Oph-nHMJdQ/profile-displayphoto-shrink_200_200/0/1646846030443?e=1660176000&v=beta&t=TO5w-Fpy7_ve4_ixX4EWvqZDC1W_A0aqiszvCKT86jo', 'ron'),
+	('16', 'ron', 'Ron Solomon', 'http://localhost:5186', 'I\'m glad to hear that :)', '2022-05-30 18:11:03.000000', 'idan', 'https://cdn.dribbble.com/users/2364329/screenshots/10481283/media/f013d5235bfcf1753d56cad154f11a67.jpg', 'idan'),
+	('17', 'noam', 'Noam Cohen', 'http://localhost:5186', 'I\'m happy to hear that! :)', '2022-05-30 18:11:33.000000', 'idan', 'https://scontent.fsdv3-1.fna.fbcdn.net/v/t1.6435-9/46498020_2215436798469037_9121585456583016448_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=pgAp58x8fUcAX_q7Geu&_nc_ht=scontent.fsdv3-1.fna&oh=00_AT-sSFofwqgtb84VAAwlKpm5m_LtaBWKsq04MI4ZqVYu_A&oe=62C19375', 'idan'),
+	('18', 'dan', 'Dan Cohen', 'http://localhost:5186', 'I\'m glad you\'re coming! :)', '2022-05-30 18:12:27.000000', 'idan', 'https://avatoon.net/wp-content/uploads/2020/04/Gary-Avatar.png', 'idan'),
+	('19', 'hadar', 'Hadar Pinto', 'http://localhost:5186', 'Have a nice day bro!', '2022-05-30 18:13:34.000000', 'idan', 'https://media-exp1.licdn.com/dms/image/C4D03AQG7Oph-nHMJdQ/profile-displayphoto-shrink_200_200/0/1646846030443?e=1660176000&v=beta&t=TO5w-Fpy7_ve4_ixX4EWvqZDC1W_A0aqiszvCKT86jo', 'idan'),
+	('2', 'hadar', 'Hadar Pinto', 'http://localhost:5186', 'man', '2022-06-18 22:20:09.889579', 'noam', 'https://media-exp1.licdn.com/dms/image/C4D03AQG7Oph-nHMJdQ/profile-displayphoto-shrink_200_200/0/1646846030443?e=1660176000&v=beta&t=TO5w-Fpy7_ve4_ixX4EWvqZDC1W_A0aqiszvCKT86jo', 'noam'),
+	('20', 'ron', 'Ron Solomon', 'http://localhost:5186', 'I\'m glad to hear that :)', '2022-05-30 18:15:18.000000', 'dvir', 'https://cdn.dribbble.com/users/2364329/screenshots/10481283/media/f013d5235bfcf1753d56cad154f11a67.jpg', 'dvir'),
+	('21', 'noam', 'Noam Cohen', 'http://localhost:5186', 'I Love it Noam! It\'s a very nice song! :)', '2022-05-30 18:16:01.000000', 'dvir', 'https://scontent.fsdv3-1.fna.fbcdn.net/v/t1.6435-9/46498020_2215436798469037_9121585456583016448_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=pgAp58x8fUcAX_q7Geu&_nc_ht=scontent.fsdv3-1.fna&oh=00_AT-sSFofwqgtb84VAAwlKpm5m_LtaBWKsq04MI4ZqVYu_A&oe=62C19375', 'dvir'),
+	('22', 'dan', 'Dan Cohen', 'http://localhost:5186', 'Always smile! :)', '2022-05-30 18:16:39.000000', 'dvir', 'https://avatoon.net/wp-content/uploads/2020/04/Gary-Avatar.png', 'dvir'),
+	('23', 'hadar', 'Hadar Pinto', 'http://localhost:5186', 'Always smile! :)', '2022-05-30 18:17:20.000000', 'dvir', 'https://media-exp1.licdn.com/dms/image/C4D03AQG7Oph-nHMJdQ/profile-displayphoto-shrink_200_200/0/1646846030443?e=1660176000&v=beta&t=TO5w-Fpy7_ve4_ixX4EWvqZDC1W_A0aqiszvCKT86jo', 'dvir'),
+	('24', 'ron', 'Ron Solomon', 'http://localhost:5186', 'Fine Ron, nice idea', '2022-05-30 18:18:20.000000', 'hadar', 'https://cdn.dribbble.com/users/2364329/screenshots/10481283/media/f013d5235bfcf1753d56cad154f11a67.jpg', 'hadar'),
+	('25', 'noam', 'Noam Cohen', 'http://localhost:5186', 'man', '2022-06-18 22:20:09.888252', 'hadar', 'https://scontent.fsdv3-1.fna.fbcdn.net/v/t1.6435-9/46498020_2215436798469037_9121585456583016448_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=pgAp58x8fUcAX_q7Geu&_nc_ht=scontent.fsdv3-1.fna&oh=00_AT-sSFofwqgtb84VAAwlKpm5m_LtaBWKsq04MI4ZqVYu_A&oe=62C19375', 'hadar'),
+	('26', 'dan', 'Dan Cohen', 'http://localhost:5186', 'I\'m glad you agreed!', '2022-05-30 18:19:52.000000', 'hadar', 'https://avatoon.net/wp-content/uploads/2020/04/Gary-Avatar.png', 'hadar'),
+	('27', 'idan', 'Idan Ben Ari', 'http://localhost:5186', 'Have a nice day bro!', '2022-05-30 18:20:34.000000', 'hadar', 'https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/attachments/delivery/asset/54164cf6ae1512d8c0a2b1d8306c5a68-1649285147/wouterbult/draw-nice-style-cartoon-caricature-as-a-profile-picture.jpg', 'hadar'),
+	('28', 'dvir', 'Dvir Pollak', 'http://localhost:5186', 'Always smile! :)', '2022-05-30 18:21:07.000000', 'hadar', 'https://media-exp1.licdn.com/dms/image/C4E03AQF6ZOFmppSpxg/profile-displayphoto-shrink_200_200/0/1646299616015?e=1660176000&v=beta&t=wnbQBn76v397qnw3fWuHpQD2ocgcI6pAAL06XXbsw_I', 'hadar'),
+	('3', 'dvir', 'Divr Pollak', 'http://localhost:5186', 'I Love it Noam! It\'s a very nice song! :)', '2022-05-30 17:16:35.000000', 'noam', 'https://media-exp1.licdn.com/dms/image/C4E03AQF6ZOFmppSpxg/profile-displayphoto-shrink_200_200/0/1646299616015?e=1660176000&v=beta&t=wnbQBn76v397qnw3fWuHpQD2ocgcI6pAAL06XXbsw_I', 'noam'),
+	('4', 'dan', 'Dan Cohen', 'http://localhost:5186', 'I\'m glad to hear so! :)', '2022-05-30 17:16:35.000000', 'noam', 'https://avatoon.net/wp-content/uploads/2020/04/Gary-Avatar.png', 'noam'),
+	('5', 'idan', 'Idan Ben Ari', 'http://localhost:5186', 'I\'m happy to hear that! :)', '2022-05-30 17:16:35.000000', 'noam', 'https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/attachments/delivery/asset/54164cf6ae1512d8c0a2b1d8306c5a68-1649285147/wouterbult/draw-nice-style-cartoon-caricature-as-a-profile-picture.jpg', 'noam'),
+	('5acc8415-f9a9-4fea-afd6-d39d11a2d9c4', 'ran', 'Ran Levi', 'localhost:5186', NULL, NULL, 'noam', 'https://i.etsystatic.com/28761236/c/2000/1589/0/76/il/d929f2/3162035768/il_340x270.3162035768_ci09.jpg', 'noam'),
+	('6', 'hadar', 'Hadar Pinto', 'http://localhost:5186', 'I think so too :)', '2022-05-30 17:18:59.000000', 'dan', 'https://media-exp1.licdn.com/dms/image/C4D03AQG7Oph-nHMJdQ/profile-displayphoto-shrink_200_200/0/1646846030443?e=1660176000&v=beta&t=TO5w-Fpy7_ve4_ixX4EWvqZDC1W_A0aqiszvCKT86jo', 'dan'),
+	('7', 'ron', 'Ron Solomon', 'http://localhost:5186', 'I appreciate that :)', '2022-05-30 17:18:59.000000', 'dan', 'https://cdn.dribbble.com/users/2364329/screenshots/10481283/media/f013d5235bfcf1753d56cad154f11a67.jpg', 'dan'),
+	('8', 'noam', 'Noam Cohen', 'http://localhost:5186', 'I\'m glad to hear so! :)', '2022-05-30 17:18:59.000000', 'dan', 'https://scontent.fsdv3-1.fna.fbcdn.net/v/t1.6435-9/46498020_2215436798469037_9121585456583016448_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=pgAp58x8fUcAX_q7Geu&_nc_ht=scontent.fsdv3-1.fna&oh=00_AT-sSFofwqgtb84VAAwlKpm5m_LtaBWKsq04MI4ZqVYu_A&oe=62C19375', 'dan'),
+	('9', 'dvir', 'Dvir Pollak', 'http://localhost:5186', 'Always smile! :)', '2022-05-30 17:22:07.000000', 'dan', 'https://media-exp1.licdn.com/dms/image/C4E03AQF6ZOFmppSpxg/profile-displayphoto-shrink_200_200/0/1646299616015?e=1660176000&v=beta&t=wnbQBn76v397qnw3fWuHpQD2ocgcI6pAAL06XXbsw_I', 'dan'),
+	('c27b0253-38bd-43dc-8e0a-42cacaaee167', 'noam', 'Noam Cohen', 'http://localhost:5186/', NULL, NULL, 'ran', 'https://scontent.fsdv3-1.fna.fbcdn.net/v/t1.6435-9/46498020_2215436798469037_9121585456583016448_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=pgAp58x8fUcAX_q7Geu&_nc_ht=scontent.fsdv3-1.fna&oh=00_AT-sSFofwqgtb84VAAwlKpm5m_LtaBWKsq04MI4ZqVYu_A&oe=62C19375', 'ran');
 
 -- Dumping structure for table pomelodb.messages
 CREATE TABLE IF NOT EXISTS `messages` (
@@ -163,61 +165,62 @@ CREATE TABLE IF NOT EXISTS `messages` (
   `WrittenIn` datetime(6) NOT NULL,
   `FileName` longtext DEFAULT NULL,
   `Sent` tinyint(1) NOT NULL,
-  `ChatId` int(11) NOT NULL DEFAULT 0,
+  `ChatId` int(11) NOT NULL,
   `Username1` varchar(255) DEFAULT NULL,
+  `Receiver` longtext DEFAULT NULL,
   PRIMARY KEY (`Id`),
-  KEY `IX_Messages_Username1` (`Username1`),
   KEY `IX_Messages_ChatId` (`ChatId`),
+  KEY `IX_Messages_Username1` (`Username1`),
   CONSTRAINT `FK_Messages_Chats_ChatId` FOREIGN KEY (`ChatId`) REFERENCES `chats` (`Id`) ON DELETE CASCADE,
   CONSTRAINT `FK_Messages_Users_Username1` FOREIGN KEY (`Username1`) REFERENCES `users` (`Username`)
-) ENGINE=InnoDB AUTO_INCREMENT=207 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb4;
 
 -- Dumping data for table pomelodb.messages: ~44 rows (approximately)
-INSERT INTO `messages` (`Id`, `Type`, `Text`, `Username`, `WrittenIn`, `FileName`, `Sent`, `ChatId`, `Username1`) VALUES
-	(1, 'text', 'yesh!! Thanks :)', 'noam', '2022-06-01 02:05:11.325633', '', 1, 24, NULL),
-	(2, 'text', 'hahahahha', 'noam', '2022-06-01 02:05:15.252798', '', 1, 24, NULL),
-	(3, 'text', 'blo', 'noam', '2022-06-01 02:03:59.620933', '', 1, 16, NULL),
-	(4, 'text', 'dsadsadsa', 'noam', '2022-06-01 01:33:12.007215', '', 1, 1, NULL),
-	(5, 'text', 'I\'m good. Thanks Ron!', 'dvir', '2022-05-30 16:27:58.000000', '', 0, 2, NULL),
-	(6, 'text', 'I\'m glad to hear that :)', 'ron', '2022-05-30 16:28:42.000000', '', 1, 2, NULL),
-	(7, 'text', 'Dan, let\'s go to the mall', 'ron', '2022-05-30 16:31:47.000000', '', 1, 4, NULL),
-	(8, 'text', 'Ok bro. Nice idea Ron', 'dan', '2022-05-30 16:32:26.000000', '', 0, 4, NULL),
-	(9, 'text', 'I appreciate that :)', 'ron', '2022-05-30 16:33:08.000000', NULL, 1, 4, NULL),
-	(10, 'text', 'Idan, how was your semester', 'ron', '2022-05-30 16:34:50.000000', ' ', 1, 5, NULL),
-	(11, 'text', 'It was GOOD. Thanks ron.', 'idan', '2022-05-30 16:36:22.000000', NULL, 0, 5, NULL),
-	(12, 'text', 'I\'m glad to hear that :)', 'ron', '2022-05-30 16:42:12.000000', NULL, 1, 5, NULL),
-	(13, 'text', 'Hadar, let\'s go to eat pizza', 'ron', '2022-05-30 16:43:44.000000', NULL, 1, 6, NULL),
-	(14, 'text', 'Fine Ron, nice idea', 'hadar', '2022-05-30 16:44:23.000000', NULL, 0, 6, NULL),
-	(15, 'text', 'I appreciate that', 'ron', '2022-05-30 16:45:00.000000', NULL, 1, 6, NULL),
-	(16, 'text', 'Hey Dvir, how are you?', 'noam', '2022-05-30 16:47:37.000000', NULL, 1, 7, NULL),
-	(17, 'text', 'I\'m great. Thanks Noam!', 'dvir', '2022-05-30 16:48:23.000000', NULL, 0, 7, NULL),
-	(18, 'text', 'I Love it Noam! It\'s a nice song! :)', 'dvir', '2022-05-30 16:49:12.000000', NULL, 0, 7, NULL),
-	(19, 'text', 'Hey Dan, how are you?', 'noam', '2022-05-30 16:53:12.000000', NULL, 1, 8, NULL),
-	(20, 'text', 'I\'m great. Thanks!', 'dan', '2022-05-30 16:53:50.000000', NULL, 0, 8, NULL),
-	(21, 'text', 'I\'m glad to hear so', 'noam', '2022-05-30 16:54:47.000000', NULL, 1, 8, NULL),
-	(22, 'text', 'Hey, how are you?', 'noam', '2022-05-30 16:56:02.000000', NULL, 1, 9, NULL),
-	(23, 'text', 'I\'m great. Thanks!', 'dan', '2022-05-30 16:56:02.000000', NULL, 0, 9, NULL),
-	(24, 'text', 'I\'m happy to hear that! :)', 'noam', '2022-09-30 16:56:02.000000', NULL, 1, 9, NULL),
-	(25, 'text', 'Hadar, let\'s go to eat pizza', 'noam', '2022-05-30 16:56:02.000000', NULL, 1, 10, NULL),
-	(26, 'text', 'Fine, nice idea Noam', 'hadar', '2022-05-30 16:56:02.000000', NULL, 0, 10, NULL),
-	(27, 'text', 'I think so too :)', 'noam', '2022-05-30 16:56:02.000000', NULL, 1, 10, NULL),
-	(28, 'text', 'Hey Dvir, how are you?', 'dan', '2022-05-30 16:56:02.000000', NULL, 1, 11, NULL),
-	(29, 'text', 'I\'m great Dan. Thanks!', 'dvir', '2022-05-30 16:56:02.000000', NULL, 0, 11, NULL),
-	(30, 'text', 'Always smile! :)', 'dan', '2022-05-30 16:56:02.000000', NULL, 1, 11, NULL),
-	(31, 'text', 'Idan lets\' go to the mall', 'dan', '2022-05-30 16:56:02.000000', NULL, 1, 12, NULL),
-	(32, 'text', 'Ok bro. Nice idea Dan', 'idan', '2022-05-30 16:56:02.000000', NULL, 0, 12, NULL),
-	(33, 'text', 'I\'m glad you\'re coming', 'dan', '2022-05-30 16:56:02.000000', NULL, 1, 12, NULL),
-	(34, 'text', 'Hadar, let\'s go to eat pizza', 'dan', '2022-05-30 16:56:02.000000', NULL, 1, 13, NULL),
-	(35, 'text', 'Find Dan. Nice idea!', 'hadar', '2022-05-30 16:56:02.000000', NULL, 0, 13, NULL),
-	(36, 'text', 'I\'m glad you agreed!', 'dan', '2022-05-30 16:56:02.000000', NULL, 1, 13, NULL),
-	(37, 'text', 'Hey, how are you?', 'idan', '2022-05-30 16:56:02.000000', NULL, 1, 14, NULL),
-	(38, 'text', 'I\'m great. Thanks :)', 'hadar', '2022-05-30 16:56:02.000000', NULL, 0, 14, NULL),
-	(39, 'text', 'Have a nice day bro! :)', 'idan', '2022-05-30 16:56:02.000000', NULL, 1, 14, NULL),
-	(40, 'text', 'Hey, how are you?', 'hadar', '2022-05-30 16:56:02.000000', NULL, 1, 15, NULL),
-	(41, 'text', 'I\'m great. thanks!', 'dvir', '2022-05-30 16:56:02.000000', NULL, 0, 15, NULL),
-	(42, 'text', 'Have a nice day Dvir! :)', 'hadar', '2022-05-30 16:56:02.000000', NULL, 1, 15, NULL),
-	(43, 'text', 'aaaa', 'noam', '2022-05-31 01:46:33.529218', NULL, 1, 10, NULL),
-	(44, 'text', 'dddd', 'noam', '2022-05-31 23:25:33.108102', NULL, 1, 10, NULL);
+INSERT INTO `messages` (`Id`, `Type`, `Text`, `Username`, `WrittenIn`, `FileName`, `Sent`, `ChatId`, `Username1`, `Receiver`) VALUES
+	(1, 'text', 'yesh!! Thanks :)', 'noam', '2022-06-01 02:05:11.325633', '', 1, 24, NULL, 'noam'),
+	(2, 'text', 'hahahahha', 'noam', '2022-06-01 02:05:15.252798', '', 1, 24, NULL, 'noam'),
+	(3, 'text', 'Ok', 'noam', '2022-06-01 02:03:59.620933', '', 1, 16, NULL, 'ran'),
+	(4, 'text', 'dsadsadsa', 'noam', '2022-06-01 01:33:12.007215', '', 1, 1, NULL, 'ron'),
+	(5, 'text', 'I\'m good. Thanks Ron!', 'dvir', '2022-05-30 16:27:58.000000', '', 0, 2, NULL, 'ron'),
+	(6, 'text', 'I\'m glad to hear that :)', 'ron', '2022-05-30 16:28:42.000000', '', 1, 2, NULL, 'dvir'),
+	(7, 'text', 'Dan, let\'s go to the mall', 'ron', '2022-05-30 16:31:47.000000', '', 1, 4, NULL, 'dan'),
+	(8, 'text', 'Ok bro. Nice idea Ron', 'dan', '2022-05-30 16:32:26.000000', '', 0, 4, NULL, 'ron'),
+	(9, 'text', 'I appreciate that :)', 'ron', '2022-05-30 16:33:08.000000', NULL, 1, 4, NULL, 'dan'),
+	(10, 'text', 'Idan, how was your semester', 'ron', '2022-05-30 16:34:50.000000', ' ', 1, 5, NULL, 'idan'),
+	(11, 'text', 'It was GOOD. Thanks ron.', 'idan', '2022-05-30 16:36:22.000000', NULL, 0, 5, NULL, 'ron'),
+	(12, 'text', 'I\'m glad to hear that :)', 'ron', '2022-05-30 16:42:12.000000', NULL, 1, 5, NULL, 'idan'),
+	(13, 'text', 'Hadar, let\'s go to eat pizza', 'ron', '2022-05-30 16:43:44.000000', NULL, 1, 6, NULL, 'hadar'),
+	(14, 'text', 'Fine Ron, nice idea', 'hadar', '2022-05-30 16:44:23.000000', NULL, 0, 6, NULL, 'ron'),
+	(15, 'text', 'I appreciate that', 'ron', '2022-05-30 16:45:00.000000', NULL, 1, 6, NULL, 'hadar'),
+	(16, 'text', 'Hey Dvir, how are you?', 'noam', '2022-05-30 16:47:37.000000', NULL, 1, 7, NULL, 'dvir'),
+	(17, 'text', 'I\'m great. Thanks Noam!', 'dvir', '2022-05-30 16:48:23.000000', NULL, 0, 7, NULL, 'noam'),
+	(18, 'text', 'I Love it Noam! It\'s a nice song! :)', 'dvir', '2022-05-30 16:49:12.000000', NULL, 0, 7, NULL, 'noam'),
+	(19, 'text', 'Hey Dan, how are you?', 'noam', '2022-05-30 16:53:12.000000', NULL, 1, 8, NULL, 'dan'),
+	(20, 'text', 'I\'m great. Thanks!', 'dan', '2022-05-30 16:53:50.000000', NULL, 0, 8, NULL, 'noam'),
+	(21, 'text', 'I\'m glad to hear so', 'noam', '2022-05-30 16:54:47.000000', NULL, 1, 8, NULL, 'dan'),
+	(22, 'text', 'Hey, how are you?', 'noam', '2022-05-30 16:56:02.000000', NULL, 1, 9, NULL, 'idan'),
+	(23, 'text', 'I\'m great. Thanks!', 'dan', '2022-05-30 16:56:02.000000', NULL, 0, 9, NULL, 'idan'),
+	(24, 'text', 'I\'m happy to hear that! :)', 'noam', '2022-09-30 16:56:02.000000', NULL, 1, 9, NULL, 'idan'),
+	(25, 'text', 'Hadar, let\'s go to eat pizza', 'noam', '2022-05-30 16:56:02.000000', NULL, 1, 10, NULL, 'hadar'),
+	(26, 'text', 'Fine, nice idea Noam', 'hadar', '2022-05-30 16:56:02.000000', NULL, 0, 10, NULL, 'noam'),
+	(27, 'text', 'I think so too :)', 'noam', '2022-05-30 16:56:02.000000', NULL, 1, 10, NULL, 'hadar'),
+	(28, 'text', 'Hey Dvir, how are you?', 'dan', '2022-05-30 16:56:02.000000', NULL, 1, 11, NULL, 'dan'),
+	(29, 'text', 'I\'m great Dan. Thanks!', 'dvir', '2022-05-30 16:56:02.000000', NULL, 0, 11, NULL, 'dan'),
+	(30, 'text', 'Always smile! :)', 'dan', '2022-05-30 16:56:02.000000', NULL, 1, 11, NULL, 'dan'),
+	(31, 'text', 'Idan lets\' go to the mall', 'dan', '2022-05-30 16:56:02.000000', NULL, 1, 12, NULL, 'idan'),
+	(32, 'text', 'Ok bro. Nice idea Dan', 'idan', '2022-05-30 16:56:02.000000', NULL, 0, 12, NULL, 'idan'),
+	(33, 'text', 'I\'m glad you\'re coming', 'dan', '2022-05-30 16:56:02.000000', NULL, 1, 12, NULL, 'idan'),
+	(34, 'text', 'Hadar, let\'s go to eat pizza', 'dan', '2022-05-30 16:56:02.000000', NULL, 1, 13, NULL, 'hadar'),
+	(35, 'text', 'Find Dan. Nice idea!', 'hadar', '2022-05-30 16:56:02.000000', NULL, 0, 13, NULL, 'dan'),
+	(36, 'text', 'I\'m glad you agreed!', 'dan', '2022-05-30 16:56:02.000000', NULL, 1, 13, NULL, 'hadar'),
+	(37, 'text', 'Hey, how are you?', 'idan', '2022-05-30 16:56:02.000000', NULL, 1, 14, NULL, 'hadar'),
+	(38, 'text', 'I\'m great. Thanks :)', 'hadar', '2022-05-30 16:56:02.000000', NULL, 0, 14, NULL, 'idan'),
+	(39, 'text', 'Have a nice day bro! :)', 'idan', '2022-05-30 16:56:02.000000', NULL, 1, 14, NULL, 'hadar'),
+	(40, 'text', 'Hey, how are you?', 'hadar', '2022-05-30 16:56:02.000000', NULL, 1, 15, NULL, 'dvir'),
+	(41, 'text', 'I\'m great. thanks!', 'dvir', '2022-05-30 16:56:02.000000', NULL, 0, 15, NULL, 'hadar'),
+	(42, 'text', 'Have a nice day Dvir! :)', 'hadar', '2022-05-30 16:56:02.000000', NULL, 1, 15, NULL, 'dvir'),
+	(43, 'text', 'It is a nice day today', 'noam', '2022-05-31 01:46:33.529218', NULL, 1, 10, NULL, 'hadar'),
+	(44, 'text', 'Ha ha, Nice joke :)', 'noam', '2022-05-31 23:25:33.108102', NULL, 1, 10, NULL, 'hadar');
 
 -- Dumping structure for table pomelodb.users
 CREATE TABLE IF NOT EXISTS `users` (
@@ -229,7 +232,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`Username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table pomelodb.users: ~10 rows (approximately)
+-- Dumping data for table pomelodb.users: ~11 rows (approximately)
 INSERT INTO `users` (`Username`, `Nickname`, `Password`, `ProfileImage`, `Server`) VALUES
 	('dan', 'Dan Cohen', 'Np1234', 'https://avatoon.net/wp-content/uploads/2020/04/Gary-Avatar.png', 'http://localhost:5186'),
 	('dvir', 'Dvir Pollak', 'Np1234', 'https://media-exp1.licdn.com/dms/image/C4E03AQF6ZOFmppSpxg/profile-displayphoto-shrink_200_200/0/1646299616015?e=1660176000&v=beta&t=wnbQBn76v397qnw3fWuHpQD2ocgcI6pAAL06XXbsw_I', 'http://localhost:5186'),

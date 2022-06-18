@@ -11,12 +11,13 @@ namespace AspWebApi.Models.Contacts {
         public bool Sent { get; set; }
 
         public string Type { get; set; }
+        public string Receiver { get; set; }
         public string SenderUsername { get; set; }
 
         public int ChatId { get; set; }
 
         public string FileName { get; set; }
-        public MessageResponse(int id, string content, DateTime? createdDate, bool sent, string senderUsername, int chatId)
+        public MessageResponse(int id, string content, DateTime? createdDate, bool sent, string senderUsername, int chatId, string receiver)
         {
             Id = id;
             Content = content;
@@ -36,7 +37,7 @@ namespace AspWebApi.Models.Contacts {
             SenderUsername = senderUsername;
             FileName = "";
             ChatId = chatId;
- 
+            Receiver = receiver;
         }
 
         public MessageResponse()

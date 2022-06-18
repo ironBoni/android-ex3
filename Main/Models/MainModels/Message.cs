@@ -23,7 +23,7 @@ namespace Models {
 
         [Required(ErrorMessage = "Please enter when the message was written in")]
         public DateTime WrittenIn { get; set; }
-
+        public string Receiver { get; set; }
         public string FileName { get; set; }
         public bool Sent { get; set; }
         [ForeignKey("ChatId")]
