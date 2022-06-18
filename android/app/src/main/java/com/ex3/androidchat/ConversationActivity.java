@@ -24,7 +24,6 @@ import com.ex3.androidchat.database.MessageDB;
 import com.ex3.androidchat.database.MessageDao;
 import com.ex3.androidchat.events.IEventListener;
 import com.ex3.androidchat.models.Chat;
-import com.ex3.androidchat.models.Contact;
 import com.ex3.androidchat.models.Utils;
 import com.ex3.androidchat.models.contacts.GetUserDetailsResponse;
 import com.ex3.androidchat.models.contacts.MessageResponse;
@@ -34,7 +33,6 @@ import com.ex3.androidchat.services.GetByAsyncTask;
 import com.ex3.androidchat.services.UserService;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -257,13 +255,13 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
         if (messageDao.isUserExits(friendId).size() == 0) {
             getMessagesForFirstTime(friendId, recyclerView);
         } else { //user exits, just pull from data base.
-            PullMessagesFromDao(friendId, recyclerView);
+            pullMessagesFromDao(friendId, recyclerView);
         }
 
 
     }
 
-    private void PullMessagesFromDao(String friendId, RecyclerView recyclerView) {
+    private void pullMessagesFromDao(String friendId, RecyclerView recyclerView) {
         try {
             int chatId = messageDao.isUserExits(friendId).get(0).chatId;
             continueOnCreateOnResponse((ArrayList<MessageResponse>) messageDao.getMessagesByChatId(chatId), recyclerView, friendId);

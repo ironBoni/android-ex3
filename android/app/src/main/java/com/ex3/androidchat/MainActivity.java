@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
     ChatService chatService = new ChatService();
     Chat conversation;
     ArrayList<MessageResponse> messages;
+    MessageDao messageDao;
 
     private void sendMessageToForeignServer(String friendId, String msg, String hisServer) {
         hisServer = Utils.getAndroidServer(hisServer);
@@ -260,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
             }
         });
         //in the start, or when adding user
-        if ( userContact(contacts)) {
+        if (userContact(contacts)) {
             contactDao.deleteAll();
 
             Call<List<Contact>> callContacts = webServiceAPI.getContacts(Client.getToken());
@@ -303,10 +304,10 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
 
     private boolean userContact(ArrayList<Contact> contactsFinal) {
         ArrayList<Contact> listOfContacts = (ArrayList<Contact>) contactDao.index();
-        if(listOfContacts.size() == 0 ) return true;
-        for(Contact c : listOfContacts) {
-            if(c.ofUser == null) return true;
-            if(!c.ofUser.equals(Client.getUserId())) {
+        if (listOfContacts.size() == 0) return true;
+        for (Contact c : listOfContacts) {
+            if (c.ofUser == null) return true;
+            if (!c.ofUser.equals(Client.getUserId())) {
                 return true;
             } else {
                 contactsFinal.add(c);
@@ -332,6 +333,8 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
     }
 
     private void beginConversationLandScape(String friendId, String nickname, String image) {
+        messageDao = MessageDB.insert(this).messageDao();
+
         TextView contactNickname = findViewById(R.id.contactNicknameConv);
         contactNickname.setText(nickname);
         ImageView view = findViewById(R.id.user_imageConv);
@@ -350,6 +353,88 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
             @Override
             public void onResponse(Call<ArrayList<MessageResponse>> call, Response<ArrayList<MessageResponse>> response) {
                 continueOnCreateOnResponse(response.body(), Client.getFriendId());
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<MessageResponse>> call, Throwable t) {
+                Log.e("retrofit", t.getMessage());
+            }
+        });
+
+        //ROOM for messages
+        if (messageDao.isUserExits(friendId).size() == 0) {
+            getMessagesForFirstTime(friendId, recyclerView);
+        } else { //user exits, just pull from data base.
+            pullMessagesFromDao(friendId, recyclerView);
+        }
+    }
+
+    private void continueOnCreateOnResponseLand(ArrayList<MessageResponse> allMessages, RecyclerView recyclerView, String friendId) {
+        try {
+            messages = allMessages;
+            ConversationAdapter adapter = ((ConversationAdapter) recyclerView.getAdapter());
+            adapter.setMessages(messages);
+            recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+
+            btnSendConv = findViewById(R.id.btnSendConv);
+            btnSendConv.setOnClickListener(v -> sendMessage(friendId, adapter));
+
+            EditText txtMsg = (EditText) findViewById(R.id.txtEnterMsg);
+            txtMsg.setOnKeyListener((v, keyCode, event) -> {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    sendMessage(friendId, adapter);
+                    return true;
+                }
+                return false;
+            });
+        } catch(Exception e) {
+            Log.e("MainActivity", e.getMessage());
+        }
+    }
+
+    private void pullMessagesFromDao(String friendId, RecyclerView recyclerView) {
+        try {
+            int chatId = messageDao.isUserExits(friendId).get(0).chatId;
+            continueOnCreateOnResponseLand((ArrayList<MessageResponse>) messageDao.getMessagesByChatId(chatId), recyclerView, friendId);
+        } catch (Exception ex) {
+            Log.d("Dao", "user doesn't have messages");
+            Call<ArrayList<MessageResponse>> allMessages = webServiceAPI.getMessagesById(friendId, Client.getToken());
+            allMessages.enqueue(new Callback<ArrayList<MessageResponse>>() {
+                @Override
+                public void onResponse(Call<ArrayList<MessageResponse>> call, Response<ArrayList<MessageResponse>> response) {
+                    if (response.body() == null) {
+                        return;
+                    }
+                    continueOnCreateOnResponseLand(response.body(), recyclerView, friendId);
+                }
+
+                @Override
+                public void onFailure(Call<ArrayList<MessageResponse>> call, Throwable t) {
+                    Log.d("Conversation", t.getMessage());
+                }
+            });
+        }
+    }
+
+    private void getMessagesForFirstTime(String friendId, RecyclerView recyclerView) {
+        Call<ArrayList<MessageResponse>> allMessages = webServiceAPI.getMessagesById(friendId, Client.getToken());
+        allMessages.enqueue(new Callback<ArrayList<MessageResponse>>() {
+            @Override
+            public void onResponse(Call<ArrayList<MessageResponse>> call, Response<ArrayList<MessageResponse>> response) {
+                if (response.body() == null) {
+                    return;
+                }
+
+                messageDao.insertList(new ArrayList<>(response.body()));
+                // get chatId
+                try {
+                    int chatId = messageDao.isUserExits(friendId).get(0).chatId;
+                    continueOnCreateOnResponseLand((ArrayList<MessageResponse>) messageDao.getMessagesByChatId(chatId), recyclerView, friendId);
+                } catch (Exception exception) {
+                    Log.d("Dao", "user doesn't have messages");
+                    continueOnCreateOnResponseLand(response.body(), recyclerView, friendId);
+                }
             }
 
             @Override
