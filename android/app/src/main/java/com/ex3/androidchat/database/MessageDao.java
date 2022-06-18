@@ -23,6 +23,10 @@ public interface MessageDao {
     List<MessageResponse> isUserExits(String username);
     @Query("SELECT * FROM messageresponse WHERE chatId=:chatId")
     List<MessageResponse> getMessagesByChatId(int chatId);
+
+    @Query ("SELECT * FROM messageresponse WHERE (senderUsername=:username OR senderUsername=:friendId) AND (receiver=:username OR receiver=:friendId)")
+    List<MessageResponse> getMessagesBySenderReceiver(String username, String friendId);
+
     @Insert
     void insert(MessageResponse message);
     @Insert

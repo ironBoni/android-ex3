@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
 
         int chatId;
         try {
-            chatId = messageDao.isUserExits(friendId).get(0).chatId;
+            chatId = messageDao.getMessagesBySenderReceiver(Client.getUserId(), friendId).get(0).chatId;
         } catch (Exception ex) {
             Chat chat = chatService.getChatByParticipants(friendId, Client.getUserId());
             if (chat != null) {
@@ -388,7 +388,8 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
         }
 
         //ROOM for messages
-        if (messageDao.isUserExits(friendId).size() == 0) {
+        List<MessageResponse> msgs = messageDao.getMessagesBySenderReceiver(Client.getUserId(), friendId);
+        if (msgs == null || msgs.size() == 0) {
             getMessagesForFirstTime(friendId, recyclerView);
         } else { //user exits, just pull from data base.
             pullMessagesFromDao(friendId, recyclerView);
@@ -428,7 +429,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
 
     private void pullMessagesFromDao(String friendId, RecyclerView recyclerView) {
         try {
-            int chatId = messageDao.isUserExits(friendId).get(0).chatId;
+            int chatId = messageDao.getMessagesBySenderReceiver(Client.getUserId(), friendId).get(0).chatId;
             continueOnCreateOnResponseLand((ArrayList<MessageResponse>) messageDao.getMessagesByChatId(chatId), recyclerView, friendId);
         } catch (Exception ex) {
             Log.d("Dao", "user doesn't have messages");
@@ -462,7 +463,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
                 messageDao.insertList(new ArrayList<>(response.body()));
                 // get chatId
                 try {
-                    int chatId = messageDao.isUserExits(friendId).get(0).chatId;
+                    int chatId = messageDao.getMessagesBySenderReceiver(Client.getUserId(), friendId).get(0).chatId;
                     continueOnCreateOnResponseLand((ArrayList<MessageResponse>) messageDao.getMessagesByChatId(chatId), recyclerView, friendId);
                 } catch (Exception exception) {
                     Log.d("Dao", "user doesn't have messages");

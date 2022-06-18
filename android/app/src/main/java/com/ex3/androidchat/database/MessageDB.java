@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-@Database(entities = {MessageResponse.class}, version = 5 , exportSchema = false)
+@Database(entities = {MessageResponse.class}, version = 6 , exportSchema = false)
 public abstract class MessageDB extends RoomDatabase {
 //    private static HashMap<String, MessageDB> messageDB = new HashMap<>();
     private static MessageDB messageDB = null;
@@ -24,6 +24,7 @@ public abstract class MessageDB extends RoomDatabase {
                             context.getApplicationContext(),
                             MessageDB.class, "messageDB")
                     .allowMainThreadQueries()
+                    .fallbackToDestructiveMigration()
                     .build();
         }
         return messageDB;

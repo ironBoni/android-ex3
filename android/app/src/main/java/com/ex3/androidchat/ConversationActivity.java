@@ -35,6 +35,7 @@ import com.ex3.androidchat.services.UserService;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -137,7 +138,7 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
 
         int chatId;
         try {
-            chatId = messageDao.isUserExits(friendId).get(0).chatId;
+            chatId = messageDao.getMessagesBySenderReceiver(Client.getUserId(), friendId).get(0).chatId;
         } catch (Exception ex) {
             Chat chat = service.getChatByParticipants(friendId, Client.getUserId());
             if (chat != null) {
@@ -259,7 +260,8 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
         }
 
         //ROOM for messages
-        if (messageDao.isUserExits(friendId).size() == 0) {
+        List<MessageResponse> msgs = messageDao.getMessagesBySenderReceiver(Client.getUserId(), friendId);
+        if (msgs == null || msgs.size() == 0) {
             getMessagesForFirstTime(friendId, recyclerView);
         } else { //user exits, just pull from data base.
             pullMessagesFromDao(friendId, recyclerView);
@@ -270,7 +272,7 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
 
     private void pullMessagesFromDao(String friendId, RecyclerView recyclerView) {
         try {
-            int chatId = messageDao.isUserExits(friendId).get(0).chatId;
+            int chatId = messageDao.getMessagesBySenderReceiver(Client.getUserId(), friendId).get(0).chatId;
             continueOnCreateOnResponse((ArrayList<MessageResponse>) messageDao.getMessagesByChatId(chatId), recyclerView, friendId);
         } catch (Exception ex) {
             Log.d("Dao", "user doesn't have messages");
@@ -308,7 +310,7 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
                 }
                 // get chatId
                 try {
-                    int chatId = messageDao.isUserExits(friendId).get(0).chatId;
+                    int chatId = messageDao.getMessagesBySenderReceiver(Client.getUserId(), friendId).get(0).chatId;
                     continueOnCreateOnResponse((ArrayList<MessageResponse>) messageDao.getMessagesByChatId(chatId), recyclerView, friendId);
                 } catch (Exception exception) {
                     Log.d("Dao", "user doesn't have messages");

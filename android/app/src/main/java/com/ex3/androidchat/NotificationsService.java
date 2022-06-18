@@ -65,7 +65,7 @@ public class NotificationsService extends FirebaseMessagingService {
             try {
                 try {
                     MessageDao messageDao = MessageDB.insert(this).messageDao();
-                    chatId = messageDao.isUserExits(fromUserId).get(0).chatId;
+                    chatId = messageDao.getMessagesBySenderReceiver(Client.getUserId(), fromUserId).get(0).chatId;
                 } catch (Exception ex) {
                     Chat chat = service.getChatByParticipants(fromUserId, Client.getUserId());
                     if (chat != null) {
@@ -105,7 +105,7 @@ public class NotificationsService extends FirebaseMessagingService {
             MessageDao messageDao = MessageDB.insert(this).messageDao();
             int chatId;
             try {
-                chatId = messageDao.isUserExits(friendId).get(0).chatId;
+                chatId = messageDao.getMessagesBySenderReceiver(Client.getUserId(), friendId).get(0).chatId;
             } catch (Exception ex) {
                 Chat chat = service.getChatByParticipants(friendId, Client.getUserId());
                 if (chat != null) {
