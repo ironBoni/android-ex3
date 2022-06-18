@@ -47,7 +47,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -138,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
         String msg = txtMsg.getText().toString();
         contactDao.updateLast(msg, friendId);
         adapter.addNewMessage(msg);
+        updateContactLastMsg(friendId, msg);
         txtMsg.setText("");
         adapter.notifyDataSetChanged();
         /////////////////////////////////////
@@ -160,6 +163,25 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
         RecyclerView recyclerViewConv = findViewById(R.id.messagesViewConv);
         if (recyclerViewConv != null)
             recyclerViewConv.scrollToPosition(adapter.getItemCount() - 1);
+    }
+
+    private void updateContactLastMsg(String fromUserId, String content) {
+        if(NotificationsService.contactsAdapter == null) return;
+
+        ArrayList<Contact> oldContacts = NotificationsService.contactsAdapter.getContacts();
+        if(oldContacts == null) return;
+        for(Contact c : oldContacts) {
+            if(c.getContactId().equals(fromUserId)) {
+                c.last = content;
+                java.util.Date date = new Date();
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                SimpleDateFormat formatterStr = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                c.lastdate = formatter.format(date);
+                c.lastdateStr = formatterStr.format(date);
+                break;
+            }
+        }
+        NotificationsService.contactsAdapter.setContacts(oldContacts);
     }
 
     private void continueOnCreateOnResponse(ArrayList<MessageResponse> allMessages, String friendId) {
