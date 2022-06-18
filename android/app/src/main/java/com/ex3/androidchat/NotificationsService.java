@@ -59,14 +59,33 @@ public class NotificationsService extends FirebaseMessagingService {
                     maxId = m.getId();
                 }
             }
-            messages.add(new MessageResponse(maxId + 1, content, fromUserId));
+
+            ChatService service = new ChatService();
+            int chatId = 1;
+            try {
+                try {
+                    MessageDao messageDao = MessageDB.insert(this).messageDao();
+                    chatId = messageDao.isUserExits(fromUserId).get(0).chatId;
+                } catch (Exception ex) {
+                    Chat chat = service.getChatByParticipants(fromUserId, Client.getUserId());
+                    if (chat != null) {
+                        chatId = chat.getId();
+                    } else {
+                        chatId = service.getAll().get(0).id;
+                    }
+                }
+            } catch(Exception ex) {
+                Log.e("error", ex.toString());
+            }
+
+            messages.add(new MessageResponse(fromUserId, content, Client.getUserId(), chatId));
 
             // don't update if the notification is about my message
             if (fromUserId.equals(Client.getUserId()))
                 return;
-            if (Client.conversationActivity != null) {
+            if (Client.conversationActivity != null && Client.getFriendId().equals(fromUserId)) {
                 Client.conversationActivity.runOnUiThread(() -> conversationAdapter.setMessages(messages));
-            } else if (Client.mainActivity != null) {
+            } else if (Client.mainActivity != null && Client.getFriendId().equals(fromUserId)) {
                 Client.mainActivity.runOnUiThread(() -> conversationAdapter.setMessages(messages));
             }
 
@@ -95,7 +114,7 @@ public class NotificationsService extends FirebaseMessagingService {
                     chatId = service.getAll().get(0).id;
                 }
             }
-            messageDao.insert(new MessageResponse(Client.getUserId(), msg, friendId, chatId));
+            messageDao.insert(new MessageResponse(friendId, msg, Client.getUserId(), chatId));
 
         } catch (Exception ex) {
             Log.d("Notification", ex.toString());
