@@ -1,20 +1,24 @@
 To open the Server's code - 
 Clone and **Go to the Main folder, and open Main.sln**.
 
-**Database - Migrations, Load Data**
-1. Delete the Migrations folder in the AspWebApi project.
-2. run in the Packange Manager Console the commands: 
+**Database - Migrations, Load Data**<br/>
+(Install MariaDB with the password Np1239, the password is defined in ItemsContext.cs). <br/>
+
+Please make sure that "pomelodb" doesn't exist as database in the MariaDB (Otherwise, drop it). <br/>
+It can be done via HeidiSQL (as mentioned below).
+
+1. run in the Packange Manager Console the commands: 
   * add-migration init <br/>
   * update-database <br/>
   
-3. Load data - Open HeidiSQL (in Windows):
+2. Load data - Open HeidiSQL (in Windows):
   * username: root
   * password: Np1239
   * port: 3306
   * Click Open
   * Go to the Database folder (in the repo)
   * In the HeidiSQL - Click on File -> Run SQL File 
-  * Choose the file in Database\Final_DeleteAndInsert.sql
+  * Choose the file in Database\Final_DeleteAndInsert.sql (In the popup, click Yes).
   
   Now all the data is loaded to the DB.
 <br/>
@@ -65,8 +69,8 @@ You can chat in this activity with the user.
   (If you will scroll down to the bottom you will see the new contact).
 
 **Firebase**
-* To simulate it, open Postman (or react client from execrise 2 - link is down below).
-* Assuming that you loaded the DB Data as mentioned, and Noam appears in ron's contacts
+* To simulate it, open Postman (or react client from execrise 2 - the react is in the react repository folder).
+* Assuming that you loaded the DB Data as mentioned, and "noam" appears in ron's contacts
   (Otherwise, add it to the contacts).
   
 * In the Postman, send Transfer:
@@ -107,7 +111,7 @@ it's equivalent to these commands: <br/>
 2. npm install react-bootstrap <br/>
 After "npm install" in the **"react" directory** - run **npm start**.
 
-Example to register user IDs: noam, ron, dan <br/>
+(Assuming you loaded the DB as mentioned above:) <br/>Example to registered user IDs: noam, ron, dan <br/>
 The password is Np1234 <br/>
 **React - use instructions**
 1. Enter "react" folder and run "npm start".
