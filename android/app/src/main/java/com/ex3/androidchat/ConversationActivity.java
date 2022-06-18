@@ -159,11 +159,6 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
         messages = allMessages;
         adapter.setMessages(messages);
         recyclerView.scrollToPosition(adapter.getItemCount() - 1);
-        backButton = findViewById(R.id.btnBack);
-        backButton.setOnClickListener(v -> {
-            Intent intent = new Intent(ConversationActivity.this, MainActivity.class);
-            startActivity(intent);
-        });
 
         btnSendConv = findViewById(R.id.btnSendConv);
         btnSendConv.setOnClickListener(v -> sendMessage(friendId, adapter));
@@ -191,6 +186,12 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);
+
+        backButton = findViewById(R.id.btnBack);
+        backButton.setOnClickListener(v -> {
+            Intent intent = new Intent(ConversationActivity.this, MainActivity.class);
+            startActivity(intent);
+        });
         Client.conversationActivity = ConversationActivity.this;
         messageDao = MessageDB.insert(this).messageDao();
 
