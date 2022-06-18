@@ -301,7 +301,11 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
                     return;
                 }
 
-                messageDao.insertList(new ArrayList<>(response.body()));
+                try {
+                    messageDao.insertList(new ArrayList<>(response.body()));
+                } catch (Exception ex) {
+                    Log.d("Message already in room", ex.toString());
+                }
                 // get chatId
                 try {
                     int chatId = messageDao.isUserExits(friendId).get(0).chatId;
