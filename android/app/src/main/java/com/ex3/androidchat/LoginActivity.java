@@ -54,11 +54,19 @@ public class LoginActivity extends AppCompatActivity implements IEventListener<S
     IUserService userService;
     Retrofit retrofit;
     WebServiceAPI webServiceAPI;
+    MessageDao messageDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        try {
+            messageDao = MessageDB.insert(this).messageDao();
+            messageDao.deleteAll();
+        } catch (Exception e) {
+            Log.d("messageDao", "could not delete message DAO");
+        }
 
         AndroidChat.context = getApplicationContext();
         this.userService = new UserService();
@@ -73,7 +81,7 @@ public class LoginActivity extends AppCompatActivity implements IEventListener<S
 
         int currentNightMode = getApplicationContext().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
         if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
-            if(txtUserId == null || txtPassword == null) return;
+            if (txtUserId == null || txtPassword == null) return;
             txtUserId.setTypeface(null, Typeface.BOLD);
             txtPassword.setTypeface(null, Typeface.BOLD);
         }
@@ -100,7 +108,7 @@ public class LoginActivity extends AppCompatActivity implements IEventListener<S
 
         buttonLogin.setOnClickListener(v -> doLogin());
 
-        if(Client.getToken() != "") {
+        if (Client.getToken() != "") {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
         }
@@ -120,10 +128,10 @@ public class LoginActivity extends AppCompatActivity implements IEventListener<S
 
     private void initNotificationsService() {
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(LoginActivity.this, instanceIdResult -> {
-            Client.firebaseToken =  instanceIdResult.getToken();
-            if(Client.firebaseToken == "") return;
+            Client.firebaseToken = instanceIdResult.getToken();
+            if (Client.firebaseToken == "") return;
             Thread t = new Thread(() -> {
-                Call <Void> call = webServiceAPI.setTokenForPush(new TokenResponse(Client.firebaseToken),
+                Call<Void> call = webServiceAPI.setTokenForPush(new TokenResponse(Client.firebaseToken),
                         Client.getToken());
                 call.enqueue(new Callback<Void>() {
                     @Override
@@ -146,7 +154,7 @@ public class LoginActivity extends AppCompatActivity implements IEventListener<S
         call.enqueue(new Callback<ArrayList<UserModel>>() {
             @Override
             public void onResponse(Call<ArrayList<UserModel>> call, Response<ArrayList<UserModel>> response) {
-                if(response.body() == null) return;
+                if (response.body() == null) return;
 
                 UserService.setUsers(new ArrayList<>(response.body()));
             }
@@ -166,7 +174,7 @@ public class LoginActivity extends AppCompatActivity implements IEventListener<S
         call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                if(response.body().isCorrectInput()) {
+                if (response.body().isCorrectInput()) {
                     String token = response.body().getToken().getToken();
                     Client.setToken("Bearer " + token);
                     initNotificationsService();

@@ -16,7 +16,7 @@ import java.util.List;
 @Dao
 public interface MessageDao {
     @Query("Select * from messageresponse")
-    List<MessageResponse > index();
+    List<MessageResponse> index();
     @Query("SELECT * FROM messageresponse WHERE id = :id")
     MessageResponse get(int id);
     @Query("SELECT * FROM messageresponse WHERE senderUsername=:username")
