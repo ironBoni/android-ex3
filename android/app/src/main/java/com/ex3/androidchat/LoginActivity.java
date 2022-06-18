@@ -54,19 +54,11 @@ public class LoginActivity extends AppCompatActivity implements IEventListener<S
     IUserService userService;
     Retrofit retrofit;
     WebServiceAPI webServiceAPI;
-    MessageDao messageDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        try {
-            messageDao = MessageDB.insert(this).messageDao();
-            messageDao.deleteAll();
-        } catch (Exception e) {
-            Log.d("messageDao", "could not delete message DAO");
-        }
 
         AndroidChat.context = getApplicationContext();
         this.userService = new UserService();
