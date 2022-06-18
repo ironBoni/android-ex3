@@ -16,7 +16,6 @@ It can be done via HeidiSQL (as mentioned below).
   * password: Np1239
   * port: 3306
   * Click Open
-  * Go to the Database folder (in the repo)
   * In the HeidiSQL - Click on File -> Run SQL File 
   * Choose the file in Database\Final_DeleteAndInsert.sql (In the popup, click Yes).
   
@@ -38,8 +37,8 @@ Run the application.<br/>
 * Press **register**.
 
 **Login:**<br/>
-* Enter user Id (we prefer "ron" - since it has contacts and friends he can chat with,
-* but you can enter the userId you registered with).
+* Enter user Id (we prefer "ron" - since it has contacts and friends he can chat with,<br/>
+  but you can enter the userId you registered with).
 * Enter password. (Np1234).
 * Press Login.
 
