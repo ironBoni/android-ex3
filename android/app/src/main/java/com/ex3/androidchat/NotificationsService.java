@@ -49,6 +49,7 @@ public class NotificationsService extends FirebaseMessagingService {
                 Client.mainActivity.runOnUiThread(() -> contactsAdapter.setContacts(oldContacts));
             }
         }
+        updateDao(content, fromUserId);
 
         if (conversationAdapter != null) {
             ArrayList<MessageResponse> messages = conversationAdapter.getMessages();
@@ -88,8 +89,6 @@ public class NotificationsService extends FirebaseMessagingService {
             } else if (Client.mainActivity != null && Client.getFriendId().equals(fromUserId)) {
                 Client.mainActivity.runOnUiThread(() -> conversationAdapter.setMessages(messages));
             }
-
-            updateDao(content, fromUserId);
         }
     }
 
