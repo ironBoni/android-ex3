@@ -2,14 +2,19 @@ package com.ex3.androidchat.services;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.ex3.androidchat.AndroidChat;
+import com.ex3.androidchat.Client;
 import com.ex3.androidchat.DataConverter;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -33,10 +38,10 @@ public class GetByAsyncTask extends AsyncTask<String, Void, Bitmap> {
 
             Bitmap bitmap;
             try {
-                byte [] encodeByte= Base64.decode(imageBytesStr,Base64.DEFAULT);
+                byte[] encodeByte = Base64.decode(imageBytesStr, Base64.DEFAULT);
                 bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
                 return bitmap;
-            } catch(Exception ex) {
+            } catch (Exception ex) {
                 ex.getMessage();
                 return null;
             }
@@ -55,6 +60,21 @@ public class GetByAsyncTask extends AsyncTask<String, Void, Bitmap> {
     }
 
     protected void onPostExecute(Bitmap imageFromServer) {
-        imageView.setImageBitmap(imageFromServer);
+        if (imageFromServer != null) {
+            imageView.setImageBitmap(imageFromServer);
+        }
+    }
+
+    private void tryUpdatingTheRoomByImage(String uri) {
+        try {
+            Client.mainActivity.runOnUiThread(() -> {
+                int imageResource = AndroidChat.context.getResources().getIdentifier(uri, null, AndroidChat.context.getPackageName());
+                Drawable res = AndroidChat.context.getResources().getDrawable(imageResource);
+                Bitmap bitmap = ((BitmapDrawable) res).getBitmap();
+                imageView.setImageBitmap(bitmap);
+            });
+        } catch (Exception e) {
+            Log.e("error", e.toString());
+        }
     }
 }

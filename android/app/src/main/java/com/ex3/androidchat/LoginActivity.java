@@ -54,24 +54,22 @@ public class LoginActivity extends AppCompatActivity implements IEventListener<S
     IUserService userService;
     Retrofit retrofit;
     WebServiceAPI webServiceAPI;
-    /*//
+
     MessageDao messageDao;
-    ContactDao contactDao;*/
+    ContactDao contactDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        /*//
+/*
         contactDao = AppDB.getContactDBInstance(this).contactDao();
-        //
         contactDao.deleteAll();
-        //
         messageDao = MessageDB.insert(this).messageDao();
-        //
         messageDao.deleteAll();
-        Log.d("Deleted", "Deleted two rooms");*/
+        Log.d("Deleted", "Deleted two rooms");
+*/
         AndroidChat.context = getApplicationContext();
         this.userService = new UserService();
         retrofit = new Retrofit.Builder()

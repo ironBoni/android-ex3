@@ -2,12 +2,16 @@ package com.ex3.androidchat.services;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.ex3.androidchat.AndroidChat;
+import com.ex3.androidchat.Client;
 import com.ex3.androidchat.DataConverter;
 import com.ex3.androidchat.database.AppDB;
 import com.ex3.androidchat.database.ContactDao;
@@ -63,6 +67,31 @@ public class AsyncTaskDao extends AsyncTask<String, Void, String> {
     }
 
     protected void onPostExecute(String imageBytesStr) {
-        contactDao.update(imageBytesStr, id);
+        if(imageBytesStr == null) {
+            String uri = "@drawable/default_avatar";
+            if(AndroidChat.context == null) return;
+            tryUpdatingTheRoomByImage(uri);
+        }
+        else {
+            contactDao.update(imageBytesStr, id);
+        }
+    }
+
+    private void tryUpdatingTheRoomByImage(String uri) {
+        try {
+            Client.mainActivity.runOnUiThread(() -> {
+                int imageResource = AndroidChat.context.getResources().getIdentifier(uri, null, AndroidChat.context.getPackageName());
+                Drawable res = AndroidChat.context.getResources().getDrawable(imageResource);
+                Bitmap bitmap = ((BitmapDrawable) res).getBitmap();
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                byte[] b = byteArrayOutputStream.toByteArray();
+
+                String imgStr = Base64.encodeToString(b, Base64.DEFAULT);
+                contactDao.update(imgStr, id);
+            });
+        } catch(Exception e) {
+            Log.e("error", e.toString());
+        }
     }
 }
