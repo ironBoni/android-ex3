@@ -133,11 +133,28 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
 
 
     private void sendMessage(String friendId, ConversationAdapter adapter) {
+        contactDao = AppDB.getContactDBInstance(this).contactDao();
         EditText txtMsg = (EditText) findViewById(R.id.txtEnterMsgConv);
         String msg = txtMsg.getText().toString();
+        contactDao.updateLast(msg, friendId);
         adapter.addNewMessage(msg);
         txtMsg.setText("");
         adapter.notifyDataSetChanged();
+        /////////////////////////////////////
+        int chatId;
+        try {
+            chatId = messageDao.isUserExits(friendId).get(0).chatId;
+        } catch (Exception ex) {
+            Chat chat = chatService.getChatByParticipants(friendId, Client.getUserId());
+            if (chat != null) {
+                chatId = chat.getId();
+            }
+            else {
+                chatId = chatService.getAll().get(0).id;
+            }
+        }
+        messageDao.insert(new MessageResponse(Client.getUserId(), msg, friendId, chatId));
+        /////////////////////////////////////////
         sendMessageToServer(Client.getFriendId(), msg);
 
         RecyclerView recyclerViewConv = findViewById(R.id.messagesViewConv);
@@ -206,6 +223,9 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
         setContentView(R.layout.activity_main);
         Client.mainActivity = MainActivity.this;
         getSupportActionBar().setTitle(R.string.happy_chat);
+
+        /////////////////
+        messageDao = MessageDB.insert(this).messageDao();
 
 
         service = new UserService();
