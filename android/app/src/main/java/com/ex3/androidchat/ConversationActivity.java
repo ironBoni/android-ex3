@@ -32,7 +32,9 @@ import com.ex3.androidchat.services.ChatService;
 import com.ex3.androidchat.services.GetByAsyncTask;
 import com.ex3.androidchat.services.UserService;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -126,6 +128,10 @@ public class ConversationActivity extends AppCompatActivity implements IEventLis
         if (msg.isEmpty()) return;
 
         contactDao.updateLast(msg, friendId);
+        java.util.Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        contactDao.updateDate(formatter.format(date),friendId);
+      
         adapter.addNewMessage(msg);
         txtMsg.setText("");
 
