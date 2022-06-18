@@ -393,6 +393,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
         try {
             messages = allMessages;
             ConversationAdapter adapter = ((ConversationAdapter) recyclerView.getAdapter());
+            Client.mainActivity = MainActivity.this;
             adapter.setMessages(messages);
             recyclerView.scrollToPosition(adapter.getItemCount() - 1);
 

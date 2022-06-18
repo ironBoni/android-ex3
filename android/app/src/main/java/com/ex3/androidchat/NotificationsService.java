@@ -57,8 +57,13 @@ public class NotificationsService extends FirebaseMessagingService {
             // don't update if the notification is about my message
             if(fromUserId.equals(Client.getUserId()))
                 return;
-            if(messages != null && Client.getFriendId().equals(fromUserId)) {
+            if(conversationAdapter == null) return;
+
+            if(Client.conversationActivity != null && messages != null && Client.getFriendId().equals(fromUserId)) {
                 Client.conversationActivity.runOnUiThread(() -> conversationAdapter.setMessages(messages));
+            }
+            if(Client.mainActivity != null && messages != null && Client.getFriendId().equals(fromUserId)) {
+                Client.mainActivity.runOnUiThread(() -> conversationAdapter.setMessages(messages));
             }
         }
     }
