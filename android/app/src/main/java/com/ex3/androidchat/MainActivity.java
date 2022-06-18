@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
         updateContactLastMsg(friendId, msg);
         txtMsg.setText("");
         adapter.notifyDataSetChanged();
-        /////////////////////////////////////
+
         int chatId;
         try {
             chatId = messageDao.isUserExits(friendId).get(0).chatId;
@@ -157,7 +157,6 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
             }
         }
         messageDao.insert(new MessageResponse(Client.getUserId(), msg, friendId, chatId));
-        /////////////////////////////////////////
         sendMessageToServer(Client.getFriendId(), msg);
 
         RecyclerView recyclerViewConv = findViewById(R.id.messagesViewConv);
@@ -246,9 +245,7 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
         Client.mainActivity = MainActivity.this;
         getSupportActionBar().setTitle(R.string.happy_chat);
 
-        /////////////////
         messageDao = MessageDB.insert(this).messageDao();
-
 
         service = new UserService();
         TextView txtNickname = findViewById(R.id.txtViewNickname);
@@ -390,19 +387,6 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
             Toast.makeText(this, "Contact could not be loaded.", Toast.LENGTH_SHORT).show();
         }
 
-        Call<ArrayList<MessageResponse>> allMessages = webServiceAPI.getMessagesById(Client.getFriendId(), Client.getToken());
-        allMessages.enqueue(new Callback<ArrayList<MessageResponse>>() {
-            @Override
-            public void onResponse(Call<ArrayList<MessageResponse>> call, Response<ArrayList<MessageResponse>> response) {
-                continueOnCreateOnResponse(response.body(), Client.getFriendId());
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<MessageResponse>> call, Throwable t) {
-                Log.e("retrofit", t.getMessage());
-            }
-        });
-
         //ROOM for messages
         if (messageDao.isUserExits(friendId).size() == 0) {
             getMessagesForFirstTime(friendId, recyclerView);
@@ -413,16 +397,22 @@ public class MainActivity extends AppCompatActivity implements IEventListener<St
 
     private void continueOnCreateOnResponseLand(ArrayList<MessageResponse> allMessages, RecyclerView recyclerView, String friendId) {
         try {
+            LinearLayoutManager manager = new LinearLayoutManager(MainActivity.this);
+            manager.setOrientation(LinearLayoutManager.VERTICAL);
+            recyclerView.setLayoutManager(manager);
             messages = allMessages;
-            ConversationAdapter adapter = ((ConversationAdapter) recyclerView.getAdapter());
+            ConversationAdapter adapter = new ConversationAdapter(messages, MainActivity.this, recyclerView);
+            NotificationsService.conversationAdapter = adapter;
+            recyclerView.setAdapter(adapter);
+
             Client.mainActivity = MainActivity.this;
             adapter.setMessages(messages);
             recyclerView.scrollToPosition(adapter.getItemCount() - 1);
 
-            btnSendConv = findViewById(R.id.btnSendConv);
+            btnSendConv = findViewById(R.id.btnSendConvConv);
             btnSendConv.setOnClickListener(v -> sendMessage(friendId, adapter));
 
-            EditText txtMsg = (EditText) findViewById(R.id.txtEnterMsg);
+            EditText txtMsg = (EditText) findViewById(R.id.txtEnterMsgConv);
             txtMsg.setOnKeyListener((v, keyCode, event) -> {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
