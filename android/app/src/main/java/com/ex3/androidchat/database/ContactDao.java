@@ -27,6 +27,8 @@ public interface ContactDao {
     List<String> getAllIds();
     @Query("UPDATE contact SET last=:last WHERE contactId =:contactId ")
     void updateLast(String last, String contactId);
+    @Query("UPDATE contact SET lastdateStr=:lastdateStr WHERE contactId=:contactId")
+    void updateDate(String lastdateStr, String contactId);
     @Insert
     void insert(Contact contacts);
 
