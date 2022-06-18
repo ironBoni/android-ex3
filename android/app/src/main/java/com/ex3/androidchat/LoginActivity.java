@@ -24,6 +24,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.ex3.androidchat.api.interfaces.WebServiceAPI;
+import com.ex3.androidchat.database.AppDB;
+import com.ex3.androidchat.database.ContactDao;
+import com.ex3.androidchat.database.MessageDB;
+import com.ex3.androidchat.database.MessageDao;
 import com.ex3.androidchat.events.IEventListener;
 import com.ex3.androidchat.models.contacts.UserModel;
 import com.ex3.androidchat.models.login.LoginRequest;
@@ -50,39 +54,24 @@ public class LoginActivity extends AppCompatActivity implements IEventListener<S
     IUserService userService;
     Retrofit retrofit;
     WebServiceAPI webServiceAPI;
-
-    void convertToBase64AndLog() {
-        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        ImageView view;
-        if (dir.exists()) {
-            File[] files = dir.listFiles();
-            if (files != null) {
-
-                for (int i = 0; i < files.length; ++i) {
-                    File file = files[i];
-                    if (file.isDirectory()) {
-                    } else {
-                        view = findViewById(R.id.imgView);
-                        view.setImageDrawable(Drawable.createFromPath(file.toString()));
-                        BitmapDrawable drawable = (BitmapDrawable) view.getDrawable();
-                        Bitmap bitmap = drawable.getBitmap();
-                        ByteArrayOutputStream byteArrayOutputStream = new  ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.PNG,100, byteArrayOutputStream);
-                        byte[] b=byteArrayOutputStream.toByteArray();
-                        String imageBytesStr = Base64.encodeToString(b, Base64.DEFAULT);
-                        Log.d("ImagesBase64", file.getName() + ":" + imageBytesStr);
-                    }
-                }
-            }
-        }
-    }
+    /*//
+    MessageDao messageDao;
+    ContactDao contactDao;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        /*String[] requiredPermissions = { Manifest.permission.READ_EXTERNAL_STORAGE };
-        ActivityCompat.requestPermissions(this, requiredPermissions, 0);*/
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        /*//
+        contactDao = AppDB.getContactDBInstance(this).contactDao();
+        //
+        contactDao.deleteAll();
+        //
+        messageDao = MessageDB.insert(this).messageDao();
+        //
+        messageDao.deleteAll();
+        Log.d("Deleted", "Deleted two rooms");*/
         AndroidChat.context = getApplicationContext();
         this.userService = new UserService();
         retrofit = new Retrofit.Builder()

@@ -29,4 +29,6 @@ public interface MessageDao {
     void insertList(List<MessageResponse> messageResponseList);
     @Update
     void update(MessageResponse message);
+    @Query("DELETE FROM messageresponse")
+    void deleteAll();
 }
