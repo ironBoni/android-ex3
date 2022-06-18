@@ -3,15 +3,22 @@ package com.ex3.androidchat;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.ex3.androidchat.adapters.ContactsAdapter;
 import com.ex3.androidchat.adapters.ConversationAdapter;
+import com.ex3.androidchat.database.AppDB;
+import com.ex3.androidchat.database.ContactDao;
+import com.ex3.androidchat.database.MessageDB;
+import com.ex3.androidchat.database.MessageDao;
+import com.ex3.androidchat.models.Chat;
 import com.ex3.androidchat.models.Contact;
 import com.ex3.androidchat.models.Utils;
 import com.ex3.androidchat.models.contacts.MessageResponse;
+import com.ex3.androidchat.services.ChatService;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -24,11 +31,11 @@ public class NotificationsService extends FirebaseMessagingService {
     public static ContactsAdapter contactsAdapter;
 
     private void notifyListeners(String fromUserId, String content) {
-        if(contactsAdapter != null) {
+        if (contactsAdapter != null) {
             ArrayList<Contact> oldContacts = contactsAdapter.getContacts();
-            if(oldContacts == null) return;
-            for(Contact c : oldContacts) {
-                if(c.getContactId().equals(fromUserId)) {
+            if (oldContacts == null) return;
+            for (Contact c : oldContacts) {
+                if (c.getContactId().equals(fromUserId)) {
                     c.last = content;
                     java.util.Date date = new Date();
                     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -38,35 +45,67 @@ public class NotificationsService extends FirebaseMessagingService {
                     break;
                 }
             }
-            if(oldContacts != null) {
+            if (oldContacts != null) {
                 Client.mainActivity.runOnUiThread(() -> contactsAdapter.setContacts(oldContacts));
             }
         }
 
-        if(conversationAdapter != null) {
+        if (conversationAdapter != null) {
             ArrayList<MessageResponse> messages = conversationAdapter.getMessages();
-            if(messages == null) return;
+            if (messages == null) return;
             int maxId = 0;
-            for(MessageResponse m : messages) {
-                if(m.getId() > maxId) {
+            for (MessageResponse m : messages) {
+                if (m.getId() > maxId) {
                     maxId = m.getId();
                 }
             }
             messages.add(new MessageResponse(maxId + 1, content, fromUserId));
 
             // don't update if the notification is about my message
-            if(fromUserId.equals(Client.getUserId()))
+            if (fromUserId.equals(Client.getUserId()))
                 return;
-            if(messages != null && Client.getFriendId().equals(fromUserId)) {
+            if (Client.conversationActivity != null) {
                 Client.conversationActivity.runOnUiThread(() -> conversationAdapter.setMessages(messages));
+            } else if (Client.mainActivity != null) {
+                Client.mainActivity.runOnUiThread(() -> conversationAdapter.setMessages(messages));
             }
+
+            updateDao(content, fromUserId);
+        }
+    }
+
+    private void updateDao(String msg, String friendId) {
+        try {
+            ContactDao contactDao = AppDB.getContactDBInstance(this).contactDao();
+            contactDao.updateLast(msg, friendId);
+            java.util.Date date = new Date();
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            contactDao.updateDate(formatter.format(date), friendId);
+            ChatService service = new ChatService();
+
+            MessageDao messageDao = MessageDB.insert(this).messageDao();
+            int chatId;
+            try {
+                chatId = messageDao.isUserExits(friendId).get(0).chatId;
+            } catch (Exception ex) {
+                Chat chat = service.getChatByParticipants(friendId, Client.getUserId());
+                if (chat != null) {
+                    chatId = chat.getId();
+                } else {
+                    chatId = service.getAll().get(0).id;
+                }
+            }
+            messageDao.insert(new MessageResponse(Client.getUserId(), msg, friendId, chatId));
+
+        } catch (Exception ex) {
+            Log.d("Notification", ex.toString());
         }
     }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        if(remoteMessage.getNotification() == null) return;
+        if (remoteMessage.getNotification() == null) return;
 
         createNotificationChannel();
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "1")
@@ -83,7 +122,7 @@ public class NotificationsService extends FirebaseMessagingService {
     }
 
     private void createNotificationChannel() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel("1", "name", importance);
             channel.setDescription("Demo channel");
